@@ -12,7 +12,7 @@ var _graphqlRequest = require("graphql-request");
 
 var raritiesList = _interopRequireWildcard(require("../../rarities.json"));
 
-var graphql = new _graphqlRequest.GraphQLClient("http://localhost:5000/graphql", {
+var graphql = new _graphqlRequest.GraphQLClient("http://futbot-graphql-1:5000/graphql", {
   headers: {}
 });
 

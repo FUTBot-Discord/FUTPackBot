@@ -15,7 +15,7 @@ exports.run = async (client, message, args) => {
         },
         {
             weight: 4.2,
-            id: "gold+84"
+            id: "gold+86"
         },
         {
             weight: 1.8,
@@ -23,8 +23,32 @@ exports.run = async (client, message, args) => {
         }
     ]);
 
+    const weights = {
+        "gold+75": {
+            ratingB: 75,
+            ratingT: 81,
+            rarity: "0,1,3,47,48,12,22"
+        },
+        "gold+82": {
+            ratingB: 82,
+            ratingT: 85,
+            rarity: "0,1,3,47,48,12,22"
+        },
+        "gold+86": {
+            ratingB: 86,
+            ratingT: 99,
+            rarity: "0,1,3,47,48,12,22"
+        },
+        "totw": {
+            ratingB: 75,
+            ratingT: 99,
+            rarity: "3"
+        }
+    }
+
+    const values = weights.get(ran);
     const delay = ms => new Promise(res => setTimeout(res, ms));
-    const player_info = await getPlayer(75, 99, "0,1,3,47,48,12,22");
+    const player_info = await getPlayer(values.ratingB, values.ratingT, values.rarity);
     const card = await makeCard(player_info);
     const channel = message.channel;
     const author = message.author;

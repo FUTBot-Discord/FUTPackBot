@@ -22,7 +22,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(client, message, args) {
-    var ran, delay, player_info, card, channel, author, embed;
+    var ran, weights, values, delay, player_info, card, channel, author, embed;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -35,11 +35,34 @@ function () {
               id: "gold+82"
             }, {
               weight: 4.2,
-              id: "gold+84"
+              id: "gold+86"
             }, {
               weight: 1.8,
               id: "totw"
             }]);
+            weights = {
+              "gold+75": {
+                ratingB: 75,
+                ratingT: 81,
+                rarity: "0,1,3,47,48,12,22"
+              },
+              "gold+82": {
+                ratingB: 82,
+                ratingT: 85,
+                rarity: "0,1,3,47,48,12,22"
+              },
+              "gold+86": {
+                ratingB: 86,
+                ratingT: 99,
+                rarity: "0,1,3,47,48,12,22"
+              },
+              "totw": {
+                ratingB: 75,
+                ratingT: 99,
+                rarity: "3"
+              }
+            };
+            values = weights.get(ran);
 
             delay = function delay(ms) {
               return new Promise(function (res) {
@@ -47,15 +70,15 @@ function () {
               });
             };
 
-            _context2.next = 4;
-            return (0, _general.getPlayer)(75, 99, "0,1,3,47,48,12,22");
+            _context2.next = 6;
+            return (0, _general.getPlayer)(values.ratingB, values.ratingT, values.rarity);
 
-          case 4:
+          case 6:
             player_info = _context2.sent;
-            _context2.next = 7;
+            _context2.next = 9;
             return makeCard(player_info);
 
-          case 7:
+          case 9:
             card = _context2.sent;
             channel = message.channel;
             author = message.author;
@@ -105,7 +128,7 @@ function () {
               };
             }());
 
-          case 12:
+          case 14:
           case "end":
             return _context2.stop();
         }

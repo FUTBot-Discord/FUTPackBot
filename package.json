@@ -1,0 +1,43 @@
+{
+  "name": "futbot-packemulator",
+  "version": "1.0.0",
+  "description": "FUTBot_PackEmulator",
+  "main": "bot.js",
+  "scripts": {
+    "test": "nodemon --exec babel-node src/bot.js",
+    "start": "node dist/bot.js",
+    "build": "babel src --out-dir dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tjird/FUTBot_PackEmulator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tjird/FUTBot_PackEmulator/issues"
+  },
+  "homepage": "https://github.com/Tjird/FUTBot_PackEmulator#readme",
+  "dependencies": {
+    "@babel/polyfill": "^7.6.0",
+    "@babel/runtime": "^7.6.3",
+    "canvas": "^2.6.0",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0",
+    "enmap": "^5.2.0",
+    "fs": "0.0.1-security",
+    "graphql-request": "^1.8.2",
+    "html-template-tag": "^3.2.0",
+    "moment": "^2.24.0",
+    "random-weighted-choice": "^0.1.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/plugin-transform-async-to-generator": "^7.5.0",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
+    "nodemon": "^1.19.4"
+  }
+}

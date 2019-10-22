@@ -7,7 +7,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var cooldown = new Set();
-var cooldownsec = 5;
+var cooldownsec = 15;
 
 module.exports =
 /*#__PURE__*/

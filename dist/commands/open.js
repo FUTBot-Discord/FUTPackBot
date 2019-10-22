@@ -28,10 +28,10 @@ function () {
         switch (_context2.prev = _context2.next) {
           case 0:
             ran = (0, _randomWeightedChoice["default"])([{
-              weight: 76,
+              weight: 82,
               id: "gold+75"
             }, {
-              weight: 18,
+              weight: 12,
               id: "gold+82"
             }, {
               weight: 4.2,

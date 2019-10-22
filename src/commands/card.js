@@ -44,7 +44,7 @@ exports.run = async (client, message, args) => {
     }
 
     Canvas.registerFont(`Roboto-Bold.ttf`, { family: "Roboto Bold" });
-    Canvas.registerFont(`DINPro-CondensedRegular.ttf`, { family: "DIN Pro Cond" });
+    Canvas.registerFont(`DINPro-CondensedBold.ttf`, { family: "DIN Pro Cond" });
     Canvas.registerFont(`DINPro-CondensedLight.ttf`, { family: "DIN Pro Cond Light" });
     const packCard = Canvas.createCanvas((644 / 2.15), (900 / 2.15));
     const ctx = packCard.getContext('2d');

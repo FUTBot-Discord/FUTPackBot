@@ -45,8 +45,8 @@ exports.run = async (client, message, args) => {
 
     Canvas.registerFont(`Roboto-Bold.ttf`, { family: "Roboto Bold" });
     Canvas.registerFont(`Champions-Regular.otf`, { family: "Champions" });
-    // Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
-    // Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
+    Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
+    Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
     const packCard = Canvas.createCanvas((644 / 2.15), (900 / 2.15));
     const ctx = packCard.getContext('2d');
 
@@ -59,11 +59,18 @@ exports.run = async (client, message, args) => {
     ctx.drawImage(playerpicture, 95, 57, 160, 160);
 
     let playername = player_info.meta_info.common_name ? player_info.meta_info.common_name.toUpperCase() : player_info.meta_info.last_name.toUpperCase();
+    let pSize = '19px';
+    let pHeight = 241;
 
-    ctx.font = `19px '${colors.font_3}'`;
+    if (playername.length < 17) {
+        pSize = '24px';
+        pHeight = 239;
+    }
+
+    ctx.font = `${pSize} '${colors.font_3}'`;
     ctx.fillStyle = `#${colors.color_text}`;
     ctx.textAlign = "center";
-    ctx.fillText(playername, packCard.width / 2, 240);
+    ctx.fillText(playername, packCard.width / 2, pHeight);
 
     ctx.font = `45px '${colors.font_1}'`;
     ctx.fillText(player_info.rating, 90, 93);

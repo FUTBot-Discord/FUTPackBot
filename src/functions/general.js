@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import * as raritiesList from '../../rarities.json';
 
-const graphql = new GraphQLClient("http://futbot-graphql-1:5000/graphql", { headers: {} });
+const graphql = new GraphQLClient(process.env.G_ENDPOINT, { headers: {} });
 
 function getQuality(rating) {
     if (rating < 65) return "bronze";

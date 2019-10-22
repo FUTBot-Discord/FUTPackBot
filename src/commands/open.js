@@ -111,7 +111,7 @@ async function makeCard(player_info) {
 
     if (playername.length < 17) {
         pSize = '24px';
-        pHeight = 239;
+        pHeight = 241;
     }
 
     ctx.font = `${pSize} '${colors.font_3}'`;

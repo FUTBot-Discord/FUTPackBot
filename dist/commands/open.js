@@ -186,7 +186,7 @@ function _makeCard() {
 
             if (playername.length < 17) {
               pSize = '24px';
-              pHeight = 239;
+              pHeight = 241;
             }
 
             ctx.font = "".concat(pSize, " '").concat(colors.font_3, "'");

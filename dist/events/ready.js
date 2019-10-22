@@ -21,8 +21,8 @@ function () {
             });
             console.log("Logged in as ".concat(client.user.tag, " and looking at ").concat(getPlayerCount(client.guilds), " users."));
             console.log("====================");
-            client.user.setActivity("".concat(getPlayerCount(client.guilds), " users"), {
-              type: 'WATCHING'
+            client.user.setActivity("?open in #testing", {
+              type: 'PLAYING'
             });
 
           case 4:

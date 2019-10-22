@@ -18,8 +18,16 @@ exports.run = async (client, message, args) => {
             id: "gold+86"
         },
         {
-            weight: 2,
+            weight: 3.8,
             id: "totw"
+        },
+        {
+            weight: 0.7,
+            id: "icon"
+        },
+        {
+            weight: 2.9,
+            id: "scream"
         }
     ]);
 
@@ -27,22 +35,32 @@ exports.run = async (client, message, args) => {
         "gold+75": {
             ratingB: 75,
             ratingT: 81,
-            rarity: "0,1,3,47,48,12,22"
+            rarity: "0,1,47,48"
         },
         "gold+82": {
             ratingB: 82,
             ratingT: 85,
-            rarity: "0,1,3,47,48,12,22"
+            rarity: "0,1,47,48"
         },
         "gold+86": {
             ratingB: 86,
             ratingT: 99,
-            rarity: "0,1,3,47,48,12,22"
+            rarity: "0,1,47,48"
         },
         "totw": {
             ratingB: 75,
             ratingT: 99,
             rarity: "3"
+        },
+        "icon": {
+            ratingB: 75,
+            ratingT: 99,
+            rarity: "12"
+        },
+        "scream": {
+            ratingB: 75,
+            ratingT: 99,
+            rarity: "22"
         }
     }
 

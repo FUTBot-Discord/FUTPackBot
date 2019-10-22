@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
-import * as raritiesList from '../../rarities.json';
 
 const graphql = new GraphQLClient(process.env.G_ENDPOINT, { headers: {} });
+const raritiesList = require('../../rarities.json');
 
 function getQuality(rating) {
     if (rating < 65) return "bronze";
@@ -17,7 +17,7 @@ function getRarityName(rarity) {
 };
 
 async function getPlayer(ratingB, ratingT, rareflag) {
-    let query = `{ getPlayerVersionPackEmulator(ratingB: ${ratingB}, ratingT: ${ratingT}, rareflag: "${rareflag}") { def dri nation_info{ img } pac pas phy meta_info{ common_name last_name img } preferred_position rareflag rating sho club_info{ img } } }`;
+    let query = `{ getPlayerVersionPackEmulator(ratingB: ${ratingB}, ratingT: ${ratingT}, rareflag: "${rareflag}") { def dri nation_info{ img } pac pas phy meta_info{ common_name last_name first_name img } preferred_position rareflag rating sho club_info{ img } } }`;
     let res = await graphql.request(query);
 
     return res.getPlayerVersionPackEmulator;

@@ -1,5 +1,5 @@
 import * as Canvas from 'canvas';
-import { Attachment } from 'discord.js';
+import { Attachment, RichEmbed } from 'discord.js';
 import rwc from 'random-weighted-choice';
 import { getPlayer, getQuality, getRarityName, getCardColor } from '../functions/general';
 
@@ -22,8 +22,54 @@ exports.run = async (client, message, args) => {
             id: "totw"
         }
     ]);
-    const player_info = await getPlayer(75, 99, "47,48");
 
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    const player_info = await getPlayer(75, 99, "0,1,3,47,48,12,22");
+    const card = await makeCard(player_info);
+    const channel = message.channel;
+    const author = message.author;
+
+    let embed = new RichEmbed()
+        .setColor("0xE51E0A")
+        .setTimestamp()
+        .setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
+
+    channel.send(embed)
+        .then(async m => {
+            await delay(2000);
+
+            let secondText = "Not even a board... Yeeezz...";
+
+            if ((player_info.rareflag !== 3 && player_info.rating > 82) || (player_info.rareflag === 3 && player_info.rating <= 82)) secondText = "Decend, it's a board!";
+            if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) secondText = "WALKOUT!!!";
+
+            embed = new RichEmbed()
+                .setColor("0xE51E0A")
+                .setTimestamp()
+                .setTitle(secondText, "https://tjird.nl/futbot.jpg");
+
+            m.edit(embed);
+
+            await delay(2000);
+
+            let quality = getQuality(player_info.rating);
+
+            embed = new RichEmbed()
+                .setColor("0xE51E0A")
+                .attachFile(card)
+                .setTimestamp()
+                .setImage("attachment://card.png")
+                .setDescription(`Version: ${getRarityName(`${player_info.rareflag}-${quality}`) ? getRarityName(`${player_info.rareflag}-${quality}`) : "Unknown"}`)
+                .setTitle(`${author.username}#${author.discriminator} has packed ${(player_info.meta_info.common_name ? player_info.meta_info.common_name : `${player_info.meta_info.first_name} ${player_info.meta_info.last_name}`)}`, "https://tjird.nl/futbot.jpg")
+                .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg");
+
+            await m.delete();
+
+            channel.send(embed);
+        });
+}
+
+async function makeCard(player_info) {
     let positions = {
         p: {
             "pac": "pac",
@@ -47,6 +93,7 @@ exports.run = async (client, message, args) => {
     Canvas.registerFont(`Champions-Regular.otf`, { family: "Champions" });
     Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
     Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
+
     const packCard = Canvas.createCanvas((644 / 2.15), (900 / 2.15));
     const ctx = packCard.getContext('2d');
 
@@ -138,6 +185,5 @@ exports.run = async (client, message, args) => {
 
     const attachment = new Attachment(packCard.toBuffer(), 'card.png');
 
-    message.channel.send(attachment);
-
+    return attachment;
 }

@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -10,11 +8,11 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _graphqlRequest = require("graphql-request");
 
-var raritiesList = _interopRequireWildcard(require("../../rarities.json"));
-
 var graphql = new _graphqlRequest.GraphQLClient(process.env.G_ENDPOINT, {
   headers: {}
 });
+
+var raritiesList = require('../../rarities.json');
 
 function getQuality(rating) {
   if (rating < 65) return "bronze";
@@ -48,7 +46,7 @@ function _getPlayer() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            query = "{ getPlayerVersionPackEmulator(ratingB: ".concat(ratingB, ", ratingT: ").concat(ratingT, ", rareflag: \"").concat(rareflag, "\") { def dri nation_info{ img } pac pas phy meta_info{ common_name last_name img } preferred_position rareflag rating sho club_info{ img } } }");
+            query = "{ getPlayerVersionPackEmulator(ratingB: ".concat(ratingB, ", ratingT: ").concat(ratingT, ", rareflag: \"").concat(rareflag, "\") { def dri nation_info{ img } pac pas phy meta_info{ common_name last_name first_name img } preferred_position rareflag rating sho club_info{ img } } }");
             _context.next = 3;
             return graphql.request(query);
 

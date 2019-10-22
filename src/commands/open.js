@@ -46,7 +46,7 @@ exports.run = async (client, message, args) => {
         }
     }
 
-    const values = weights.get(ran);
+    const values = weights[ran];
     const delay = ms => new Promise(res => setTimeout(res, ms));
     const player_info = await getPlayer(values.ratingB, values.ratingT, values.rarity);
     const card = await makeCard(player_info);

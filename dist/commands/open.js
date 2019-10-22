@@ -62,7 +62,7 @@ function () {
                 rarity: "3"
               }
             };
-            values = weights.get(ran);
+            values = weights[ran];
 
             delay = function delay(ms) {
               return new Promise(function (res) {

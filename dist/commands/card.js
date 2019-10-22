@@ -66,10 +66,10 @@ function () {
             Canvas.registerFont("Roboto-Bold.ttf", {
               family: "Roboto Bold"
             });
-            Canvas.registerFont("DINPro-CondensedRegular.ttf", {
+            Canvas.registerFont("fut.ttf", {
               family: "DIN Pro Cond"
             });
-            Canvas.registerFont("DINPro-CondensedLight.ttf", {
+            Canvas.registerFont("futlight.ttf", {
               family: "DIN Pro Cond Light"
             });
             packCard = Canvas.createCanvas(644 / 2.15, 900 / 2.15);

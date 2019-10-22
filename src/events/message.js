@@ -1,5 +1,5 @@
 const cooldown = new Set();
-const cooldownsec = 5;
+const cooldownsec = 12;
 
 module.exports = async (client, message) => {
     if (message.author.bot) return;

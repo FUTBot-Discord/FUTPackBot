@@ -6,11 +6,11 @@ import { getPlayer, getQuality, getRarityName, getCardColor } from '../functions
 exports.run = async (client, message, args) => {
     const ran = rwc([
         {
-            weight: 76,
+            weight: 82,
             id: "gold+75"
         },
         {
-            weight: 18,
+            weight: 12,
             id: "gold+82"
         },
         {

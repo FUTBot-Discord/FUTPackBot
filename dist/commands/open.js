@@ -192,26 +192,30 @@ function _makeCard() {
             });
             Canvas.registerFont("Champions-Regular.otf", {
               family: "Champions"
-            }); // Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
-            // Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
-
+            });
+            Canvas.registerFont("fut.ttf", {
+              family: "DIN Condensed Web"
+            });
+            Canvas.registerFont("futlight.ttf", {
+              family: "DIN Condensed Web Light"
+            });
             packCard = Canvas.createCanvas(644 / 2.15, 900 / 2.15);
             ctx = packCard.getContext('2d');
-            _context3.next = 7;
+            _context3.next = 9;
             return (0, _general.getCardColor)(player_info.rareflag, player_info.rating);
 
-          case 7:
+          case 9:
             colors = _context3.sent;
-            _context3.next = 10;
+            _context3.next = 12;
             return Canvas.loadImage("http://fifa.tjird.nl/cards/".concat(player_info.rareflag, "-").concat((0, _general.getQuality)(player_info.rating), ".png"));
 
-          case 10:
+          case 12:
             background = _context3.sent;
             ctx.drawImage(background, 0, 0, 644 / 2.15, 900 / 2.15);
-            _context3.next = 14;
+            _context3.next = 16;
             return Canvas.loadImage(player_info.meta_info.img);
 
-          case 14:
+          case 16:
             playerpicture = _context3.sent;
             ctx.drawImage(playerpicture, 95, 57, 160, 160);
             playername = player_info.meta_info.common_name ? player_info.meta_info.common_name.toUpperCase() : player_info.meta_info.last_name.toUpperCase();
@@ -231,16 +235,16 @@ function _makeCard() {
             ctx.fillText(player_info.rating, 90, 93);
             ctx.font = "28px '".concat(colors.font_2, "'");
             ctx.fillText(player_info.preferred_position.toUpperCase(), 90, 119);
-            _context3.next = 30;
+            _context3.next = 32;
             return Canvas.loadImage(player_info.nation_info.img);
 
-          case 30:
+          case 32:
             nation = _context3.sent;
             ctx.drawImage(nation, 70, 128, nation.width * 0.6, nation.height * 0.6);
-            _context3.next = 34;
+            _context3.next = 36;
             return Canvas.loadImage(player_info.club_info.img);
 
-          case 34:
+          case 36:
             club = _context3.sent;
             ctx.drawImage(club, 70, 165, club.width * 0.31, club.height * 0.31);
             ctx.font = "18px '".concat(colors.font_3, "'");
@@ -291,7 +295,7 @@ function _makeCard() {
             attachment = new _discord.Attachment(packCard.toBuffer(), 'card.png');
             return _context3.abrupt("return", attachment);
 
-          case 77:
+          case 79:
           case "end":
             return _context3.stop();
         }

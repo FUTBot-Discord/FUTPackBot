@@ -138,8 +138,8 @@ async function makeCard(player_info) {
 
     Canvas.registerFont(`Roboto-Bold.ttf`, { family: "Roboto Bold" });
     Canvas.registerFont(`Champions-Regular.otf`, { family: "Champions" });
-    // Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
-    // Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
+    Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
+    Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
 
     const packCard = Canvas.createCanvas((644 / 2.15), (900 / 2.15));
     const ctx = packCard.getContext('2d');

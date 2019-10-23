@@ -4,7 +4,7 @@ module.exports = async (client) => {
     console.log(`Logged in as ${client.user.tag} and looking at ${getPlayerCount(client.guilds)} users.`);
     console.log("====================");
 
-    client.user.setActivity(`?open in #testing`, { type: 'PLAYING' });
+    client.user.setActivity(`pack! in #testing`, { type: 'WACTHING' });
 }
 
 function getPlayerCount(guilds) {

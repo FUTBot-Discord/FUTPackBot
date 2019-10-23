@@ -22,7 +22,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(client, message, args) {
-    var ran, weights, values, delay, player_info, card, channel, author, secondText, embed;
+    var ran, weights, values, delay, player_info, card, channel, author, animation, embed;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -97,12 +97,16 @@ function () {
           case 9:
             card = _context2.sent;
             channel = message.channel;
-            author = message.author;
-            secondText = ["Not even a board... Yeeezz...", "nonrare"];
-            if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
-            if (player_info.rareflag !== 3 && player_info.rating >= 83 || player_info.rareflag === 3 && player_info.rating <= 82 || player_info.rareflag === 47 || player_info.rareflag === 48) secondText = ["Decend, it's a board!", "board"];
-            if (player_info.rareflag !== 3 && player_info.rating > 85 || player_info.rareflag === 3 && player_info.rating >= 83 || player_info.rareflag === 12) secondText = ["WALKOUT!!!", "walkout"];
-            embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(secondText[1], ".gif"), "animation.gif").setImage("attachment://animation.gif").setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
+            author = message.author; // let secondText = ["Not even a board... Yeeezz...", "nonrare"];
+
+            animation = "nonrare"; // if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
+            // if ((player_info.rareflag !== 3 && player_info.rating >= 83) || (player_info.rareflag === 3 && player_info.rating <= 82) || (player_info.rareflag === 47 || player_info.rareflag === 48)) secondText = ["Decend, it's a board!", "board"];
+            // if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) secondText = ["WALKOUT!!!", "walkout"];
+
+            if (player_info.rareflag === 1) animation = "rare";
+            if (player_info.rareflag !== 3 && player_info.rating >= 83 || player_info.rareflag === 3 && player_info.rating <= 82 || player_info.rareflag === 47 || player_info.rareflag === 48) animation = "board";
+            if (player_info.rareflag !== 3 && player_info.rating > 85 || player_info.rareflag === 3 && player_info.rating >= 83 || player_info.rareflag === 12) animation = "walkout";
+            embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
             channel.send(embed).then(
             /*#__PURE__*/
             function () {
@@ -115,22 +119,23 @@ function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return delay(6500);
+                        return delay(8000);
 
                       case 2:
-                        embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp() // .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
-                        .setImage("attachment://animation.gif").setTitle(secondText[0], "https://tjird.nl/futbot.jpg");
-                        m.edit(embed);
-                        _context.next = 6;
-                        return delay(3000);
-
-                      case 6:
+                        // embed = new RichEmbed()
+                        //     .setColor("0xE51E0A")
+                        //     .setTimestamp()
+                        //     // .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
+                        //     .setImage("attachment://animation.gif")
+                        //     .setTitle(secondText[0], "https://tjird.nl/futbot.jpg");
+                        // m.edit(embed);
+                        // await delay(3000);
                         quality = (0, _general.getQuality)(player_info.rating);
                         embed = new _discord.RichEmbed().setColor("0xE51E0A").attachFile(card).setTimestamp().setImage("attachment://card.png").setDescription("Version: ".concat((0, _general.getRarityName)("".concat(player_info.rareflag, "-").concat(quality)) ? (0, _general.getRarityName)("".concat(player_info.rareflag, "-").concat(quality)) : "Unknown")).setTitle("".concat(author.username, "#").concat(author.discriminator, " has packed ").concat(player_info.meta_info.common_name ? player_info.meta_info.common_name : "".concat(player_info.meta_info.first_name, " ").concat(player_info.meta_info.last_name)), "https://tjird.nl/futbot.jpg").setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg");
                         m["delete"]();
                         channel.send(embed);
 
-                      case 10:
+                      case 6:
                       case "end":
                         return _context.stop();
                     }

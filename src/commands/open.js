@@ -71,33 +71,38 @@ exports.run = async (client, message, args) => {
     const channel = message.channel;
     const author = message.author;
 
-    let secondText = ["Not even a board... Yeeezz...", "nonrare"];
+    // let secondText = ["Not even a board... Yeeezz...", "nonrare"];
+    let animation = "nonrare";
 
-    if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
-    if ((player_info.rareflag !== 3 && player_info.rating >= 83) || (player_info.rareflag === 3 && player_info.rating <= 82) || (player_info.rareflag === 47 || player_info.rareflag === 48)) secondText = ["Decend, it's a board!", "board"];
-    if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) secondText = ["WALKOUT!!!", "walkout"];
+    // if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
+    // if ((player_info.rareflag !== 3 && player_info.rating >= 83) || (player_info.rareflag === 3 && player_info.rating <= 82) || (player_info.rareflag === 47 || player_info.rareflag === 48)) secondText = ["Decend, it's a board!", "board"];
+    // if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) secondText = ["WALKOUT!!!", "walkout"];
+    if (player_info.rareflag === 1) animation = "rare";
+    if ((player_info.rareflag !== 3 && player_info.rating >= 83) || (player_info.rareflag === 3 && player_info.rating <= 82) || (player_info.rareflag === 47 || player_info.rareflag === 48)) animation = "board";
+    if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) animation = "walkout";
 
     let embed = new RichEmbed()
         .setColor("0xE51E0A")
         .setTimestamp()
-        .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
-        .setImage("attachment://animation.gif")
+        .attachFile(`pack_animations/${animation}.gif`, `${animation}.gif`)
+        .setImage(`attachment://${animation}.gif`)
+        .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg")
         .setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
 
     channel.send(embed)
         .then(async m => {
-            await delay(6500);
+            await delay(8000);
 
-            embed = new RichEmbed()
-                .setColor("0xE51E0A")
-                .setTimestamp()
-                // .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
-                .setImage("attachment://animation.gif")
-                .setTitle(secondText[0], "https://tjird.nl/futbot.jpg");
+            // embed = new RichEmbed()
+            //     .setColor("0xE51E0A")
+            //     .setTimestamp()
+            //     // .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
+            //     .setImage("attachment://animation.gif")
+            //     .setTitle(secondText[0], "https://tjird.nl/futbot.jpg");
 
-            m.edit(embed);
+            // m.edit(embed);
 
-            await delay(3000);
+            // await delay(3000);
 
             let quality = getQuality(player_info.rating);
 

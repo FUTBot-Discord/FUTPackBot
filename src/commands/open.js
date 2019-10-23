@@ -57,7 +57,7 @@ exports.run = async (client, message, args) => {
 
     channel.send(embed)
         .then(async m => {
-            await delay(9000);
+            await delay(10000);
 
             let quality = getQuality(player_info.rating);
 

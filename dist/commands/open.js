@@ -122,7 +122,7 @@ function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return delay(9000);
+                        return delay(10000);
 
                       case 2:
                         quality = (0, _general.getQuality)(player_info.rating);

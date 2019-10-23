@@ -74,7 +74,7 @@ exports.run = async (client, message, args) => {
     let secondText = ["Not even a board... Yeeezz...", "nonrare"];
 
     if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
-    if ((player_info.rareflag !== 3 && player_info.rating > 82) || (player_info.rareflag === 3 && player_info.rating <= 82)) secondText = ["Decend, it's a board!", "board"];
+    if ((player_info.rareflag !== 3 && player_info.rating > 82) || (player_info.rareflag === 3 && player_info.rating <= 82) || (player_info.rareflag === 47 || player_info.rareflag === 48)) secondText = ["Decend, it's a board!", "board"];
     if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) secondText = ["WALKOUT!!!", "walkout"];
 
     let embed = new RichEmbed()

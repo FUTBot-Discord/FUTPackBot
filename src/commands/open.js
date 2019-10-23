@@ -87,7 +87,7 @@ exports.run = async (client, message, args) => {
         .attachFile(`pack_animations/${animation}.gif`, `${animation}.gif`)
         .setImage(`attachment://${animation}.gif`)
         .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg")
-        .setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
+        .setTitle(`${author.username}#${author.discriminator} is opening a gold pack`, "https://tjird.nl/futbot.jpg");
 
     channel.send(embed)
         .then(async m => {

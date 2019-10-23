@@ -106,7 +106,7 @@ function () {
             if (player_info.rareflag === 1) animation = "rare";
             if (player_info.rareflag !== 3 && player_info.rating >= 83 || player_info.rareflag === 3 && player_info.rating <= 82 || player_info.rareflag === 47 || player_info.rareflag === 48) animation = "board";
             if (player_info.rareflag !== 3 && player_info.rating > 85 || player_info.rareflag === 3 && player_info.rating >= 83 || player_info.rareflag === 12) animation = "walkout";
-            embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
+            embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a gold pack"), "https://tjird.nl/futbot.jpg");
             channel.send(embed).then(
             /*#__PURE__*/
             function () {

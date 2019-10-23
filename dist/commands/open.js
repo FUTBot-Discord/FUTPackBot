@@ -22,7 +22,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(client, message, args) {
-    var ran, weights, values, delay, player_info, card, channel, author, embed;
+    var ran, weights, values, delay, player_info, card, channel, author, secondText, embed;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -98,40 +98,39 @@ function () {
             card = _context2.sent;
             channel = message.channel;
             author = message.author;
-            embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
+            secondText = ["Not even a board... Yeeezz...", "nonrare"];
+            if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
+            if (player_info.rareflag !== 3 && player_info.rating > 82 || player_info.rareflag === 3 && player_info.rating <= 82) secondText = ["Decend, it's a board!", "board"];
+            if (player_info.rareflag !== 3 && player_info.rating > 85 || player_info.rareflag === 3 && player_info.rating >= 83 || player_info.rareflag === 12) secondText = ["WALKOUT!!!", "walkout"];
+            embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(secondText[1], ".gif"), "animation.gif").setImage("attachment://animation.gif").setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
             channel.send(embed).then(
             /*#__PURE__*/
             function () {
               var _ref2 = (0, _asyncToGenerator2["default"])(
               /*#__PURE__*/
               _regenerator["default"].mark(function _callee(m) {
-                var secondText, quality;
+                var quality;
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return delay(2000);
+                        return delay(5500);
 
                       case 2:
-                        secondText = "Not even a board... Yeeezz...";
-                        if (player_info.rareflag !== 3 && player_info.rating > 82 || player_info.rareflag === 3 && player_info.rating <= 82) secondText = "Decend, it's a board!";
-                        if (player_info.rareflag !== 3 && player_info.rating > 85 || player_info.rareflag === 3 && player_info.rating >= 83 || player_info.rareflag === 12) secondText = "WALKOUT!!!";
-                        embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().setTitle(secondText, "https://tjird.nl/futbot.jpg");
+                        embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp() // .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
+                        .setImage("attachment://animation.gif").setTitle(secondText[0], "https://tjird.nl/futbot.jpg");
                         m.edit(embed);
-                        _context.next = 9;
-                        return delay(2000);
+                        _context.next = 6;
+                        return delay(3000);
 
-                      case 9:
+                      case 6:
                         quality = (0, _general.getQuality)(player_info.rating);
                         embed = new _discord.RichEmbed().setColor("0xE51E0A").attachFile(card).setTimestamp().setImage("attachment://card.png").setDescription("Version: ".concat((0, _general.getRarityName)("".concat(player_info.rareflag, "-").concat(quality)) ? (0, _general.getRarityName)("".concat(player_info.rareflag, "-").concat(quality)) : "Unknown")).setTitle("".concat(author.username, "#").concat(author.discriminator, " has packed ").concat(player_info.meta_info.common_name ? player_info.meta_info.common_name : "".concat(player_info.meta_info.first_name, " ").concat(player_info.meta_info.last_name)), "https://tjird.nl/futbot.jpg").setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg");
-                        _context.next = 13;
-                        return m["delete"]();
-
-                      case 13:
+                        m["delete"]();
                         channel.send(embed);
 
-                      case 14:
+                      case 10:
                       case "end":
                         return _context.stop();
                     }
@@ -144,7 +143,7 @@ function () {
               };
             }());
 
-          case 14:
+          case 18:
           case "end":
             return _context2.stop();
         }
@@ -193,30 +192,26 @@ function _makeCard() {
             });
             Canvas.registerFont("Champions-Regular.otf", {
               family: "Champions"
-            });
-            Canvas.registerFont("fut.ttf", {
-              family: "DIN Condensed Web"
-            });
-            Canvas.registerFont("futlight.ttf", {
-              family: "DIN Condensed Web Light"
-            });
+            }); // Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
+            // Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
+
             packCard = Canvas.createCanvas(644 / 2.15, 900 / 2.15);
             ctx = packCard.getContext('2d');
-            _context3.next = 9;
+            _context3.next = 7;
             return (0, _general.getCardColor)(player_info.rareflag, player_info.rating);
 
-          case 9:
+          case 7:
             colors = _context3.sent;
-            _context3.next = 12;
+            _context3.next = 10;
             return Canvas.loadImage("http://fifa.tjird.nl/cards/".concat(player_info.rareflag, "-").concat((0, _general.getQuality)(player_info.rating), ".png"));
 
-          case 12:
+          case 10:
             background = _context3.sent;
             ctx.drawImage(background, 0, 0, 644 / 2.15, 900 / 2.15);
-            _context3.next = 16;
+            _context3.next = 14;
             return Canvas.loadImage(player_info.meta_info.img);
 
-          case 16:
+          case 14:
             playerpicture = _context3.sent;
             ctx.drawImage(playerpicture, 95, 57, 160, 160);
             playername = player_info.meta_info.common_name ? player_info.meta_info.common_name.toUpperCase() : player_info.meta_info.last_name.toUpperCase();
@@ -236,16 +231,16 @@ function _makeCard() {
             ctx.fillText(player_info.rating, 90, 93);
             ctx.font = "28px '".concat(colors.font_2, "'");
             ctx.fillText(player_info.preferred_position.toUpperCase(), 90, 119);
-            _context3.next = 32;
+            _context3.next = 30;
             return Canvas.loadImage(player_info.nation_info.img);
 
-          case 32:
+          case 30:
             nation = _context3.sent;
             ctx.drawImage(nation, 70, 128, nation.width * 0.6, nation.height * 0.6);
-            _context3.next = 36;
+            _context3.next = 34;
             return Canvas.loadImage(player_info.club_info.img);
 
-          case 36:
+          case 34:
             club = _context3.sent;
             ctx.drawImage(club, 70, 165, club.width * 0.31, club.height * 0.31);
             ctx.font = "18px '".concat(colors.font_3, "'");
@@ -296,7 +291,7 @@ function _makeCard() {
             attachment = new _discord.Attachment(packCard.toBuffer(), 'card.png');
             return _context3.abrupt("return", attachment);
 
-          case 79:
+          case 77:
           case "end":
             return _context3.stop();
         }

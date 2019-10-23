@@ -71,28 +71,33 @@ exports.run = async (client, message, args) => {
     const channel = message.channel;
     const author = message.author;
 
+    let secondText = ["Not even a board... Yeeezz...", "nonrare"];
+
+    if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
+    if ((player_info.rareflag !== 3 && player_info.rating > 82) || (player_info.rareflag === 3 && player_info.rating <= 82)) secondText = ["Decend, it's a board!", "board"];
+    if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) secondText = ["WALKOUT!!!", "walkout"];
+
     let embed = new RichEmbed()
         .setColor("0xE51E0A")
         .setTimestamp()
+        .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
+        .setImage("attachment://animation.gif")
         .setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
 
     channel.send(embed)
         .then(async m => {
-            await delay(2000);
-
-            let secondText = "Not even a board... Yeeezz...";
-
-            if ((player_info.rareflag !== 3 && player_info.rating > 82) || (player_info.rareflag === 3 && player_info.rating <= 82)) secondText = "Decend, it's a board!";
-            if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) secondText = "WALKOUT!!!";
+            await delay(5500);
 
             embed = new RichEmbed()
                 .setColor("0xE51E0A")
                 .setTimestamp()
-                .setTitle(secondText, "https://tjird.nl/futbot.jpg");
+                // .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
+                .setImage("attachment://animation.gif")
+                .setTitle(secondText[0], "https://tjird.nl/futbot.jpg");
 
             m.edit(embed);
 
-            await delay(2000);
+            await delay(3000);
 
             let quality = getQuality(player_info.rating);
 
@@ -105,7 +110,7 @@ exports.run = async (client, message, args) => {
                 .setTitle(`${author.username}#${author.discriminator} has packed ${(player_info.meta_info.common_name ? player_info.meta_info.common_name : `${player_info.meta_info.first_name} ${player_info.meta_info.last_name}`)}`, "https://tjird.nl/futbot.jpg")
                 .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg");
 
-            await m.delete();
+            m.delete();
 
             channel.send(embed);
         });
@@ -133,8 +138,8 @@ async function makeCard(player_info) {
 
     Canvas.registerFont(`Roboto-Bold.ttf`, { family: "Roboto Bold" });
     Canvas.registerFont(`Champions-Regular.otf`, { family: "Champions" });
-    Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
-    Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
+    // Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
+    // Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
 
     const packCard = Canvas.createCanvas((644 / 2.15), (900 / 2.15));
     const ctx = packCard.getContext('2d');

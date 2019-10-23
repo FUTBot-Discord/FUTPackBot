@@ -100,7 +100,7 @@ function () {
             author = message.author;
             secondText = ["Not even a board... Yeeezz...", "nonrare"];
             if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
-            if (player_info.rareflag !== 3 && player_info.rating > 82 || player_info.rareflag === 3 && player_info.rating <= 82 || player_info.rareflag === 47 || player_info.rareflag === 48) secondText = ["Decend, it's a board!", "board"];
+            if (player_info.rareflag !== 3 && player_info.rating >= 83 || player_info.rareflag === 3 && player_info.rating <= 82 || player_info.rareflag === 47 || player_info.rareflag === 48) secondText = ["Decend, it's a board!", "board"];
             if (player_info.rareflag !== 3 && player_info.rating > 85 || player_info.rareflag === 3 && player_info.rating >= 83 || player_info.rareflag === 12) secondText = ["WALKOUT!!!", "walkout"];
             embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(secondText[1], ".gif"), "animation.gif").setImage("attachment://animation.gif").setTitle("Opening a gold pack", "https://tjird.nl/futbot.jpg");
             channel.send(embed).then(
@@ -222,7 +222,7 @@ function _makeCard() {
             pSize = '19px';
             pHeight = 241;
 
-            if (playername.length < 17) {
+            if (playername.length < 15) {
               pSize = '24px';
               pHeight = 241;
             }

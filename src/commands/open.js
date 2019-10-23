@@ -86,7 +86,7 @@ exports.run = async (client, message, args) => {
 
     channel.send(embed)
         .then(async m => {
-            await delay(5500);
+            await delay(6500);
 
             embed = new RichEmbed()
                 .setColor("0xE51E0A")

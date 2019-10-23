@@ -115,7 +115,7 @@ function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return delay(5500);
+                        return delay(6500);
 
                       case 2:
                         embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp() // .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")

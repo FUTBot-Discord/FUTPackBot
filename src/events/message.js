@@ -8,7 +8,6 @@ module.exports = async (client, message) => {
     const prefix = client.prefix;
     const channel = message.channel;
 
-    if (!guild || guild == undefined) return;
     if (!message.content.startsWith(prefix)) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);

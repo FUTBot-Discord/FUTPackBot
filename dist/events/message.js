@@ -32,7 +32,7 @@ function () {
             prefix = client.prefix;
             channel = message.channel;
 
-            if (!(!guild || guild == undefined)) {
+            if (message.content.startsWith(prefix)) {
               _context.next = 7;
               break;
             }
@@ -40,50 +40,42 @@ function () {
             return _context.abrupt("return");
 
           case 7:
-            if (message.content.startsWith(prefix)) {
-              _context.next = 9;
-              break;
-            }
-
-            return _context.abrupt("return");
-
-          case 9:
             args = message.content.slice(prefix.length).trim().split(/ +/g);
             command = args.shift().toLowerCase();
 
             if (command) {
-              _context.next = 13;
+              _context.next = 11;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 13:
+          case 11:
             cmd = client.commands.get(command);
 
             if (cmd) {
-              _context.next = 16;
+              _context.next = 14;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 16:
+          case 14:
             if (!cooldown.has(message.author.id)) {
-              _context.next = 18;
+              _context.next = 16;
               break;
             }
 
             return _context.abrupt("return", channel.send("You need to wait ".concat(cooldownsec, " seconds before executing commands.")));
 
-          case 18:
+          case 16:
             cooldown.add(message.author.id);
             setTimeout(function () {
               cooldown["delete"](message.author.id);
             }, cooldownsec * 1000);
             return _context.abrupt("return", cmd.run(client, message, args));
 
-          case 21:
+          case 19:
           case "end":
             return _context.stop();
         }

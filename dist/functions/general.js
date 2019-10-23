@@ -99,9 +99,118 @@ function _getCardColor() {
 }
 
 ;
+
+function getPacks() {
+  return _getPacks.apply(this, arguments);
+}
+
+function _getPacks() {
+  _getPacks = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee3() {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            query = "{ getPacks { id name_id name description price } }";
+            _context3.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context3.sent;
+            return _context3.abrupt("return", res.getPacks);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _getPacks.apply(this, arguments);
+}
+
+;
+
+function getPacksByName(_x6) {
+  return _getPacksByName.apply(this, arguments);
+}
+
+function _getPacksByName() {
+  _getPacksByName = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee4(name) {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            query = "{ getPacks(name: \"".concat(name, "\") { id name_id name description price } }");
+            _context4.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context4.sent;
+            return _context4.abrupt("return", res.getPacks);
+
+          case 5:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _getPacksByName.apply(this, arguments);
+}
+
+;
+
+function getPackById(_x7) {
+  return _getPackById.apply(this, arguments);
+}
+
+function _getPackById() {
+  _getPackById = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee5(id) {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            query = "{ getPackById(id: ".concat(id, ") { name } }");
+            _context5.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context5.sent;
+            return _context5.abrupt("return", res.getPackById);
+
+          case 5:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+  return _getPackById.apply(this, arguments);
+}
+
+;
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+;
 module.exports = {
   getQuality: getQuality,
   getRarityName: getRarityName,
   getPlayer: getPlayer,
-  getCardColor: getCardColor
+  getCardColor: getCardColor,
+  getPacks: getPacks,
+  getPacksByName: getPacksByName,
+  numberWithCommas: numberWithCommas,
+  getPackById: getPackById
 };

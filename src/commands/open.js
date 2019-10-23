@@ -1,85 +1,51 @@
 import * as Canvas from 'canvas';
 import { Attachment, RichEmbed } from 'discord.js';
 import rwc from 'random-weighted-choice';
-import { getPlayer, getQuality, getRarityName, getCardColor } from '../functions/general';
+import { getPlayer, getQuality, getRarityName, getCardColor, getPackById } from '../functions/general';
+import { createClient } from 'async-redis';
+
+const redis = createClient({
+    "host": process.env.R_HOST,
+    "db": 15,
+    "retry_strategy": function (options) {
+        if (options.error && options.error.code === 'ECONNREFUSED') {
+            return new Error('The server refused the connection');
+        }
+        if (options.total_retry_time > 1000 * 60 * 60) {
+            return new Error('Retry time exhausted');
+        }
+        if (options.attempt > 10) {
+            return undefined;
+        }
+        return Math.min(options.attempt * 100, 3000);
+    }
+});
 
 exports.run = async (client, message, args) => {
-    const ran = rwc([
-        {
-            weight: 78,
-            id: "gold+75"
-        },
-        {
-            weight: 15.3,
-            id: "gold+82"
-        },
-        {
-            weight: 4.7,
-            id: "gold+86"
-        },
-        {
-            weight: 3.8,
-            id: "totw"
-        },
-        {
-            weight: 0.7,
-            id: "icon"
-        },
-        {
-            weight: 2.9,
-            id: "scream"
-        }
-    ]);
-
-    const weights = {
-        "gold+75": {
-            ratingB: 75,
-            ratingT: 81,
-            rarity: "0,1,47,48"
-        },
-        "gold+82": {
-            ratingB: 82,
-            ratingT: 85,
-            rarity: "0,1,47,48"
-        },
-        "gold+86": {
-            ratingB: 86,
-            ratingT: 99,
-            rarity: "0,1,47,48"
-        },
-        "totw": {
-            ratingB: 75,
-            ratingT: 99,
-            rarity: "3"
-        },
-        "icon": {
-            ratingB: 75,
-            ratingT: 99,
-            rarity: "12"
-        },
-        "scream": {
-            ratingB: 75,
-            ratingT: 99,
-            rarity: "22"
-        }
-    }
-
-    const values = weights[ran];
-    const delay = ms => new Promise(res => setTimeout(res, ms));
-    const player_info = await getPlayer(values.ratingB, values.ratingT, values.rarity);
-    const card = await makeCard(player_info);
     const channel = message.channel;
     const author = message.author;
 
-    // let secondText = ["Not even a board... Yeeezz...", "nonrare"];
+    if (!args[0] || args[0] == undefined) return channel.send(`You need to fill in an id of a pack. ${author}`);
+
+    const packw = await redis.get(args[0]);
+
+    if (!packw || packw == undefined) return channel.send(`You need to fill in a valid id of a pack. ${author}`);
+
+    const ran = rwc(JSON.parse(packw));
+    let values = JSON.parse(await redis.get("information"));
+    values = values[ran];
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    const player_info = await getPlayer(values.ratingB, values.ratingT, values.rarity);
+    const card = await makeCard(player_info);
+
     let animation = "nonrare";
 
-    // if (player_info.rareflag === 1) secondText = ["Not even a board... Yeeezz...", "rare"];
-    // if ((player_info.rareflag !== 3 && player_info.rating >= 83) || (player_info.rareflag === 3 && player_info.rating <= 82) || (player_info.rareflag === 47 || player_info.rareflag === 48)) secondText = ["Decend, it's a board!", "board"];
-    // if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) secondText = ["WALKOUT!!!", "walkout"];
     if (player_info.rareflag === 1) animation = "rare";
     if ((player_info.rareflag !== 3 && player_info.rating >= 83) || (player_info.rareflag === 3 && player_info.rating <= 82) || (player_info.rareflag === 47 || player_info.rareflag === 48)) animation = "board";
     if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) animation = "walkout";
+
+    const packi = await getPackById(args[0]);
 
     let embed = new RichEmbed()
         .setColor("0xE51E0A")
@@ -87,22 +53,11 @@ exports.run = async (client, message, args) => {
         .attachFile(`pack_animations/${animation}.gif`, `${animation}.gif`)
         .setImage(`attachment://${animation}.gif`)
         .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg")
-        .setTitle(`${author.username}#${author.discriminator} is opening a gold pack`, "https://tjird.nl/futbot.jpg");
+        .setTitle(`${author.username}#${author.discriminator} is opening a ${packi.name}`, "https://tjird.nl/futbot.jpg");
 
     channel.send(embed)
         .then(async m => {
             await delay(9000);
-
-            // embed = new RichEmbed()
-            //     .setColor("0xE51E0A")
-            //     .setTimestamp()
-            //     // .attachFile(`pack_animations/${secondText[1]}.gif`, "animation.gif")
-            //     .setImage("attachment://animation.gif")
-            //     .setTitle(secondText[0], "https://tjird.nl/futbot.jpg");
-
-            // m.edit(embed);
-
-            // await delay(3000);
 
             let quality = getQuality(player_info.rating);
 
@@ -111,7 +66,7 @@ exports.run = async (client, message, args) => {
                 .attachFile(card)
                 .setTimestamp()
                 .setImage("attachment://card.png")
-                .setDescription(`Version: ${getRarityName(`${player_info.rareflag}-${quality}`) ? getRarityName(`${player_info.rareflag}-${quality}`) : "Unknown"}`)
+                .setDescription(`Version: ${getRarityName(`${player_info.rareflag}-${quality}`) ? getRarityName(`${player_info.rareflag}-${quality}`) : "Unknown"}\nPack: ${packi.name}`)
                 .setTitle(`${author.username}#${author.discriminator} has packed ${(player_info.meta_info.common_name ? player_info.meta_info.common_name : `${player_info.meta_info.first_name} ${player_info.meta_info.last_name}`)}`, "https://tjird.nl/futbot.jpg")
                 .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg");
 

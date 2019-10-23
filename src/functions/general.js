@@ -31,9 +31,38 @@ async function getCardColor(rareflag, rating) {
     return res.getCardColorsByRarity;
 };
 
+async function getPacks() {
+    let query = `{ getPacks { id name_id name description price } }`;
+    let res = await graphql.request(query);
+
+    return res.getPacks;
+};
+
+async function getPacksByName(name) {
+    let query = `{ getPacks(name: "${name}") { id name_id name description price } }`;
+    let res = await graphql.request(query);
+
+    return res.getPacks;
+};
+
+async function getPackById(id) {
+    let query = `{ getPackById(id: ${id}) { name } }`;
+    let res = await graphql.request(query);
+
+    return res.getPackById;
+};
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 module.exports = {
     getQuality,
     getRarityName,
     getPlayer,
-    getCardColor
+    getCardColor,
+    getPacks,
+    getPacksByName,
+    numberWithCommas,
+    getPackById
 }

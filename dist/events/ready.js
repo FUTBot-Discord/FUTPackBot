@@ -21,7 +21,7 @@ function () {
             });
             console.log("Logged in as ".concat(client.user.tag, " and looking at ").concat(getPlayerCount(client.guilds), " users."));
             console.log("====================");
-            client.user.setActivity("pack! in #testing", {
+            client.user.setActivity("pack!", {
               type: 'WACTHING'
             });
 

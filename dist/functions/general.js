@@ -113,7 +113,7 @@ function _getPacks() {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            query = "{ getPacks { id name_id name description price } }";
+            query = "{ getPacks { id name_id name description price players } }";
             _context3.next = 3;
             return graphql.request(query);
 
@@ -146,7 +146,7 @@ function _getPacksByName() {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            query = "{ getPacks(name: \"".concat(name, "\") { id name_id name description price } }");
+            query = "{ getPacks(name: \"".concat(name, "\") { id name_id name description price players } }");
             _context4.next = 3;
             return graphql.request(query);
 
@@ -179,7 +179,7 @@ function _getPackById() {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            query = "{ getPackById(id: ".concat(id, ") { name } }");
+            query = "{ getPackById(id: ".concat(id, ") { name players } }");
             _context5.next = 3;
             return graphql.request(query);
 
@@ -204,6 +204,16 @@ function numberWithCommas(x) {
 }
 
 ;
+
+function getAnimation(rf, rt) {
+  var a = "nonrare";
+  if (rf === 1) a = "rare";
+  if (rf !== 3 && rt >= 83 || rf === 3 && rt <= 82 || rf === 48) a = "board";
+  if (rf !== 3 && rt > 85 || rf === 3 && rt >= 83 || rf === 12) a = "walkout";
+  return a;
+}
+
+;
 module.exports = {
   getQuality: getQuality,
   getRarityName: getRarityName,
@@ -212,5 +222,6 @@ module.exports = {
   getPacks: getPacks,
   getPacksByName: getPacksByName,
   numberWithCommas: numberWithCommas,
-  getPackById: getPackById
+  getPackById: getPackById,
+  getAnimation: getAnimation
 };

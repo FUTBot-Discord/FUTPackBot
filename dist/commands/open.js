@@ -44,7 +44,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(client, message, args) {
-    var channel, author, packw, ran, values, delay, player_info, card, animation, packi, embed;
+    var channel, author, wPacks, iPacks, delay, players_info, tPacks, w, players_count, card, animation, embed;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -64,9 +64,9 @@ function () {
             return redis.get(args[0]);
 
           case 6:
-            packw = _context2.sent;
+            wPacks = _context2.sent;
 
-            if (!(!packw || packw == undefined)) {
+            if (!(!wPacks || wPacks == undefined)) {
               _context2.next = 9;
               break;
             }
@@ -74,15 +74,11 @@ function () {
             return _context2.abrupt("return", channel.send("You need to fill in a valid id of a pack. ".concat(author)));
 
           case 9:
-            ran = (0, _randomWeightedChoice["default"])(JSON.parse(packw));
-            _context2.t0 = JSON;
-            _context2.next = 13;
-            return redis.get("information");
+            _context2.next = 11;
+            return (0, _general.getPackById)(args[0]);
 
-          case 13:
-            _context2.t1 = _context2.sent;
-            values = _context2.t0.parse.call(_context2.t0, _context2.t1);
-            values = values[ran];
+          case 11:
+            iPacks = _context2.sent;
 
             delay = function delay(ms) {
               return new Promise(function (res) {
@@ -90,33 +86,55 @@ function () {
               });
             };
 
-            _context2.next = 19;
-            return (0, _general.getPlayer)(values.ratingB, values.ratingT, values.rarity);
+            players_info = [];
+            _context2.t0 = JSON;
+            _context2.next = 17;
+            return redis.get("information");
 
-          case 19:
-            player_info = _context2.sent;
-            _context2.next = 22;
-            return makeCard(player_info);
+          case 17:
+            _context2.t1 = _context2.sent;
+            tPacks = _context2.t0.parse.call(_context2.t0, _context2.t1);
+            players_count = 1;
 
-          case 22:
+          case 20:
+            if (!(players_count <= iPacks.players)) {
+              _context2.next = 30;
+              break;
+            }
+
+            w = tPacks[(0, _randomWeightedChoice["default"])(JSON.parse(wPacks))];
+            _context2.t2 = players_info;
+            _context2.next = 25;
+            return (0, _general.getPlayer)(w.ratingB, w.ratingT, w.rarity);
+
+          case 25:
+            _context2.t3 = _context2.sent;
+
+            _context2.t2.push.call(_context2.t2, _context2.t3);
+
+          case 27:
+            players_count++;
+            _context2.next = 20;
+            break;
+
+          case 30:
+            players_info = players_info.sort(function (a, b) {
+              return a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0;
+            });
+            _context2.next = 33;
+            return makeCard(players_info[0]);
+
+          case 33:
             card = _context2.sent;
-            animation = "nonrare";
-            if (player_info.rareflag === 1) animation = "rare";
-            if (player_info.rareflag !== 3 && player_info.rating >= 83 || player_info.rareflag === 3 && player_info.rating <= 82 || player_info.rareflag === 48) animation = "board";
-            if (player_info.rareflag !== 3 && player_info.rating > 85 || player_info.rareflag === 3 && player_info.rating >= 83 || player_info.rareflag === 12) animation = "walkout";
-            _context2.next = 29;
-            return (0, _general.getPackById)(args[0]);
-
-          case 29:
-            packi = _context2.sent;
-            embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a ").concat(packi.name), "https://tjird.nl/futbot.jpg");
+            animation = (0, _general.getAnimation)(players_info[0].rareflag, players_info[0].rating);
+            embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a ").concat(iPacks.name), "https://tjird.nl/futbot.jpg");
             channel.send(embed).then(
             /*#__PURE__*/
             function () {
               var _ref2 = (0, _asyncToGenerator2["default"])(
               /*#__PURE__*/
               _regenerator["default"].mark(function _callee(m) {
-                var quality;
+                var quality, other_players, i;
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
@@ -125,12 +143,18 @@ function () {
                         return delay(10000);
 
                       case 2:
-                        quality = (0, _general.getQuality)(player_info.rating);
-                        embed = new _discord.RichEmbed().setColor("0xE51E0A").attachFile(card).setTimestamp().setImage("attachment://card.png").setDescription("Version: ".concat((0, _general.getRarityName)("".concat(player_info.rareflag, "-").concat(quality)) ? (0, _general.getRarityName)("".concat(player_info.rareflag, "-").concat(quality)) : "Unknown", "\nPack: ").concat(packi.name)).setTitle("".concat(author.username, "#").concat(author.discriminator, " has packed ").concat(player_info.meta_info.common_name ? player_info.meta_info.common_name : "".concat(player_info.meta_info.first_name, " ").concat(player_info.meta_info.last_name)), "https://tjird.nl/futbot.jpg").setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg");
+                        quality = (0, _general.getQuality)(players_info[0].rating);
+                        other_players = [];
+
+                        for (i = 1; i < players_info.length; i++) {
+                          other_players.push("Playername: ".concat(players_info[i].meta_info.common_name ? "".concat(players_info[i].meta_info.common_name, " (").concat(players_info[i].meta_info.first_name, " ").concat(players_info[i].meta_info.last_name, ")") : "".concat(players_info[i].meta_info.first_name, " ").concat(players_info[i].meta_info.last_name), "\nVersion: ").concat((0, _general.getRarityName)("".concat(players_info[i].rareflag, "-").concat((0, _general.getQuality)(players_info[i].rating))) ? (0, _general.getRarityName)("".concat(players_info[i].rareflag, "-").concat((0, _general.getQuality)(players_info[i].rating))) : "Unknown", "\nRating: ").concat(players_info[i].rating));
+                        }
+
+                        embed = new _discord.RichEmbed().setColor("0xE51E0A").attachFile(card).setTimestamp().setImage("attachment://card.png").setDescription("Version: ".concat((0, _general.getRarityName)("".concat(players_info[0].rareflag, "-").concat(quality)) ? (0, _general.getRarityName)("".concat(players_info[0].rareflag, "-").concat(quality)) : "Unknown", "\nPack: ").concat(iPacks.name, "\n\nOther players obtained through this pack are listed below.\n\n").concat(other_players.join("\n\n"))).setTitle("".concat(author.username, "#").concat(author.discriminator, " has packed ").concat(players_info[0].meta_info.common_name ? players_info[0].meta_info.common_name : "".concat(players_info[0].meta_info.first_name, " ").concat(players_info[0].meta_info.last_name)), "https://tjird.nl/futbot.jpg").setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg");
                         m["delete"]();
                         channel.send(embed);
 
-                      case 6:
+                      case 8:
                       case "end":
                         return _context.stop();
                     }
@@ -143,7 +167,7 @@ function () {
               };
             }());
 
-          case 32:
+          case 37:
           case "end":
             return _context2.stop();
         }

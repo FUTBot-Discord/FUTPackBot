@@ -32,21 +32,21 @@ async function getCardColor(rareflag, rating) {
 };
 
 async function getPacks() {
-    let query = `{ getPacks { id name_id name description price } }`;
+    let query = `{ getPacks { id name_id name description price players } }`;
     let res = await graphql.request(query);
 
     return res.getPacks;
 };
 
 async function getPacksByName(name) {
-    let query = `{ getPacks(name: "${name}") { id name_id name description price } }`;
+    let query = `{ getPacks(name: "${name}") { id name_id name description price players } }`;
     let res = await graphql.request(query);
 
     return res.getPacks;
 };
 
 async function getPackById(id) {
-    let query = `{ getPackById(id: ${id}) { name } }`;
+    let query = `{ getPackById(id: ${id}) { name players } }`;
     let res = await graphql.request(query);
 
     return res.getPackById;
@@ -54,6 +54,16 @@ async function getPackById(id) {
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+function getAnimation(rf, rt) {
+    let a = "nonrare";
+
+    if (rf === 1) a = "rare";
+    if ((rf !== 3 && rt >= 83) || (rf === 3 && rt <= 82) || (rf === 48)) a = "board";
+    if ((rf !== 3 && rt > 85) || (rf === 3 && rt >= 83) || (rf === 12)) a = "walkout";
+
+    return a;
 };
 
 module.exports = {
@@ -64,5 +74,6 @@ module.exports = {
     getPacks,
     getPacksByName,
     numberWithCommas,
-    getPackById
+    getPackById,
+    getAnimation
 }

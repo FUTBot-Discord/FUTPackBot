@@ -1,7 +1,7 @@
 import * as Canvas from 'canvas';
 import { Attachment, RichEmbed } from 'discord.js';
 import rwc from 'random-weighted-choice';
-import { getPlayer, getQuality, getRarityName, getCardColor, getPackById } from '../functions/general';
+import { getPlayer, getQuality, getRarityName, getCardColor, getPackById, getAnimation } from '../functions/general';
 import { createClient } from 'async-redis';
 
 const redis = createClient({
@@ -27,25 +27,26 @@ exports.run = async (client, message, args) => {
 
     if (!args[0] || args[0] == undefined) return channel.send(`You need to fill in an id of a pack. ${author}`);
 
-    const packw = await redis.get(args[0]);
+    const wPacks = await redis.get(args[0]);
 
-    if (!packw || packw == undefined) return channel.send(`You need to fill in a valid id of a pack. ${author}`);
+    if (!wPacks || wPacks == undefined) return channel.send(`You need to fill in a valid id of a pack. ${author}`);
 
-    const ran = rwc(JSON.parse(packw));
-    let values = JSON.parse(await redis.get("information"));
-    values = values[ran];
-
+    const iPacks = await getPackById(args[0]);
     const delay = ms => new Promise(res => setTimeout(res, ms));
-    const player_info = await getPlayer(values.ratingB, values.ratingT, values.rarity);
-    const card = await makeCard(player_info);
 
-    let animation = "nonrare";
+    let players_info = [];
+    let tPacks = JSON.parse(await redis.get("information"));
+    let w;
 
-    if (player_info.rareflag === 1) animation = "rare";
-    if ((player_info.rareflag !== 3 && player_info.rating >= 83) || (player_info.rareflag === 3 && player_info.rating <= 82) || (player_info.rareflag === 48)) animation = "board";
-    if ((player_info.rareflag !== 3 && player_info.rating > 85) || (player_info.rareflag === 3 && player_info.rating >= 83) || (player_info.rareflag === 12)) animation = "walkout";
+    for (let players_count = 1; players_count <= iPacks.players; players_count++) {
+        w = tPacks[rwc(JSON.parse(wPacks))];
+        players_info.push(await getPlayer(w.ratingB, w.ratingT, w.rarity));
+    }
 
-    const packi = await getPackById(args[0]);
+    players_info = players_info.sort((a, b) => (a.rating < b.rating) ? 1 : ((b.rating < a.rating) ? -1 : 0));
+
+    const card = await makeCard(players_info[0]);
+    const animation = getAnimation(players_info[0].rareflag, players_info[0].rating);
 
     let embed = new RichEmbed()
         .setColor("0xE51E0A")
@@ -53,21 +54,27 @@ exports.run = async (client, message, args) => {
         .attachFile(`pack_animations/${animation}.gif`, `${animation}.gif`)
         .setImage(`attachment://${animation}.gif`)
         .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg")
-        .setTitle(`${author.username}#${author.discriminator} is opening a ${packi.name}`, "https://tjird.nl/futbot.jpg");
+        .setTitle(`${author.username}#${author.discriminator} is opening a ${iPacks.name}`, "https://tjird.nl/futbot.jpg");
 
     channel.send(embed)
         .then(async m => {
             await delay(10000);
 
-            let quality = getQuality(player_info.rating);
+            let quality = getQuality(players_info[0].rating);
+
+            const other_players = [];
+
+            for (let i = 1; i < players_info.length; i++) {
+                other_players.push(`Playername: ${(players_info[i].meta_info.common_name ? `${players_info[i].meta_info.common_name} (${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name})` : `${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name}`)}\nVersion: ${getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) ? getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) : "Unknown"}\nRating: ${players_info[i].rating}`);
+            }
 
             embed = new RichEmbed()
                 .setColor("0xE51E0A")
                 .attachFile(card)
                 .setTimestamp()
                 .setImage("attachment://card.png")
-                .setDescription(`Version: ${getRarityName(`${player_info.rareflag}-${quality}`) ? getRarityName(`${player_info.rareflag}-${quality}`) : "Unknown"}\nPack: ${packi.name}`)
-                .setTitle(`${author.username}#${author.discriminator} has packed ${(player_info.meta_info.common_name ? player_info.meta_info.common_name : `${player_info.meta_info.first_name} ${player_info.meta_info.last_name}`)}`, "https://tjird.nl/futbot.jpg")
+                .setDescription(`Version: ${getRarityName(`${players_info[0].rareflag}-${quality}`) ? getRarityName(`${players_info[0].rareflag}-${quality}`) : "Unknown"}\nPack: ${iPacks.name}\n\nOther players obtained through this pack are listed below.\n\n${other_players.join("\n\n")}`)
+                .setTitle(`${author.username}#${author.discriminator} has packed ${(players_info[0].meta_info.common_name ? players_info[0].meta_info.common_name : `${players_info[0].meta_info.first_name} ${players_info[0].meta_info.last_name}`)}`, "https://tjird.nl/futbot.jpg")
                 .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg");
 
             m.delete();

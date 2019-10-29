@@ -1,5 +1,5 @@
 const cooldown = new Set();
-const cooldownsec = 15;
+const cooldownsec = 12;
 
 module.exports = async (client, message) => {
     if (message.author.bot) return;
@@ -8,7 +8,7 @@ module.exports = async (client, message) => {
     const prefix = client.prefix;
     const channel = message.channel;
 
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix.toLowerCase())) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();

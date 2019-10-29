@@ -7,7 +7,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var cooldown = new Set();
-var cooldownsec = 15;
+var cooldownsec = 12;
 
 module.exports =
 /*#__PURE__*/
@@ -32,7 +32,7 @@ function () {
             prefix = client.prefix;
             channel = message.channel;
 
-            if (message.content.startsWith(prefix)) {
+            if (message.content.startsWith(prefix.toLowerCase())) {
               _context.next = 7;
               break;
             }

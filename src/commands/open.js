@@ -42,7 +42,7 @@ exports.run = async (client, message, args) => {
     for (let players_count = 1; players_count <= iPacks.players; players_count++) {
         chance = new Chance();
         w = tPacks[chance.weighted(wPacks[0], wPacks[1])];
-        console.log(wPacks[0])
+        console.log(wPacks[1])
         console.log(w);
         players_info.push(await getPlayer(w.ratingB, w.ratingT, w.rarity));
     }

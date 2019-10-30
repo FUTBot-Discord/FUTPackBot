@@ -106,7 +106,7 @@ function () {
 
             chance = new _chance.Chance();
             w = tPacks[chance.weighted(wPacks[0], wPacks[1])];
-            console.log(wPacks[0]);
+            console.log(wPacks[1]);
             console.log(w);
             _context2.t4 = players_info;
             _context2.next = 30;

@@ -17,7 +17,7 @@ function getRarityName(rarity) {
 };
 
 async function getPlayer(ratingB, ratingT, rareflag) {
-    let query = `{ getPlayerVersionPackEmulator(ratingB: ${ratingB}, ratingT: ${ratingT}, rareflag: "${rareflag}") { def dri nation_info{ img } pac pas phy meta_info{ common_name last_name first_name img } preferred_position rareflag rating sho club_info{ img } } }`;
+    let query = `{ getPlayerVersionPackEmulator(ratingB: ${ratingB}, ratingT: ${ratingT}, rareflag: "${rareflag}") { def dri id nation_info{ img } pac pas phy meta_info{ common_name last_name first_name img } preferred_position rareflag rating sho min_price club_info{ img } } }`;
     let res = await graphql.request(query);
 
     return res.getPlayerVersionPackEmulator;
@@ -52,6 +52,72 @@ async function getPackById(id) {
     return res.getPackById;
 };
 
+async function addClubPlayer(club_id, player_id) {
+    let query = `mutation { addClubPlayer(club_id: "${club_id}", player_id: "${player_id}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
+async function getUserClubId(author_id) {
+    let query = `{ getUserClubByAuthorId(author_id: "${author_id}") { id } }`;
+    let res = await graphql.request(query);
+
+    return res.getUserClubByAuthorId;
+};
+
+async function createUserClub(author_id) {
+    let query = `mutation { createUserClub(author_id: "${author_id}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
+async function getClubPlayer(club_id, player_id) {
+    let query = `{ getClubPlayer(club_id: "${club_id}", player_id: "${player_id}") { id } }`;
+    let res = await graphql.request(query);
+
+    return res.getClubPlayer;
+};
+
+async function addCoinsToClub(club_id, coins) {
+    let query = `mutation { addCoinsToClub(club_id: "${club_id}", coins: "${coins}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
+async function removeCoinsFromClub(club_id, coins) {
+    let query = `mutation { removeCoinsFromClub(club_id: "${club_id}", coins: "${coins}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -75,5 +141,11 @@ module.exports = {
     getPacksByName,
     numberWithCommas,
     getPackById,
-    getAnimation
+    getAnimation,
+    addClubPlayer,
+    getUserClubId,
+    createUserClub,
+    getClubPlayer,
+    addCoinsToClub,
+    removeCoinsFromClub
 }

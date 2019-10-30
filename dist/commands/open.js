@@ -44,7 +44,8 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(client, message, args) {
-    var channel, author, wPacks, iPacks, delay, players_info, tPacks, w, chance, players_count, card, animation, embed;
+    var channel, author, wPacks, iPacks, delay, players_info, tPacks, clubuser, w, chance, players_count, duplicates, _i, _players_info, p, o, card, animation, embed;
+
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -96,40 +97,82 @@ function () {
           case 19:
             _context2.t3 = _context2.sent;
             tPacks = _context2.t2.parse.call(_context2.t2, _context2.t3);
+            _context2.next = 23;
+            return (0, _general.getUserClubId)(author.id);
+
+          case 23:
+            clubuser = _context2.sent;
             players_count = 1;
 
-          case 22:
+          case 25:
             if (!(players_count <= iPacks.players)) {
-              _context2.next = 34;
+              _context2.next = 36;
               break;
             }
 
             chance = new _chance.Chance();
             w = tPacks[chance.weighted(wPacks[0], wPacks[1])];
-            console.log(w);
             _context2.t4 = players_info;
-            _context2.next = 29;
+            _context2.next = 31;
             return (0, _general.getPlayer)(w.ratingB, w.ratingT, w.rarity);
 
-          case 29:
+          case 31:
             _context2.t5 = _context2.sent;
 
             _context2.t4.push.call(_context2.t4, _context2.t5);
 
-          case 31:
+          case 33:
             players_count++;
-            _context2.next = 22;
+            _context2.next = 25;
             break;
 
-          case 34:
-            console.log("==========");
+          case 36:
+            duplicates = [];
+            _i = 0, _players_info = players_info;
+
+          case 38:
+            if (!(_i < _players_info.length)) {
+              _context2.next = 54;
+              break;
+            }
+
+            p = _players_info[_i];
+            _context2.next = 42;
+            return (0, _general.getClubPlayer)(clubuser.id, p.id);
+
+          case 42:
+            o = _context2.sent;
+
+            if (!(o !== null)) {
+              _context2.next = 49;
+              break;
+            }
+
+            duplicates.push(p.id);
+            _context2.next = 47;
+            return (0, _general.addCoinsToClub)(clubuser.id, p.min_price);
+
+          case 47:
+            _context2.next = 51;
+            break;
+
+          case 49:
+            _context2.next = 51;
+            return (0, _general.addClubPlayer)(clubuser.id, p.id);
+
+          case 51:
+            _i++;
+            _context2.next = 38;
+            break;
+
+          case 54:
             players_info = players_info.sort(function (a, b) {
               return a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0;
             });
-            _context2.next = 38;
+            _context2.next = 57;
             return makeCard(players_info[0]);
 
-          case 38:
+          case 57:
             card = _context2.sent;
             animation = (0, _general.getAnimation)(players_info[0].rareflag, players_info[0].rating);
             embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a ").concat(iPacks.name), "https://tjird.nl/futbot.jpg");
@@ -139,7 +182,7 @@ function () {
               var _ref2 = (0, _asyncToGenerator2["default"])(
               /*#__PURE__*/
               _regenerator["default"].mark(function _callee(m) {
-                var quality, other_players, i;
+                var quality, other_players, i, t;
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
@@ -152,14 +195,26 @@ function () {
                         other_players = [];
 
                         for (i = 1; i < players_info.length; i++) {
-                          other_players.push("Playername: ".concat(players_info[i].meta_info.common_name ? "".concat(players_info[i].meta_info.common_name, " (").concat(players_info[i].meta_info.first_name, " ").concat(players_info[i].meta_info.last_name, ")") : "".concat(players_info[i].meta_info.first_name, " ").concat(players_info[i].meta_info.last_name), "\nVersion: ").concat((0, _general.getRarityName)("".concat(players_info[i].rareflag, "-").concat((0, _general.getQuality)(players_info[i].rating))) ? (0, _general.getRarityName)("".concat(players_info[i].rareflag, "-").concat((0, _general.getQuality)(players_info[i].rating))) : "Unknown", "\nRating: ").concat(players_info[i].rating));
+                          if (duplicates.includes(players_info[i].id)) {
+                            other_players.push("Playername: ".concat(players_info[i].meta_info.common_name ? "".concat(players_info[i].meta_info.common_name, " (").concat(players_info[i].meta_info.first_name, " ").concat(players_info[i].meta_info.last_name, ")") : "".concat(players_info[i].meta_info.first_name, " ").concat(players_info[i].meta_info.last_name), "\nVersion: ").concat((0, _general.getRarityName)("".concat(players_info[i].rareflag, "-").concat((0, _general.getQuality)(players_info[i].rating))) ? (0, _general.getRarityName)("".concat(players_info[i].rareflag, "-").concat((0, _general.getQuality)(players_info[i].rating))) : "Unknown", "\nRating: ").concat(players_info[i].rating, "\nQuick-sold for ").concat(players_info[i].min_price, " because it's a duplicate."));
+                          } else {
+                            other_players.push("Playername: ".concat(players_info[i].meta_info.common_name ? "".concat(players_info[i].meta_info.common_name, " (").concat(players_info[i].meta_info.first_name, " ").concat(players_info[i].meta_info.last_name, ")") : "".concat(players_info[i].meta_info.first_name, " ").concat(players_info[i].meta_info.last_name), "\nVersion: ").concat((0, _general.getRarityName)("".concat(players_info[i].rareflag, "-").concat((0, _general.getQuality)(players_info[i].rating))) ? (0, _general.getRarityName)("".concat(players_info[i].rareflag, "-").concat((0, _general.getQuality)(players_info[i].rating))) : "Unknown", "\nRating: ").concat(players_info[i].rating));
+                          }
                         }
 
-                        embed = new _discord.RichEmbed().setColor("0xE51E0A").attachFile(card).setTimestamp().setImage("attachment://card.png").setDescription("Version: ".concat((0, _general.getRarityName)("".concat(players_info[0].rareflag, "-").concat(quality)) ? (0, _general.getRarityName)("".concat(players_info[0].rareflag, "-").concat(quality)) : "Unknown", "\nPack: ").concat(iPacks.name, "\n\nOther players obtained through this pack are listed below.\n\n").concat(other_players.join("\n\n"))).setTitle("".concat(author.username, "#").concat(author.discriminator, " has packed ").concat(players_info[0].meta_info.common_name ? players_info[0].meta_info.common_name : "".concat(players_info[0].meta_info.first_name, " ").concat(players_info[0].meta_info.last_name)), "https://tjird.nl/futbot.jpg").setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg");
-                        m["delete"]();
-                        channel.send(embed);
+                        t = "";
+                        if (duplicates.includes(players_info[0].id)) t = "\nQuick-sold for ".concat(players_info[0].min_price, " because it's a duplicate.");
+                        embed = new _discord.RichEmbed().setColor("0xE51E0A").attachFile(card).setTimestamp().setImage("attachment://card.png").setDescription("Version: ".concat((0, _general.getRarityName)("".concat(players_info[0].rareflag, "-").concat(quality)) ? (0, _general.getRarityName)("".concat(players_info[0].rareflag, "-").concat(quality)) : "Unknown", "\nPack: ").concat(iPacks.name).concat(t, "\n\nOther players obtained through this pack are listed below.\n\n").concat(other_players.join("\n\n"))).setTitle("".concat(author.username, "#").concat(author.discriminator, " has packed ").concat(players_info[0].meta_info.common_name ? players_info[0].meta_info.common_name : "".concat(players_info[0].meta_info.first_name, " ").concat(players_info[0].meta_info.last_name)), "https://tjird.nl/futbot.jpg").setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg");
+                        m["delete"]()["catch"](function (e) {
+                          if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nSomething just went wrong with the opening.");
+                          return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
+                        });
+                        channel.send(embed)["catch"](function (e) {
+                          if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nSomething just went wrong with the opening.");
+                          return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
+                        });
 
-                      case 8:
+                      case 10:
                       case "end":
                         return _context.stop();
                     }
@@ -170,9 +225,12 @@ function () {
               return function (_x4) {
                 return _ref2.apply(this, arguments);
               };
-            }());
+            }())["catch"](function (e) {
+              if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nSomething just went wrong with the opening.");
+              return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
+            });
 
-          case 42:
+          case 61:
           case "end":
             return _context2.stop();
         }

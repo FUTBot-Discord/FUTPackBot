@@ -6,6 +6,8 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var _general = require("../functions/general");
+
 var cooldown = new Map();
 var cooldownsec = 12;
 
@@ -15,7 +17,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee(client, message) {
-    var prefix, channel, author, args, command, cmd, init, curr, diff;
+    var prefix, channel, author, guild, args, command, cmd, init, curr, diff;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -31,38 +33,54 @@ function () {
             prefix = client.prefix;
             channel = message.channel;
             author = message.author;
+            guild = message.guild;
 
             if (message.content.startsWith(prefix.toLowerCase())) {
-              _context.next = 7;
+              _context.next = 8;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 7:
+          case 8:
             args = message.content.slice(prefix.length).trim().split(/ +/g);
             command = args.shift().toLowerCase();
 
             if (command) {
-              _context.next = 11;
+              _context.next = 12;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 11:
+          case 12:
             cmd = client.commands.get(command);
 
             if (cmd) {
-              _context.next = 14;
+              _context.next = 15;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 14:
-            if (!(author.id != 259012839379828739 && command === "open" && cooldown.has(author.id))) {
-              _context.next = 19;
+          case 15:
+            _context.next = 17;
+            return (0, _general.getUserClubId)(author.id);
+
+          case 17:
+            _context.t0 = _context.sent;
+
+            if (!(_context.t0 === null)) {
+              _context.next = 21;
+              break;
+            }
+
+            _context.next = 21;
+            return (0, _general.createUserClub)(author.id);
+
+          case 21:
+            if (!(author.id !== "259012839379828739" && command === "open" && cooldown.has(author.id))) {
+              _context.next = 26;
               break;
             }
 
@@ -71,7 +89,7 @@ function () {
             diff = (curr - init) / 1000;
             return _context.abrupt("return", channel.send("You need to wait ".concat((cooldownsec - diff).toFixed(1), " seconds before opening another pack.")));
 
-          case 19:
+          case 26:
             if (command === "open") {
               cooldown.set(author.id, new Date());
               setTimeout(function () {
@@ -81,7 +99,7 @@ function () {
 
             return _context.abrupt("return", cmd.run(client, message, args));
 
-          case 21:
+          case 28:
           case "end":
             return _context.stop();
         }

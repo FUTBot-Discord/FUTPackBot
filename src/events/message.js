@@ -1,5 +1,6 @@
 const cooldown = new Map();
 const cooldownsec = 12;
+import { getUserClubId, createUserClub } from '../functions/general';
 
 module.exports = async (client, message) => {
     if (message.author.bot) return;
@@ -7,6 +8,7 @@ module.exports = async (client, message) => {
     const prefix = client.prefix;
     const channel = message.channel;
     const author = message.author;
+    const guild = message.guild;
 
     if (!message.content.startsWith(prefix.toLowerCase())) return;
 
@@ -19,7 +21,9 @@ module.exports = async (client, message) => {
 
     if (!cmd) return;
 
-    if (author.id != 259012839379828739 && command === "open" && cooldown.has(author.id)) {
+    if (await getUserClubId(author.id) === null) await createUserClub(author.id);
+
+    if (author.id !== "259012839379828739" && command === "open" && cooldown.has(author.id)) {
         let init = cooldown.get(author.id);
         let curr = new Date();
         let diff = (curr - init) / 1000;

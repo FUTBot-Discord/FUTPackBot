@@ -96,40 +96,41 @@ function () {
           case 19:
             _context2.t3 = _context2.sent;
             tPacks = _context2.t2.parse.call(_context2.t2, _context2.t3);
-            chance = new _chance.Chance();
             players_count = 1;
 
-          case 23:
+          case 22:
             if (!(players_count <= iPacks.players)) {
-              _context2.next = 34;
+              _context2.next = 35;
               break;
             }
 
+            chance = new _chance.Chance();
             w = tPacks[chance.weighted(wPacks[0], wPacks[1])];
+            console.log(wPacks[0]);
             console.log(w);
             _context2.t4 = players_info;
-            _context2.next = 29;
+            _context2.next = 30;
             return (0, _general.getPlayer)(w.ratingB, w.ratingT, w.rarity);
 
-          case 29:
+          case 30:
             _context2.t5 = _context2.sent;
 
             _context2.t4.push.call(_context2.t4, _context2.t5);
 
-          case 31:
+          case 32:
             players_count++;
-            _context2.next = 23;
+            _context2.next = 22;
             break;
 
-          case 34:
+          case 35:
             console.log("==========");
             players_info = players_info.sort(function (a, b) {
               return a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0;
             });
-            _context2.next = 38;
+            _context2.next = 39;
             return makeCard(players_info[0]);
 
-          case 38:
+          case 39:
             card = _context2.sent;
             animation = (0, _general.getAnimation)(players_info[0].rareflag, players_info[0].rating);
             embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a ").concat(iPacks.name), "https://tjird.nl/futbot.jpg");
@@ -172,7 +173,7 @@ function () {
               };
             }());
 
-          case 42:
+          case 43:
           case "end":
             return _context2.stop();
         }

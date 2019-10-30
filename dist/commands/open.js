@@ -126,11 +126,10 @@ function () {
             players_info = players_info.sort(function (a, b) {
               return a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0;
             });
-            console.log(players_info);
-            _context2.next = 39;
+            _context2.next = 38;
             return makeCard(players_info[0]);
 
-          case 39:
+          case 38:
             card = _context2.sent;
             animation = (0, _general.getAnimation)(players_info[0].rareflag, players_info[0].rating);
             embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a ").concat(iPacks.name), "https://tjird.nl/futbot.jpg");
@@ -173,7 +172,7 @@ function () {
               };
             }());
 
-          case 43:
+          case 42:
           case "end":
             return _context2.stop();
         }

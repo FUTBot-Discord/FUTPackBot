@@ -49,8 +49,6 @@ exports.run = async (client, message, args) => {
 
     players_info = players_info.sort((a, b) => (a.rating < b.rating) ? 1 : ((b.rating < a.rating) ? -1 : 0));
 
-    console.log(players_info);
-
     const card = await makeCard(players_info[0]);
     const animation = getAnimation(players_info[0].rareflag, players_info[0].rating);
 

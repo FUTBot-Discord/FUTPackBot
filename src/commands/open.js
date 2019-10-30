@@ -41,10 +41,15 @@ exports.run = async (client, message, args) => {
 
     for (let players_count = 1; players_count <= iPacks.players; players_count++) {
         w = tPacks[chance.weighted(wPacks[0], wPacks[1])];
+        console.log(w);
         players_info.push(await getPlayer(w.ratingB, w.ratingT, w.rarity));
     }
 
+    console.log("==========");
+
     players_info = players_info.sort((a, b) => (a.rating < b.rating) ? 1 : ((b.rating < a.rating) ? -1 : 0));
+
+    console.log(players_info);
 
     const card = await makeCard(players_info[0]);
     const animation = getAnimation(players_info[0].rareflag, players_info[0].rating);

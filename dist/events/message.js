@@ -61,7 +61,7 @@ function () {
             return _context.abrupt("return");
 
           case 14:
-            if (!(command === "open" && cooldown.has(author.id))) {
+            if (!(author.id != 259012839379828739 && command === "open" && cooldown.has(author.id))) {
               _context.next = 19;
               break;
             }

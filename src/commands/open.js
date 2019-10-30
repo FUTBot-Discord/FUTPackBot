@@ -1,6 +1,6 @@
 import * as Canvas from 'canvas';
 import { Attachment, RichEmbed } from 'discord.js';
-import rwc from 'random-weighted-choice';
+import { Chance } from 'chance';
 import { getPlayer, getQuality, getRarityName, getCardColor, getPackById, getAnimation } from '../functions/general';
 import { createClient } from 'async-redis';
 
@@ -27,7 +27,7 @@ exports.run = async (client, message, args) => {
 
     if (!args[0] || args[0] == undefined) return channel.send(`You need to fill in an id of a pack. ${author}`);
 
-    const wPacks = await redis.get(args[0]);
+    const wPacks = JSON.parse(await redis.get(args[0]));
 
     if (!wPacks || wPacks == undefined) return channel.send(`You need to fill in a valid id of a pack. ${author}`);
 
@@ -37,9 +37,10 @@ exports.run = async (client, message, args) => {
     let players_info = [];
     let tPacks = JSON.parse(await redis.get("information"));
     let w;
+    let chance = new Chance();
 
     for (let players_count = 1; players_count <= iPacks.players; players_count++) {
-        w = tPacks[rwc(JSON.parse(wPacks))];
+        w = tPacks[chance.weighted(wPacks[0], wPacks[1])];
         players_info.push(await getPlayer(w.ratingB, w.ratingT, w.rarity));
     }
 

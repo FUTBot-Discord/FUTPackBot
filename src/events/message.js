@@ -19,7 +19,7 @@ module.exports = async (client, message) => {
 
     if (!cmd) return;
 
-    if (command === "open" && cooldown.has(author.id)) {
+    if (author.id != 259012839379828739 && command === "open" && cooldown.has(author.id)) {
         let init = cooldown.get(author.id);
         let curr = new Date();
         let diff = (curr - init) / 1000;

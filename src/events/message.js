@@ -23,7 +23,19 @@ module.exports = async (client, message) => {
 
     if (await getUserClubId(author.id) === null) await createUserClub(author.id);
 
-    if (author.id !== "259012839379828739" && command === "open" && cooldown.has(author.id)) {
+    const allowedCommands = [
+        "help",
+        "support",
+        "list",
+        "bal",
+        "balance",
+        "point",
+        "points",
+        "commands",
+        "command"
+    ];
+
+    if (author.id !== "259012839379828739" && allowedCommands.includes(command) && cooldown.has(author.id)) {
         let init = cooldown.get(author.id);
         let curr = new Date();
         let diff = (curr - init) / 1000;
@@ -31,7 +43,7 @@ module.exports = async (client, message) => {
         return channel.send(`You need to wait ${(cooldownsec - diff).toFixed(1)} seconds before opening another pack.`);
     }
 
-    if (command === "open") {
+    if (allowedCommands.includes(command)) {
         cooldown.set(author.id, new Date());
 
         setTimeout(() => {

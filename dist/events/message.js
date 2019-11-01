@@ -17,7 +17,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee(client, message) {
-    var prefix, channel, author, guild, args, command, cmd, init, curr, diff;
+    var prefix, channel, author, guild, args, command, cmd, allowedCommands, init, curr, diff;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -79,8 +79,10 @@ function () {
             return (0, _general.createUserClub)(author.id);
 
           case 21:
-            if (!(author.id !== "259012839379828739" && command === "open" && cooldown.has(author.id))) {
-              _context.next = 26;
+            allowedCommands = ["help", "support", "list", "bal", "balance", "point", "points", "commands", "command"];
+
+            if (!(author.id !== "259012839379828739" && allowedCommands.includes(command) && cooldown.has(author.id))) {
+              _context.next = 27;
               break;
             }
 
@@ -89,8 +91,8 @@ function () {
             diff = (curr - init) / 1000;
             return _context.abrupt("return", channel.send("You need to wait ".concat((cooldownsec - diff).toFixed(1), " seconds before opening another pack.")));
 
-          case 26:
-            if (command === "open") {
+          case 27:
+            if (allowedCommands.includes(command)) {
               cooldown.set(author.id, new Date());
               setTimeout(function () {
                 cooldown["delete"](author.id);
@@ -99,7 +101,7 @@ function () {
 
             return _context.abrupt("return", cmd.run(client, message, args));
 
-          case 28:
+          case 29:
           case "end":
             return _context.stop();
         }

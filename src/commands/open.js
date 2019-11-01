@@ -1,7 +1,21 @@
-import * as Canvas from 'canvas';
-import { Attachment, RichEmbed } from 'discord.js';
+import { RichEmbed } from 'discord.js';
 import { Chance } from 'chance';
-import { getPlayer, getQuality, getRarityName, getCardColor, getPackById, getAnimation, getUserClubId, addClubPlayer, getClubPlayer, removeCoinsFromClub, addCoinsToClub } from '../functions/general';
+import {
+    getPlayer,
+    getQuality,
+    getRarityName,
+    getPackById,
+    getAnimation,
+    getUserClubId,
+    addClubPlayer,
+    getClubPlayer,
+    removeCoinsFromClub,
+    addCoinsToClub,
+    makePlayerCard,
+    setDialogue,
+    getPacksByName,
+    makeOptionMenu
+} from '../functions/general';
 import { createClient } from 'async-redis';
 
 const redis = createClient({
@@ -24,14 +38,74 @@ const redis = createClient({
 exports.run = async (client, message, args) => {
     const channel = message.channel;
     const author = message.author;
+    let pID;
 
-    if (!args[0] || args[0] == undefined) return channel.send(`You need to fill in an id of a pack. ${author}`);
+    if (!args[0] || args[0] == undefined) {
+        const f = m => m.author.id === author.id;
+        let mTemp;
+        let mTemp2;
+        let pName;
 
-    const wPacks = JSON.parse(await redis.get(args[0]));
+        channel.send(`Send the name of the pack you want to open.\n\n*This request is being cancelled in 20 seconds*`)
+            .then(m => mTemp = m);
+
+        await setDialogue(f, channel, 20000)
+            .then(m => pName = m)
+            .then(m => m.delete())
+            .then(() => mTemp.delete())
+            .catch(e => {
+                switch (e) {
+                    case 1:
+                        return channel.send(`Request cancelled by ${author}.`);
+                    case 2:
+                        return channel.send(`Time exceeded for ${author}.`);
+                };
+            });
+
+        if (!pName) return;
+
+        const packList = await getPacksByName(pName.content);
+
+        if (packList.length < 1) {
+            return channel.send(`Try again... No packs where found with that name ${author}.\nYou can get a whole list of available packs with \`pack!list\`.`);
+        } else if (packList.length === 1) {
+            pID = packList[0].id;
+        } else {
+            channel.send(await makeOptionMenu(packList), {
+                code: true
+            }).then(m => mTemp = m);
+
+            channel.send(`Send the **ID** of the pack you want to open.\n\n*This request is being cancelled in 20 seconds*`)
+                .then(m => mTemp2 = m);
+
+            await setDialogue(f, channel, 20000)
+                .then(m => pID = m)
+                .then(m => m.delete())
+                .then(() => mTemp.delete())
+                .then(() => mTemp2.delete())
+                .catch(e => {
+                    switch (e) {
+                        case 1:
+                            return channel.send(`Request cancelled by ${author}.`);
+                        case 2:
+                            return channel.send(`Time exceeded for ${author}.`);
+                    };
+                });
+
+            if (!pID) return;
+
+            pID = pID.content
+        }
+
+    } else {
+        pID = args[0];
+    }
+
+    const wPacks = JSON.parse(await redis.get(pID));
 
     if (!wPacks || wPacks == undefined) return channel.send(`You need to fill in a valid id of a pack. ${author}`);
 
-    const iPacks = await getPackById(args[0]);
+    const iPacks = await getPackById(pID);
     const delay = ms => new Promise(res => setTimeout(res, ms));
 
     let players_info = [];
@@ -61,7 +135,7 @@ exports.run = async (client, message, args) => {
 
     players_info = players_info.sort((a, b) => (a.rating < b.rating) ? 1 : ((b.rating < a.rating) ? -1 : 0));
 
-    const card = await makeCard(players_info[0]);
+    const card = await makePlayerCard(players_info[0]);
     const animation = getAnimation(players_info[0].rareflag, players_info[0].rating);
 
     let embed = new RichEmbed()
@@ -120,123 +194,4 @@ exports.run = async (client, message, args) => {
 
             return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
         });
-}
-
-async function makeCard(player_info) {
-    let positions = {
-        p: {
-            "pac": "pac",
-            "sho": "sho",
-            "pas": "pas",
-            "dri": "dri",
-            "def": "def",
-            "phy": "phy"
-        },
-        g: {
-            "pac": "DIV",
-            "sho": "HAN",
-            "pas": "KIC",
-            "dri": "REF",
-            "def": "SPE",
-            "phy": "POS"
-        }
-    }
-
-    Canvas.registerFont(`Roboto-Bold.ttf`, { family: "Roboto Bold" });
-    Canvas.registerFont(`Champions-Regular.otf`, { family: "Champions" });
-    Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
-    Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
-
-    const packCard = Canvas.createCanvas((644 / 2.15), (900 / 2.15));
-    const ctx = packCard.getContext('2d');
-
-    const colors = await getCardColor(player_info.rareflag, player_info.rating);
-    const background = await Canvas.loadImage(`http://fifa.tjird.nl/cards/${player_info.rareflag}-${getQuality(player_info.rating)}.png`);
-    ctx.drawImage(background, 0, 0, (644 / 2.15), (900 / 2.15));
-
-    const playerpicture = await Canvas.loadImage(player_info.meta_info.img);
-
-    ctx.drawImage(playerpicture, 95, 57, 160, 160);
-
-    let playername = player_info.meta_info.common_name ? player_info.meta_info.common_name.toUpperCase() : player_info.meta_info.last_name.toUpperCase();
-    let pSize = '19px';
-    let pHeight = 241;
-
-    if (playername.length < 15) {
-        pSize = '24px';
-        pHeight = 241;
-    }
-
-    ctx.font = `${pSize} '${colors.font_3}'`;
-    ctx.fillStyle = `#${colors.color_text}`;
-    ctx.textAlign = "center";
-    ctx.fillText(playername, packCard.width / 2, pHeight);
-
-    ctx.font = `45px '${colors.font_1}'`;
-    ctx.fillText(player_info.rating, 90, 93);
-
-    ctx.font = `28px '${colors.font_2}'`;
-    ctx.fillText(player_info.preferred_position.toUpperCase(), 90, 119);
-
-    const nation = await Canvas.loadImage(player_info.nation_info.img);
-    ctx.drawImage(nation, 70, 128, nation.width * 0.6, nation.height * 0.6);
-
-    const club = await Canvas.loadImage(player_info.club_info.img);
-    ctx.drawImage(club, 70, 165, club.width * 0.31, club.height * 0.31);
-
-    ctx.font = `18px '${colors.font_3}'`;
-    ctx.fillStyle = `#${colors.color_attr_values}`;
-    ctx.textAlign = "center";
-    ctx.fillText(player_info.pac, packCard.width * 0.28, packCard.height * 0.67);
-    ctx.fillText(player_info.sho, packCard.width * 0.28, packCard.height * 0.73);
-    ctx.fillText(player_info.pas, packCard.width * 0.28, packCard.height * 0.79);
-    ctx.fillText(player_info.dri, packCard.width * 0.598, packCard.height * 0.67);
-    ctx.fillText(player_info.def, packCard.width * 0.598, packCard.height * 0.73);
-    ctx.fillText(player_info.phy, packCard.width * 0.598, packCard.height * 0.79);
-
-    if (player_info.preferred_position === "GK") {
-        positions = positions.g;
-    } else {
-        positions = positions.p;
-    }
-
-    ctx.fillStyle = `#${colors.color_attr_names}`;
-    ctx.textAlign = "left";
-    ctx.fillText(positions.pac.toUpperCase(), packCard.width * 0.33, packCard.height * 0.67);
-    ctx.fillText(positions.sho.toUpperCase(), packCard.width * 0.33, packCard.height * 0.73);
-    ctx.fillText(positions.pas.toUpperCase(), packCard.width * 0.33, packCard.height * 0.79);
-    ctx.fillText(positions.dri.toUpperCase(), packCard.width * 0.648, packCard.height * 0.67);
-    ctx.fillText(positions.def.toUpperCase(), packCard.width * 0.648, packCard.height * 0.73);
-    ctx.fillText(positions.phy.toUpperCase(), packCard.width * 0.648, packCard.height * 0.79);
-
-    ctx.strokeStyle = `#${colors.color_stripes}`;
-
-    ctx.beginPath();
-    ctx.moveTo(80, 124);
-    ctx.lineTo(101, 124);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(80, 160);
-    ctx.lineTo(101, 160);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(packCard.width / 2, 262);
-    ctx.lineTo(packCard.width / 2, 337);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(62, 249);
-    ctx.lineTo(235, 249);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo((packCard.width / 2) - 23, 350);
-    ctx.lineTo((packCard.width / 2) + 23, 350);
-    ctx.stroke();
-
-    const attachment = new Attachment(packCard.toBuffer(), 'card.png');
-
-    return attachment;
 }

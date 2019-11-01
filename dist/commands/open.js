@@ -1,14 +1,10 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
-
-var Canvas = _interopRequireWildcard(require("canvas"));
 
 var _discord = require("discord.js");
 
@@ -44,7 +40,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(client, message, args) {
-    var channel, author, wPacks, iPacks, delay, players_info, tPacks, clubuser, w, chance, players_count, duplicates, _i, _players_info, p, o, card, animation, embed;
+    var channel, author, pID, f, mTemp, mTemp2, pName, packList, wPacks, iPacks, delay, players_info, tPacks, clubuser, w, chance, players_count, duplicates, _i, _players_info, p, o, card, animation, embed;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -54,33 +50,148 @@ function () {
             author = message.author;
 
             if (!(!args[0] || args[0] == undefined)) {
-              _context2.next = 4;
+              _context2.next = 35;
               break;
             }
 
-            return _context2.abrupt("return", channel.send("You need to fill in an id of a pack. ".concat(author)));
+            f = function f(m) {
+              return m.author.id === author.id;
+            };
 
-          case 4:
-            _context2.t0 = JSON;
+            channel.send("Send the name of the pack you want to open.\n\n*This request is being cancelled in 20 seconds*").then(function (m) {
+              return mTemp = m;
+            });
             _context2.next = 7;
-            return redis.get(args[0]);
+            return (0, _general.setDialogue)(f, channel, 20000).then(function (m) {
+              return pName = m;
+            }).then(function (m) {
+              return m["delete"]();
+            }).then(function () {
+              return mTemp["delete"]();
+            })["catch"](function (e) {
+              switch (e) {
+                case 1:
+                  return channel.send("Request cancelled by ".concat(author, "."));
+
+                case 2:
+                  return channel.send("Time exceeded for ".concat(author, "."));
+              }
+
+              ;
+            });
 
           case 7:
+            if (pName) {
+              _context2.next = 9;
+              break;
+            }
+
+            return _context2.abrupt("return");
+
+          case 9:
+            _context2.next = 11;
+            return (0, _general.getPacksByName)(pName.content);
+
+          case 11:
+            packList = _context2.sent;
+
+            if (!(packList.length < 1)) {
+              _context2.next = 16;
+              break;
+            }
+
+            return _context2.abrupt("return", channel.send("Try again... No packs where found with that name ".concat(author, ".\nYou can get a whole list of available packs with `pack!list`.")));
+
+          case 16:
+            if (!(packList.length === 1)) {
+              _context2.next = 20;
+              break;
+            }
+
+            pID = packList[0].id;
+            _context2.next = 33;
+            break;
+
+          case 20:
+            _context2.t0 = channel;
+            _context2.next = 23;
+            return (0, _general.makeOptionMenu)(packList);
+
+          case 23:
             _context2.t1 = _context2.sent;
-            wPacks = _context2.t0.parse.call(_context2.t0, _context2.t1);
+            _context2.t2 = {
+              code: true
+            };
+
+            _context2.t3 = function (m) {
+              return mTemp = m;
+            };
+
+            _context2.t0.send.call(_context2.t0, _context2.t1, _context2.t2).then(_context2.t3);
+
+            channel.send("Send the **ID** of the pack you want to open.\n\n*This request is being cancelled in 20 seconds*").then(function (m) {
+              return mTemp2 = m;
+            });
+            _context2.next = 30;
+            return (0, _general.setDialogue)(f, channel, 20000).then(function (m) {
+              return pID = m;
+            }).then(function (m) {
+              return m["delete"]();
+            }).then(function () {
+              return mTemp["delete"]();
+            }).then(function () {
+              return mTemp2["delete"]();
+            })["catch"](function (e) {
+              switch (e) {
+                case 1:
+                  return channel.send("Request cancelled by ".concat(author, "."));
+
+                case 2:
+                  return channel.send("Time exceeded for ".concat(author, "."));
+              }
+
+              ;
+            });
+
+          case 30:
+            if (pID) {
+              _context2.next = 32;
+              break;
+            }
+
+            return _context2.abrupt("return");
+
+          case 32:
+            pID = pID.content;
+
+          case 33:
+            _context2.next = 36;
+            break;
+
+          case 35:
+            pID = args[0];
+
+          case 36:
+            _context2.t4 = JSON;
+            _context2.next = 39;
+            return redis.get(pID);
+
+          case 39:
+            _context2.t5 = _context2.sent;
+            wPacks = _context2.t4.parse.call(_context2.t4, _context2.t5);
 
             if (!(!wPacks || wPacks == undefined)) {
-              _context2.next = 11;
+              _context2.next = 43;
               break;
             }
 
             return _context2.abrupt("return", channel.send("You need to fill in a valid id of a pack. ".concat(author)));
 
-          case 11:
-            _context2.next = 13;
-            return (0, _general.getPackById)(args[0]);
+          case 43:
+            _context2.next = 45;
+            return (0, _general.getPackById)(pID);
 
-          case 13:
+          case 45:
             iPacks = _context2.sent;
 
             delay = function delay(ms) {
@@ -90,89 +201,89 @@ function () {
             };
 
             players_info = [];
-            _context2.t2 = JSON;
-            _context2.next = 19;
+            _context2.t6 = JSON;
+            _context2.next = 51;
             return redis.get("information");
 
-          case 19:
-            _context2.t3 = _context2.sent;
-            tPacks = _context2.t2.parse.call(_context2.t2, _context2.t3);
-            _context2.next = 23;
+          case 51:
+            _context2.t7 = _context2.sent;
+            tPacks = _context2.t6.parse.call(_context2.t6, _context2.t7);
+            _context2.next = 55;
             return (0, _general.getUserClubId)(author.id);
 
-          case 23:
+          case 55:
             clubuser = _context2.sent;
             players_count = 1;
 
-          case 25:
+          case 57:
             if (!(players_count <= iPacks.players)) {
-              _context2.next = 36;
+              _context2.next = 68;
               break;
             }
 
             chance = new _chance.Chance();
             w = tPacks[chance.weighted(wPacks[0], wPacks[1])];
-            _context2.t4 = players_info;
-            _context2.next = 31;
+            _context2.t8 = players_info;
+            _context2.next = 63;
             return (0, _general.getPlayer)(w.ratingB, w.ratingT, w.rarity);
 
-          case 31:
-            _context2.t5 = _context2.sent;
+          case 63:
+            _context2.t9 = _context2.sent;
 
-            _context2.t4.push.call(_context2.t4, _context2.t5);
+            _context2.t8.push.call(_context2.t8, _context2.t9);
 
-          case 33:
+          case 65:
             players_count++;
-            _context2.next = 25;
+            _context2.next = 57;
             break;
 
-          case 36:
+          case 68:
             duplicates = [];
             _i = 0, _players_info = players_info;
 
-          case 38:
+          case 70:
             if (!(_i < _players_info.length)) {
-              _context2.next = 54;
+              _context2.next = 86;
               break;
             }
 
             p = _players_info[_i];
-            _context2.next = 42;
+            _context2.next = 74;
             return (0, _general.getClubPlayer)(clubuser.id, p.id);
 
-          case 42:
+          case 74:
             o = _context2.sent;
 
             if (!(o !== null)) {
-              _context2.next = 49;
+              _context2.next = 81;
               break;
             }
 
             duplicates.push(p.id);
-            _context2.next = 47;
+            _context2.next = 79;
             return (0, _general.addCoinsToClub)(clubuser.id, p.min_price);
 
-          case 47:
-            _context2.next = 51;
+          case 79:
+            _context2.next = 83;
             break;
 
-          case 49:
-            _context2.next = 51;
+          case 81:
+            _context2.next = 83;
             return (0, _general.addClubPlayer)(clubuser.id, p.id);
 
-          case 51:
+          case 83:
             _i++;
-            _context2.next = 38;
+            _context2.next = 70;
             break;
 
-          case 54:
+          case 86:
             players_info = players_info.sort(function (a, b) {
               return a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0;
             });
-            _context2.next = 57;
-            return makeCard(players_info[0]);
+            _context2.next = 89;
+            return (0, _general.makePlayerCard)(players_info[0]);
 
-          case 57:
+          case 89:
             card = _context2.sent;
             animation = (0, _general.getAnimation)(players_info[0].rareflag, players_info[0].rating);
             embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a ").concat(iPacks.name), "https://tjird.nl/futbot.jpg");
@@ -230,7 +341,7 @@ function () {
               return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
             });
 
-          case 61:
+          case 93:
           case "end":
             return _context2.stop();
         }
@@ -242,152 +353,3 @@ function () {
     return _ref.apply(this, arguments);
   };
 }();
-
-function makeCard(_x5) {
-  return _makeCard.apply(this, arguments);
-}
-
-function _makeCard() {
-  _makeCard = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee3(player_info) {
-    var positions, packCard, ctx, colors, background, playerpicture, playername, pSize, pHeight, nation, club, attachment;
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            positions = {
-              p: {
-                "pac": "pac",
-                "sho": "sho",
-                "pas": "pas",
-                "dri": "dri",
-                "def": "def",
-                "phy": "phy"
-              },
-              g: {
-                "pac": "DIV",
-                "sho": "HAN",
-                "pas": "KIC",
-                "dri": "REF",
-                "def": "SPE",
-                "phy": "POS"
-              }
-            };
-            Canvas.registerFont("Roboto-Bold.ttf", {
-              family: "Roboto Bold"
-            });
-            Canvas.registerFont("Champions-Regular.otf", {
-              family: "Champions"
-            });
-            Canvas.registerFont("fut.ttf", {
-              family: "DIN Condensed Web"
-            });
-            Canvas.registerFont("futlight.ttf", {
-              family: "DIN Condensed Web Light"
-            });
-            packCard = Canvas.createCanvas(644 / 2.15, 900 / 2.15);
-            ctx = packCard.getContext('2d');
-            _context3.next = 9;
-            return (0, _general.getCardColor)(player_info.rareflag, player_info.rating);
-
-          case 9:
-            colors = _context3.sent;
-            _context3.next = 12;
-            return Canvas.loadImage("http://fifa.tjird.nl/cards/".concat(player_info.rareflag, "-").concat((0, _general.getQuality)(player_info.rating), ".png"));
-
-          case 12:
-            background = _context3.sent;
-            ctx.drawImage(background, 0, 0, 644 / 2.15, 900 / 2.15);
-            _context3.next = 16;
-            return Canvas.loadImage(player_info.meta_info.img);
-
-          case 16:
-            playerpicture = _context3.sent;
-            ctx.drawImage(playerpicture, 95, 57, 160, 160);
-            playername = player_info.meta_info.common_name ? player_info.meta_info.common_name.toUpperCase() : player_info.meta_info.last_name.toUpperCase();
-            pSize = '19px';
-            pHeight = 241;
-
-            if (playername.length < 15) {
-              pSize = '24px';
-              pHeight = 241;
-            }
-
-            ctx.font = "".concat(pSize, " '").concat(colors.font_3, "'");
-            ctx.fillStyle = "#".concat(colors.color_text);
-            ctx.textAlign = "center";
-            ctx.fillText(playername, packCard.width / 2, pHeight);
-            ctx.font = "45px '".concat(colors.font_1, "'");
-            ctx.fillText(player_info.rating, 90, 93);
-            ctx.font = "28px '".concat(colors.font_2, "'");
-            ctx.fillText(player_info.preferred_position.toUpperCase(), 90, 119);
-            _context3.next = 32;
-            return Canvas.loadImage(player_info.nation_info.img);
-
-          case 32:
-            nation = _context3.sent;
-            ctx.drawImage(nation, 70, 128, nation.width * 0.6, nation.height * 0.6);
-            _context3.next = 36;
-            return Canvas.loadImage(player_info.club_info.img);
-
-          case 36:
-            club = _context3.sent;
-            ctx.drawImage(club, 70, 165, club.width * 0.31, club.height * 0.31);
-            ctx.font = "18px '".concat(colors.font_3, "'");
-            ctx.fillStyle = "#".concat(colors.color_attr_values);
-            ctx.textAlign = "center";
-            ctx.fillText(player_info.pac, packCard.width * 0.28, packCard.height * 0.67);
-            ctx.fillText(player_info.sho, packCard.width * 0.28, packCard.height * 0.73);
-            ctx.fillText(player_info.pas, packCard.width * 0.28, packCard.height * 0.79);
-            ctx.fillText(player_info.dri, packCard.width * 0.598, packCard.height * 0.67);
-            ctx.fillText(player_info.def, packCard.width * 0.598, packCard.height * 0.73);
-            ctx.fillText(player_info.phy, packCard.width * 0.598, packCard.height * 0.79);
-
-            if (player_info.preferred_position === "GK") {
-              positions = positions.g;
-            } else {
-              positions = positions.p;
-            }
-
-            ctx.fillStyle = "#".concat(colors.color_attr_names);
-            ctx.textAlign = "left";
-            ctx.fillText(positions.pac.toUpperCase(), packCard.width * 0.33, packCard.height * 0.67);
-            ctx.fillText(positions.sho.toUpperCase(), packCard.width * 0.33, packCard.height * 0.73);
-            ctx.fillText(positions.pas.toUpperCase(), packCard.width * 0.33, packCard.height * 0.79);
-            ctx.fillText(positions.dri.toUpperCase(), packCard.width * 0.648, packCard.height * 0.67);
-            ctx.fillText(positions.def.toUpperCase(), packCard.width * 0.648, packCard.height * 0.73);
-            ctx.fillText(positions.phy.toUpperCase(), packCard.width * 0.648, packCard.height * 0.79);
-            ctx.strokeStyle = "#".concat(colors.color_stripes);
-            ctx.beginPath();
-            ctx.moveTo(80, 124);
-            ctx.lineTo(101, 124);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(80, 160);
-            ctx.lineTo(101, 160);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(packCard.width / 2, 262);
-            ctx.lineTo(packCard.width / 2, 337);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(62, 249);
-            ctx.lineTo(235, 249);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(packCard.width / 2 - 23, 350);
-            ctx.lineTo(packCard.width / 2 + 23, 350);
-            ctx.stroke();
-            attachment = new _discord.Attachment(packCard.toBuffer(), 'card.png');
-            return _context3.abrupt("return", attachment);
-
-          case 79:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  }));
-  return _makeCard.apply(this, arguments);
-}

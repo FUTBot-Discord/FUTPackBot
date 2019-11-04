@@ -9,7 +9,7 @@
   },
   {
     "id": "3-gold",
-    "rarity": "Team of the Week Gold"
+    "rarity": "TOTW Gold"
   },
   {
     "id": "1-silver",
@@ -17,7 +17,7 @@
   },
   {
     "id": "21-gold",
-    "rarity": "Ones to Watch"
+    "rarity": "OTW"
   },
   {
     "id": "1-gold",
@@ -33,7 +33,7 @@
   },
   {
     "id": "68-gold",
-    "rarity": "UEFA Europa League Team of the Tournament"
+    "rarity": "UEL TOTT"
   },
   {
     "id": "1-bronze",
@@ -49,7 +49,7 @@
   },
   {
     "id": "46-gold",
-    "rarity": "Europa League Live Rare"
+    "rarity": "UCL Live Rare"
   },
   {
     "id": "3-silver",
@@ -61,7 +61,7 @@
   },
   {
     "id": "3-bronze",
-    "rarity": "Team of the Week Bronze"
+    "rarity": "TOTW Bronze"
   },
   {
     "id": "74-gold",
@@ -69,11 +69,11 @@
   },
   {
     "id": "50-gold",
-    "rarity": "Champions League Live Rare"
+    "rarity": "UCL Live Rare"
   },
   {
     "id": "45-gold",
-    "rarity": "UEFA Europa League Man of the Match"
+    "rarity": "UEL MOTM"
   },
   {
     "id": "66-gold",
@@ -81,11 +81,11 @@
   },
   {
     "id": "49-gold",
-    "rarity": "UEFA Champions League Man of the Match"
+    "rarity": "UCL Man of the Match"
   },
   {
     "id": "48-gold",
-    "rarity": "UEFA Champions League Rare"
+    "rarity": "UCL Rare"
   },
   {
     "id": "4-gold",
@@ -105,7 +105,7 @@
   },
   {
     "id": "70-gold",
-    "rarity": "UEFA Champions League Team of the Tournament"
+    "rarity": "UCL Team of the Tournament"
   },
   {
     "id": "71-gold",
@@ -125,7 +125,7 @@
   },
   {
     "id": "78-gold",
-    "rarity": "UEFA Europa League"
+    "rarity": "UEL"
   },
   {
     "id": "85-gold",
@@ -141,7 +141,7 @@
   },
   {
     "id": "47-gold",
-    "rarity": "UEFA Champions League Common"
+    "rarity": "UCL Common"
   },
   {
     "id": "75-gold",

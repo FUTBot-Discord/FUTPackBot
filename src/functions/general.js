@@ -2,6 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 import * as Canvas from 'canvas';
 import { Attachment } from 'discord.js';
 import AsciiTable from 'ascii-table';
+import hDuration from "humanize-duration"
 
 const graphql = new GraphQLClient(process.env.G_ENDPOINT, { headers: {} });
 const raritiesList = require('../../rarities.json');
@@ -83,11 +84,67 @@ function makeOptionMenu(packs) {
     return t;
 };
 
+function makeAuctionMenu(auctions, a, p, pp) {
+    const t = new AsciiTable()
+        .setTitle(`Transfer market for ${a.username}#${a.discriminator}. Page ${p}/${pp}.`)
+        .setHeading('ID', 'Name', 'Rating', 'Current bid', 'Buy now', 'Time remaining')
+        .setAlign(1, AsciiTable.LEFT)
+        .setAlign(2, AsciiTable.LEFT)
+        .setAlign(3, AsciiTable.LEFT)
+        .setAlign(4, AsciiTable.LEFT)
+        .setAlign(5, AsciiTable.LEFT)
+        .setAlign(6, AsciiTable.LEFT);
+
+    let cDate = new Date();
+    cDate = cDate.getTime();
+
+    for (let auction of auctions) {
+        let bid = auction.current_bid;
+
+        if (bid < 1) bid = "-";
+
+        t.addRow(auction.id, (auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : `${auction.card_info.meta_info.first_name} ${auction.card_info.meta_info.last_name}`), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.buy_now), hDuration(auction.end_timestamp - cDate, { round: true, largest: 1 }));
+    }
+
+    return t;
+};
+
+function makeClubMenu(players, a, p, pp) {
+    const t = new AsciiTable()
+        .setTitle(`Club player(s) from ${a.username}#${a.discriminator}. Page ${p}/${pp}.`)
+        .setHeading('ID', 'Name', 'Rating', 'Version', 'Position')
+        .setAlign(1, AsciiTable.LEFT)
+        .setAlign(2, AsciiTable.LEFT)
+        .setAlign(3, AsciiTable.LEFT)
+        .setAlign(4, AsciiTable.LEFT)
+        .setAlign(5, AsciiTable.LEFT);
+
+    for (let player of players) {
+        t.addRow(player.id, (player.card_info.meta_info.common_name ? player.card_info.meta_info.common_name : `${player.card_info.meta_info.first_name} ${player.card_info.meta_info.last_name}`), player.card_info.rating, getRarityName(`${player.card_info.rareflag}-${getQuality(player.card_info.rating)}`), player.card_info.preferred_position);
+    }
+
+    return t;
+};
+
 async function getUserClubId(author_id) {
     let query = `{ getUserClubByAuthorId(author_id: "${author_id}") { id points coins creation_time } }`;
     let res = await graphql.request(query);
 
     return res.getUserClubByAuthorId;
+};
+
+async function getCurrentAuctionsCount(club_id, name) {
+    let query;
+
+    if (!name || name == undefined) {
+        query = `{ getCurrentAuctionsCount(club_id: "${club_id}") { auctions } }`;
+    } else {
+        query = `{ getCurrentAuctionsCount(club_id: "${club_id}", name: "${name}") { auctions } }`;
+    }
+
+    let res = await graphql.request(query);
+
+    return res.getCurrentAuctionsCount;
 };
 
 async function createUserClub(author_id) {
@@ -108,6 +165,20 @@ async function getClubPlayer(club_id, player_id) {
     let res = await graphql.request(query);
 
     return res.getClubPlayer;
+};
+
+async function getActiveAuctions(club_id, page, name) {
+    let query;
+
+    if (!name || name == undefined) {
+        query = `{ getCurrentAuctions(club_id: "${club_id}", page: ${page}) { id current_bid buy_now end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }`;
+    } else {
+        query = `{ getCurrentAuctions(club_id: "${club_id}", name: "${name}", page: ${page}) { id current_bid buy_now end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }`;
+    }
+
+    let res = await graphql.request(query);
+
+    return res.getCurrentAuctions;
 };
 
 async function addCoinsToClub(club_id, coins) {
@@ -295,8 +366,8 @@ async function getClubCollectionCount(club_id) {
     return res.getClubCollection;
 };
 
-async function getClubCollection(club_id) {
-    let query = `{ getClubCollection(club_id: "${club_id}") { card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+async function getClubCollection(club_id, page) {
+    let query = `{ getClubCollection(club_id: "${club_id}", page: ${page}) { id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
     let res = await graphql.request(query);
 
     return res.getClubCollection;
@@ -322,5 +393,9 @@ module.exports = {
     setDialogue,
     makeOptionMenu,
     getClubCollectionCount,
-    getClubCollection
+    getClubCollection,
+    getActiveAuctions,
+    makeAuctionMenu,
+    getCurrentAuctionsCount,
+    makeClubMenu
 }

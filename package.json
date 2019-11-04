@@ -31,6 +31,8 @@
     "fs": "0.0.1-security",
     "graphql-request": "^1.8.2",
     "html-template-tag": "^3.2.0",
+    "humanize-duration": "^3.21.0",
+    "ioredis": "^4.14.1",
     "moment": "^2.24.0"
   },
   "devDependencies": {

@@ -16,6 +16,8 @@ var _discord = require("discord.js");
 
 var _asciiTable = _interopRequireDefault(require("ascii-table"));
 
+var _humanizeDuration = _interopRequireDefault(require("humanize-duration"));
+
 var graphql = new _graphqlRequest.GraphQLClient(process.env.G_ENDPOINT, {
   headers: {}
 });
@@ -281,6 +283,75 @@ function makeOptionMenu(packs) {
 
 ;
 
+function makeAuctionMenu(auctions, a, p, pp) {
+  var t = new _asciiTable["default"]().setTitle("Transfer market for ".concat(a.username, "#").concat(a.discriminator, ". Page ").concat(p, "/").concat(pp, ".")).setHeading('ID', 'Name', 'Rating', 'Current bid', 'Buy now', 'Time remaining').setAlign(1, _asciiTable["default"].LEFT).setAlign(2, _asciiTable["default"].LEFT).setAlign(3, _asciiTable["default"].LEFT).setAlign(4, _asciiTable["default"].LEFT).setAlign(5, _asciiTable["default"].LEFT).setAlign(6, _asciiTable["default"].LEFT);
+  var cDate = new Date();
+  cDate = cDate.getTime();
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = auctions[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var auction = _step2.value;
+      var bid = auction.current_bid;
+      if (bid < 1) bid = "-";
+      t.addRow(auction.id, auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : "".concat(auction.card_info.meta_info.first_name, " ").concat(auction.card_info.meta_info.last_name), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.buy_now), (0, _humanizeDuration["default"])(auction.end_timestamp - cDate, {
+        round: true,
+        largest: 1
+      }));
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+        _iterator2["return"]();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  return t;
+}
+
+;
+
+function makeClubMenu(players, a, p, pp) {
+  var t = new _asciiTable["default"]().setTitle("Club player(s) from ".concat(a.username, "#").concat(a.discriminator, ". Page ").concat(p, "/").concat(pp, ".")).setHeading('ID', 'Name', 'Rating', 'Version', 'Position').setAlign(1, _asciiTable["default"].LEFT).setAlign(2, _asciiTable["default"].LEFT).setAlign(3, _asciiTable["default"].LEFT).setAlign(4, _asciiTable["default"].LEFT).setAlign(5, _asciiTable["default"].LEFT);
+  var _iteratorNormalCompletion3 = true;
+  var _didIteratorError3 = false;
+  var _iteratorError3 = undefined;
+
+  try {
+    for (var _iterator3 = players[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var player = _step3.value;
+      t.addRow(player.id, player.card_info.meta_info.common_name ? player.card_info.meta_info.common_name : "".concat(player.card_info.meta_info.first_name, " ").concat(player.card_info.meta_info.last_name), player.card_info.rating, getRarityName("".concat(player.card_info.rareflag, "-").concat(getQuality(player.card_info.rating))), player.card_info.preferred_position);
+    }
+  } catch (err) {
+    _didIteratorError3 = true;
+    _iteratorError3 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+        _iterator3["return"]();
+      }
+    } finally {
+      if (_didIteratorError3) {
+        throw _iteratorError3;
+      }
+    }
+  }
+
+  return t;
+}
+
+;
+
 function getUserClubId(_x10) {
   return _getUserClubId.apply(this, arguments);
 }
@@ -314,162 +385,238 @@ function _getUserClubId() {
 
 ;
 
-function createUserClub(_x11) {
+function getCurrentAuctionsCount(_x11, _x12) {
+  return _getCurrentAuctionsCount.apply(this, arguments);
+}
+
+function _getCurrentAuctionsCount() {
+  _getCurrentAuctionsCount = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee8(club_id, name) {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            if (!name || name == undefined) {
+              query = "{ getCurrentAuctionsCount(club_id: \"".concat(club_id, "\") { auctions } }");
+            } else {
+              query = "{ getCurrentAuctionsCount(club_id: \"".concat(club_id, "\", name: \"").concat(name, "\") { auctions } }");
+            }
+
+            _context8.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context8.sent;
+            return _context8.abrupt("return", res.getCurrentAuctionsCount);
+
+          case 5:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
+  }));
+  return _getCurrentAuctionsCount.apply(this, arguments);
+}
+
+;
+
+function createUserClub(_x13) {
   return _createUserClub.apply(this, arguments);
 }
 
 function _createUserClub() {
   _createUserClub = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee8(author_id) {
+  _regenerator["default"].mark(function _callee9(author_id) {
     var query;
-    return _regenerator["default"].wrap(function _callee8$(_context8) {
+    return _regenerator["default"].wrap(function _callee9$(_context9) {
       while (1) {
-        switch (_context8.prev = _context8.next) {
+        switch (_context9.prev = _context9.next) {
           case 0:
             query = "mutation { createUserClub(author_id: \"".concat(author_id, "\") { id } }");
-            _context8.prev = 1;
-            _context8.next = 4;
+            _context9.prev = 1;
+            _context9.next = 4;
             return graphql.request(query);
 
           case 4:
-            _context8.next = 10;
+            _context9.next = 10;
             break;
 
           case 6:
-            _context8.prev = 6;
-            _context8.t0 = _context8["catch"](1);
-            console.log(_context8.t0);
-            return _context8.abrupt("return", false);
+            _context9.prev = 6;
+            _context9.t0 = _context9["catch"](1);
+            console.log(_context9.t0);
+            return _context9.abrupt("return", false);
 
           case 10:
-            return _context8.abrupt("return", true);
+            return _context9.abrupt("return", true);
 
           case 11:
           case "end":
-            return _context8.stop();
+            return _context9.stop();
         }
       }
-    }, _callee8, null, [[1, 6]]);
+    }, _callee9, null, [[1, 6]]);
   }));
   return _createUserClub.apply(this, arguments);
 }
 
 ;
 
-function getClubPlayer(_x12, _x13) {
+function getClubPlayer(_x14, _x15) {
   return _getClubPlayer.apply(this, arguments);
 }
 
 function _getClubPlayer() {
   _getClubPlayer = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee9(club_id, player_id) {
+  _regenerator["default"].mark(function _callee10(club_id, player_id) {
     var query, res;
-    return _regenerator["default"].wrap(function _callee9$(_context9) {
+    return _regenerator["default"].wrap(function _callee10$(_context10) {
       while (1) {
-        switch (_context9.prev = _context9.next) {
+        switch (_context10.prev = _context10.next) {
           case 0:
             query = "{ getClubPlayer(club_id: \"".concat(club_id, "\", player_id: \"").concat(player_id, "\") { id } }");
-            _context9.next = 3;
+            _context10.next = 3;
             return graphql.request(query);
 
           case 3:
-            res = _context9.sent;
-            return _context9.abrupt("return", res.getClubPlayer);
+            res = _context10.sent;
+            return _context10.abrupt("return", res.getClubPlayer);
 
           case 5:
           case "end":
-            return _context9.stop();
+            return _context10.stop();
         }
       }
-    }, _callee9);
+    }, _callee10);
   }));
   return _getClubPlayer.apply(this, arguments);
 }
 
 ;
 
-function addCoinsToClub(_x14, _x15) {
+function getActiveAuctions(_x16, _x17, _x18) {
+  return _getActiveAuctions.apply(this, arguments);
+}
+
+function _getActiveAuctions() {
+  _getActiveAuctions = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee11(club_id, page, name) {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee11$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            if (!name || name == undefined) {
+              query = "{ getCurrentAuctions(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id current_bid buy_now end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }");
+            } else {
+              query = "{ getCurrentAuctions(club_id: \"".concat(club_id, "\", name: \"").concat(name, "\", page: ").concat(page, ") { id current_bid buy_now end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }");
+            }
+
+            _context11.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context11.sent;
+            return _context11.abrupt("return", res.getCurrentAuctions);
+
+          case 5:
+          case "end":
+            return _context11.stop();
+        }
+      }
+    }, _callee11);
+  }));
+  return _getActiveAuctions.apply(this, arguments);
+}
+
+;
+
+function addCoinsToClub(_x19, _x20) {
   return _addCoinsToClub.apply(this, arguments);
 }
 
 function _addCoinsToClub() {
   _addCoinsToClub = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee10(club_id, coins) {
+  _regenerator["default"].mark(function _callee12(club_id, coins) {
     var query;
-    return _regenerator["default"].wrap(function _callee10$(_context10) {
+    return _regenerator["default"].wrap(function _callee12$(_context12) {
       while (1) {
-        switch (_context10.prev = _context10.next) {
+        switch (_context12.prev = _context12.next) {
           case 0:
             query = "mutation { addCoinsToClub(club_id: \"".concat(club_id, "\", coins: \"").concat(coins, "\") { id } }");
-            _context10.prev = 1;
-            _context10.next = 4;
+            _context12.prev = 1;
+            _context12.next = 4;
             return graphql.request(query);
 
           case 4:
-            _context10.next = 10;
+            _context12.next = 10;
             break;
 
           case 6:
-            _context10.prev = 6;
-            _context10.t0 = _context10["catch"](1);
-            console.log(_context10.t0);
-            return _context10.abrupt("return", false);
+            _context12.prev = 6;
+            _context12.t0 = _context12["catch"](1);
+            console.log(_context12.t0);
+            return _context12.abrupt("return", false);
 
           case 10:
-            return _context10.abrupt("return", true);
+            return _context12.abrupt("return", true);
 
           case 11:
           case "end":
-            return _context10.stop();
+            return _context12.stop();
         }
       }
-    }, _callee10, null, [[1, 6]]);
+    }, _callee12, null, [[1, 6]]);
   }));
   return _addCoinsToClub.apply(this, arguments);
 }
 
 ;
 
-function removeCoinsFromClub(_x16, _x17) {
+function removeCoinsFromClub(_x21, _x22) {
   return _removeCoinsFromClub.apply(this, arguments);
 }
 
 function _removeCoinsFromClub() {
   _removeCoinsFromClub = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee11(club_id, coins) {
+  _regenerator["default"].mark(function _callee13(club_id, coins) {
     var query;
-    return _regenerator["default"].wrap(function _callee11$(_context11) {
+    return _regenerator["default"].wrap(function _callee13$(_context13) {
       while (1) {
-        switch (_context11.prev = _context11.next) {
+        switch (_context13.prev = _context13.next) {
           case 0:
             query = "mutation { removeCoinsFromClub(club_id: \"".concat(club_id, "\", coins: \"").concat(coins, "\") { id } }");
-            _context11.prev = 1;
-            _context11.next = 4;
+            _context13.prev = 1;
+            _context13.next = 4;
             return graphql.request(query);
 
           case 4:
-            _context11.next = 10;
+            _context13.next = 10;
             break;
 
           case 6:
-            _context11.prev = 6;
-            _context11.t0 = _context11["catch"](1);
-            console.log(_context11.t0);
-            return _context11.abrupt("return", false);
+            _context13.prev = 6;
+            _context13.t0 = _context13["catch"](1);
+            console.log(_context13.t0);
+            return _context13.abrupt("return", false);
 
           case 10:
-            return _context11.abrupt("return", true);
+            return _context13.abrupt("return", true);
 
           case 11:
           case "end":
-            return _context11.stop();
+            return _context13.stop();
         }
       }
-    }, _callee11, null, [[1, 6]]);
+    }, _callee13, null, [[1, 6]]);
   }));
   return _removeCoinsFromClub.apply(this, arguments);
 }
@@ -492,18 +639,18 @@ function getAnimation(rf, rt) {
 
 ;
 
-function makePlayerCard(_x18) {
+function makePlayerCard(_x23) {
   return _makePlayerCard.apply(this, arguments);
 }
 
 function _makePlayerCard() {
   _makePlayerCard = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee12(player_info) {
+  _regenerator["default"].mark(function _callee14(player_info) {
     var positions, packCard, ctx, colors, background, playerpicture, playername, pSize, pHeight, nation, club, attachment;
-    return _regenerator["default"].wrap(function _callee12$(_context12) {
+    return _regenerator["default"].wrap(function _callee14$(_context14) {
       while (1) {
-        switch (_context12.prev = _context12.next) {
+        switch (_context14.prev = _context14.next) {
           case 0:
             positions = {
               p: {
@@ -537,22 +684,22 @@ function _makePlayerCard() {
             });
             packCard = Canvas.createCanvas(644 / 2.15, 900 / 2.15);
             ctx = packCard.getContext('2d');
-            _context12.next = 9;
+            _context14.next = 9;
             return getCardColor(player_info.rareflag, player_info.rating);
 
           case 9:
-            colors = _context12.sent;
-            _context12.next = 12;
+            colors = _context14.sent;
+            _context14.next = 12;
             return Canvas.loadImage("http://fifa.tjird.nl/cards/".concat(player_info.rareflag, "-").concat(getQuality(player_info.rating), ".png"));
 
           case 12:
-            background = _context12.sent;
+            background = _context14.sent;
             ctx.drawImage(background, 0, 0, 644 / 2.15, 900 / 2.15);
-            _context12.next = 16;
+            _context14.next = 16;
             return Canvas.loadImage(player_info.meta_info.img);
 
           case 16:
-            playerpicture = _context12.sent;
+            playerpicture = _context14.sent;
             ctx.drawImage(playerpicture, 95, 57, 160, 160);
             playername = player_info.meta_info.common_name ? player_info.meta_info.common_name.toUpperCase() : player_info.meta_info.last_name.toUpperCase();
             pSize = '19px';
@@ -571,17 +718,17 @@ function _makePlayerCard() {
             ctx.fillText(player_info.rating, 90, 93);
             ctx.font = "28px '".concat(colors.font_2, "'");
             ctx.fillText(player_info.preferred_position.toUpperCase(), 90, 119);
-            _context12.next = 32;
+            _context14.next = 32;
             return Canvas.loadImage(player_info.nation_info.img);
 
           case 32:
-            nation = _context12.sent;
+            nation = _context14.sent;
             ctx.drawImage(nation, 70, 128, nation.width * 0.6, nation.height * 0.6);
-            _context12.next = 36;
+            _context14.next = 36;
             return Canvas.loadImage(player_info.club_info.img);
 
           case 36:
-            club = _context12.sent;
+            club = _context14.sent;
             ctx.drawImage(club, 70, 165, club.width * 0.31, club.height * 0.31);
             ctx.font = "18px '".concat(colors.font_3, "'");
             ctx.fillStyle = "#".concat(colors.color_attr_values);
@@ -629,43 +776,43 @@ function _makePlayerCard() {
             ctx.lineTo(packCard.width / 2 + 23, 350);
             ctx.stroke();
             attachment = new _discord.Attachment(packCard.toBuffer(), 'card.png');
-            return _context12.abrupt("return", attachment);
+            return _context14.abrupt("return", attachment);
 
           case 79:
           case "end":
-            return _context12.stop();
+            return _context14.stop();
         }
       }
-    }, _callee12);
+    }, _callee14);
   }));
   return _makePlayerCard.apply(this, arguments);
 }
 
 ;
 
-function setDialogue(_x19, _x20, _x21) {
+function setDialogue(_x24, _x25, _x26) {
   return _setDialogue.apply(this, arguments);
 }
 
 function _setDialogue() {
   _setDialogue = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee14(f, c, t) {
-    return _regenerator["default"].wrap(function _callee14$(_context14) {
+  _regenerator["default"].mark(function _callee16(f, c, t) {
+    return _regenerator["default"].wrap(function _callee16$(_context16) {
       while (1) {
-        switch (_context14.prev = _context14.next) {
+        switch (_context16.prev = _context16.next) {
           case 0:
-            return _context14.abrupt("return", new Promise(
+            return _context16.abrupt("return", new Promise(
             /*#__PURE__*/
             function () {
               var _ref = (0, _asyncToGenerator2["default"])(
               /*#__PURE__*/
-              _regenerator["default"].mark(function _callee13(resolve, reject) {
-                return _regenerator["default"].wrap(function _callee13$(_context13) {
+              _regenerator["default"].mark(function _callee15(resolve, reject) {
+                return _regenerator["default"].wrap(function _callee15$(_context15) {
                   while (1) {
-                    switch (_context13.prev = _context13.next) {
+                    switch (_context15.prev = _context15.next) {
                       case 0:
-                        _context13.next = 2;
+                        _context15.next = 2;
                         return c.awaitMessages(f, {
                           max: 1,
                           time: t
@@ -679,89 +826,89 @@ function _setDialogue() {
 
                       case 2:
                       case "end":
-                        return _context13.stop();
+                        return _context15.stop();
                     }
                   }
-                }, _callee13);
+                }, _callee15);
               }));
 
-              return function (_x24, _x25) {
+              return function (_x30, _x31) {
                 return _ref.apply(this, arguments);
               };
             }()));
 
           case 1:
           case "end":
-            return _context14.stop();
+            return _context16.stop();
         }
       }
-    }, _callee14);
+    }, _callee16);
   }));
   return _setDialogue.apply(this, arguments);
 }
 
 ;
 
-function getClubCollectionCount(_x22) {
+function getClubCollectionCount(_x27) {
   return _getClubCollectionCount.apply(this, arguments);
 }
 
 function _getClubCollectionCount() {
   _getClubCollectionCount = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee15(club_id) {
+  _regenerator["default"].mark(function _callee17(club_id) {
     var query, res;
-    return _regenerator["default"].wrap(function _callee15$(_context15) {
+    return _regenerator["default"].wrap(function _callee17$(_context17) {
       while (1) {
-        switch (_context15.prev = _context15.next) {
+        switch (_context17.prev = _context17.next) {
           case 0:
             query = "{ getClubCollection(club_id: \"".concat(club_id, "\") { player_id } }");
-            _context15.next = 3;
+            _context17.next = 3;
             return graphql.request(query);
 
           case 3:
-            res = _context15.sent;
-            return _context15.abrupt("return", res.getClubCollection);
+            res = _context17.sent;
+            return _context17.abrupt("return", res.getClubCollection);
 
           case 5:
           case "end":
-            return _context15.stop();
+            return _context17.stop();
         }
       }
-    }, _callee15);
+    }, _callee17);
   }));
   return _getClubCollectionCount.apply(this, arguments);
 }
 
 ;
 
-function getClubCollection(_x23) {
+function getClubCollection(_x28, _x29) {
   return _getClubCollection.apply(this, arguments);
 }
 
 function _getClubCollection() {
   _getClubCollection = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee16(club_id) {
+  _regenerator["default"].mark(function _callee18(club_id, page) {
     var query, res;
-    return _regenerator["default"].wrap(function _callee16$(_context16) {
+    return _regenerator["default"].wrap(function _callee18$(_context18) {
       while (1) {
-        switch (_context16.prev = _context16.next) {
+        switch (_context18.prev = _context18.next) {
           case 0:
-            query = "{ getClubCollection(club_id: \"".concat(club_id, "\") { card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
-            _context16.next = 3;
+            query = "{ getClubCollection(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
+            _context18.next = 3;
             return graphql.request(query);
 
           case 3:
-            res = _context16.sent;
-            return _context16.abrupt("return", res.getClubCollection);
+            res = _context18.sent;
+            return _context18.abrupt("return", res.getClubCollection);
 
           case 5:
           case "end":
-            return _context16.stop();
+            return _context18.stop();
         }
       }
-    }, _callee16);
+    }, _callee18);
   }));
   return _getClubCollection.apply(this, arguments);
 }
@@ -787,5 +934,9 @@ module.exports = {
   setDialogue: setDialogue,
   makeOptionMenu: makeOptionMenu,
   getClubCollectionCount: getClubCollectionCount,
-  getClubCollection: getClubCollection
+  getClubCollection: getClubCollection,
+  getActiveAuctions: getActiveAuctions,
+  makeAuctionMenu: makeAuctionMenu,
+  getCurrentAuctionsCount: getCurrentAuctionsCount,
+  makeClubMenu: makeClubMenu
 };

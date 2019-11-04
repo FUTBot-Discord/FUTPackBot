@@ -50,12 +50,15 @@ exports.run = async (client, message, args) => {
 
             aPages = Math.ceil(aPlayers / 18);
 
-            if (aPages <= page) return;
+            if (aPages <= page) return r.remove(author);
 
             page = aPages;
             cPlayers = await getClubCollection(cInfo.id, page);
 
-            if (cPlayers.length < 1) return page--;
+            if (cPlayers.length < 1) {
+                pMessage.edit(`Your club is empty man! Open some packs ${author}.`);
+                collector.stop();
+            }
 
             aMenu = makeClubMenu(cPlayers, author, page, aPages);
 
@@ -72,12 +75,15 @@ exports.run = async (client, message, args) => {
 
             aPages = Math.ceil(aPlayers / 18);
 
-            if (aPages <= page) return;
+            if (aPages <= page) return r.remove(author);
 
             page++;
             cPlayers = await getClubCollection(cInfo.id, page);
 
-            if (cPlayers.length < 1) return page--;
+            if (cPlayers.length < 1) {
+                pMessage.edit(`Your club is empty man! Open some packs ${author}.`);
+                collector.stop();
+            }
 
             aMenu = makeClubMenu(cPlayers, author, page, aPages);
 
@@ -98,7 +104,10 @@ exports.run = async (client, message, args) => {
             aPages = Math.ceil(aPlayers / 18);
             cPlayers = await getClubCollection(cInfo.id, page);
 
-            if (cPlayers.length < 1) return page++;
+            if (cPlayers.length < 1) {
+                pMessage.edit(`Your club is empty man! Open some packs ${author}.`);
+                collector.stop();
+            }
 
             aMenu = makeClubMenu(cPlayers, author, page, aPages);
 
@@ -119,7 +128,10 @@ exports.run = async (client, message, args) => {
             page = 1;
             cPlayers = await getClubCollection(cInfo.id, page);
 
-            if (cPlayers.length < 1) return page++;
+            if (cPlayers.length < 1) {
+                pMessage.edit(`Your club is empty man! Open some packs ${author}.`);
+                collector.stop();
+            }
 
             aMenu = makeClubMenu(cPlayers, author, page, aPages);
 

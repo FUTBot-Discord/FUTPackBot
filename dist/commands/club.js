@@ -104,7 +104,7 @@ function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         if (!(r.emoji.name === "⏭")) {
-                          _context.next = 19;
+                          _context.next = 18;
                           break;
                         }
 
@@ -126,7 +126,7 @@ function () {
                           break;
                         }
 
-                        return _context.abrupt("return");
+                        return _context.abrupt("return", r.remove(author));
 
                       case 8:
                         page = aPages;
@@ -136,34 +136,31 @@ function () {
                       case 11:
                         cPlayers = _context.sent;
 
-                        if (!(cPlayers.length < 1)) {
-                          _context.next = 14;
-                          break;
+                        if (cPlayers.length < 1) {
+                          pMessage.edit("Your club is empty man! Open some packs ".concat(author, "."));
+                          collector.stop();
                         }
 
-                        return _context.abrupt("return", page--);
-
-                      case 14:
                         aMenu = (0, _general.makeClubMenu)(cPlayers, author, page, aPages);
-                        _context.next = 17;
+                        _context.next = 16;
                         return pMessage.edit(aMenu, {
                           code: true
                         });
 
-                      case 17:
-                        _context.next = 74;
+                      case 16:
+                        _context.next = 70;
                         break;
 
-                      case 19:
+                      case 18:
                         if (!(r.emoji.name === "⏩")) {
-                          _context.next = 38;
+                          _context.next = 36;
                           break;
                         }
 
-                        _context.next = 22;
+                        _context.next = 21;
                         return (0, _general.getClubCollectionCount)(cInfo.id);
 
-                      case 22:
+                      case 21:
                         aPlayers = _context.sent.length;
 
                         if (aPlayers < 1) {
@@ -174,56 +171,53 @@ function () {
                         aPages = Math.ceil(aPlayers / 18);
 
                         if (!(aPages <= page)) {
-                          _context.next = 27;
+                          _context.next = 26;
                           break;
                         }
 
-                        return _context.abrupt("return");
+                        return _context.abrupt("return", r.remove(author));
 
-                      case 27:
+                      case 26:
                         page++;
-                        _context.next = 30;
+                        _context.next = 29;
                         return (0, _general.getClubCollection)(cInfo.id, page);
 
-                      case 30:
+                      case 29:
                         cPlayers = _context.sent;
 
-                        if (!(cPlayers.length < 1)) {
-                          _context.next = 33;
-                          break;
+                        if (cPlayers.length < 1) {
+                          pMessage.edit("Your club is empty man! Open some packs ".concat(author, "."));
+                          collector.stop();
                         }
 
-                        return _context.abrupt("return", page--);
-
-                      case 33:
                         aMenu = (0, _general.makeClubMenu)(cPlayers, author, page, aPages);
-                        _context.next = 36;
+                        _context.next = 34;
                         return pMessage.edit(aMenu, {
                           code: true
                         });
 
-                      case 36:
-                        _context.next = 74;
+                      case 34:
+                        _context.next = 70;
                         break;
 
-                      case 38:
+                      case 36:
                         if (!(r.emoji.name === "⏪")) {
-                          _context.next = 57;
+                          _context.next = 54;
                           break;
                         }
 
                         if (!(page <= 1)) {
-                          _context.next = 41;
+                          _context.next = 39;
                           break;
                         }
 
                         return _context.abrupt("return");
 
-                      case 41:
-                        _context.next = 43;
+                      case 39:
+                        _context.next = 41;
                         return (0, _general.getClubCollectionCount)(cInfo.id);
 
-                      case 43:
+                      case 41:
                         aPlayers = _context.sent.length;
 
                         if (aPlayers < 1) {
@@ -233,48 +227,45 @@ function () {
 
                         page--;
                         aPages = Math.ceil(aPlayers / 18);
-                        _context.next = 49;
+                        _context.next = 47;
                         return (0, _general.getClubCollection)(cInfo.id, page);
 
-                      case 49:
+                      case 47:
                         cPlayers = _context.sent;
 
-                        if (!(cPlayers.length < 1)) {
-                          _context.next = 52;
-                          break;
+                        if (cPlayers.length < 1) {
+                          pMessage.edit("Your club is empty man! Open some packs ".concat(author, "."));
+                          collector.stop();
                         }
 
-                        return _context.abrupt("return", page++);
-
-                      case 52:
                         aMenu = (0, _general.makeClubMenu)(cPlayers, author, page, aPages);
-                        _context.next = 55;
+                        _context.next = 52;
                         return pMessage.edit(aMenu, {
                           code: true
                         });
 
-                      case 55:
-                        _context.next = 74;
+                      case 52:
+                        _context.next = 70;
                         break;
 
-                      case 57:
+                      case 54:
                         if (!(r.emoji.name === "⏮")) {
-                          _context.next = 74;
+                          _context.next = 70;
                           break;
                         }
 
                         if (!(page <= 1)) {
-                          _context.next = 60;
+                          _context.next = 57;
                           break;
                         }
 
                         return _context.abrupt("return");
 
-                      case 60:
-                        _context.next = 62;
+                      case 57:
+                        _context.next = 59;
                         return (0, _general.getClubCollectionCount)(cInfo.id);
 
-                      case 62:
+                      case 59:
                         aPlayers = _context.sent.length;
 
                         if (aPlayers < 1) {
@@ -284,30 +275,27 @@ function () {
 
                         aPages = Math.ceil(aPlayers / 18);
                         page = 1;
-                        _context.next = 68;
+                        _context.next = 65;
                         return (0, _general.getClubCollection)(cInfo.id, page);
 
-                      case 68:
+                      case 65:
                         cPlayers = _context.sent;
 
-                        if (!(cPlayers.length < 1)) {
-                          _context.next = 71;
-                          break;
+                        if (cPlayers.length < 1) {
+                          pMessage.edit("Your club is empty man! Open some packs ".concat(author, "."));
+                          collector.stop();
                         }
 
-                        return _context.abrupt("return", page++);
-
-                      case 71:
                         aMenu = (0, _general.makeClubMenu)(cPlayers, author, page, aPages);
-                        _context.next = 74;
+                        _context.next = 70;
                         return pMessage.edit(aMenu, {
                           code: true
                         });
 
-                      case 74:
+                      case 70:
                         r.remove(author);
 
-                      case 75:
+                      case 71:
                       case "end":
                         return _context.stop();
                     }

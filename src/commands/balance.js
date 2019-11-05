@@ -6,5 +6,5 @@ exports.run = async (client, message, args) => {
 
     const cBalance = await getUserClubId(author.id);
 
-    return channel.send(`${author} your current balance is **${numberWithCommas(cBalance.coins)}** and **${numberWithCommas(cBalance.points)}** point(s).`);
+    return channel.send(`${author} your current balance is **${numberWithCommas(cBalance.coins)}**.`);
 }

@@ -56,6 +56,13 @@ async function getPackById(id) {
     return res.getPackById;
 };
 
+async function getPlayerVersionById(id) {
+    let query = `{ getPlayerVersionById(id: ${id}) { def dri id nation_info{ img } pac pas phy meta_info{ common_name last_name first_name img } preferred_position rareflag rating sho min_price club_info{ img } } }`;
+    let res = await graphql.request(query);
+
+    return res.getPlayerVersionById;
+};
+
 async function addClubPlayer(club_id, player_id) {
     let query = `mutation { addClubPlayer(club_id: "${club_id}", player_id: "${player_id}") { id } }`;
 
@@ -69,7 +76,7 @@ async function addClubPlayer(club_id, player_id) {
     return true;
 };
 
-function makeOptionMenu(packs) {
+function makeOptionMenuPacks(packs) {
     const t = new AsciiTable()
         .setHeading('ID', 'Name', 'Price', 'Points')
         .setAlign(1, AsciiTable.LEFT)
@@ -85,7 +92,7 @@ function makeOptionMenu(packs) {
 };
 
 function makeAuctionMenu(auctions, a, p, pp) {
-    const t = new AsciiTable()
+    let t = new AsciiTable()
         .setTitle(`Transfer market for ${a.username}#${a.discriminator}. Page ${p}/${pp}.`)
         .setHeading('ID', 'Name', 'Rating', 'Current bid', 'Buy now', 'Time remaining')
         .setAlign(1, AsciiTable.LEFT)
@@ -106,11 +113,50 @@ function makeAuctionMenu(auctions, a, p, pp) {
         t.addRow(auction.id, (auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : `${auction.card_info.meta_info.first_name} ${auction.card_info.meta_info.last_name}`), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.buy_now), hDuration(auction.end_timestamp - cDate, { round: true, largest: 1 }));
     }
 
+    t += `\nFUTPackBot v.1.0.0 | Made by Tjird#0001 | You can switch 3 minutes between pages`;
+
+    return t;
+};
+
+function makeTransferMenu(transfers, a, p, pp, am) {
+    let t = new AsciiTable()
+        .setTitle(`Transferpile of ${a.username}#${a.discriminator}. Page ${p}/${pp}. Amount ${am}/100.`)
+        .setHeading('ID', 'Name', 'Rating', 'Current bid', 'Buy now', 'Time remaining')
+        .setAlign(1, AsciiTable.LEFT)
+        .setAlign(2, AsciiTable.LEFT)
+        .setAlign(3, AsciiTable.LEFT)
+        .setAlign(4, AsciiTable.LEFT)
+        .setAlign(5, AsciiTable.LEFT)
+        .setAlign(6, AsciiTable.LEFT);
+
+    let cDate = new Date();
+    cDate = cDate.getTime();
+
+    for (let transfer of transfers) {
+        let cBid;
+        let cTime;
+        let cBuy;
+
+        if (!transfer.auction_info || transfer.auction_info == undefined) {
+            cBid = "-";
+            cTime = "-";
+            cBuy = "-";
+        } else {
+            cBid = transfer.auction_info.current_bid;
+            cTime = transfer.auction_info.end_timestamp;
+            cBuy = transfer.auction_info.buy_now;
+        }
+
+        t.addRow(transfer.id, (transfer.card_info.meta_info.common_name ? transfer.card_info.meta_info.common_name : `${transfer.card_info.meta_info.first_name} ${transfer.card_info.meta_info.last_name}`), transfer.card_info.rating, numberWithCommas(cBid), numberWithCommas(cBuy), transfer.auction_info ? hDuration(cTime - cDate, { round: true, largest: 1 }) : cTime);
+    }
+
+    t += `\nFUTPackBot v.1.0.0 | Made by Tjird#0001 | You can switch 3 minutes between pages`;
+
     return t;
 };
 
 function makeClubMenu(players, a, p, pp) {
-    const t = new AsciiTable()
+    let t = new AsciiTable()
         .setTitle(`Club player(s) from ${a.username}#${a.discriminator}. Page ${p}/${pp}.`)
         .setHeading('ID', 'Name', 'Rating', 'Version', 'Position')
         .setAlign(1, AsciiTable.LEFT)
@@ -122,6 +168,8 @@ function makeClubMenu(players, a, p, pp) {
     for (let player of players) {
         t.addRow(player.id, (player.card_info.meta_info.common_name ? player.card_info.meta_info.common_name : `${player.card_info.meta_info.first_name} ${player.card_info.meta_info.last_name}`), player.card_info.rating, getRarityName(`${player.card_info.rareflag}-${getQuality(player.card_info.rating)}`), player.card_info.preferred_position);
     }
+
+    t += `\nFUTPackBot v.1.0.0 | Made by Tjird#0001 | You can switch 3 minutes between pages`;
 
     return t;
 };
@@ -359,21 +407,85 @@ async function setDialogue(f, c, t) {
     });
 };
 
-async function getClubCollectionCount(club_id) {
-    let query = `{ getClubCollection(club_id: "${club_id}") { player_id } }`;
+async function setDialogueReactions(f, m, t) {
+    return new Promise(async (resolve, reject) => {
+        await m.awaitReactions(f, {
+            max: 1,
+            time: t
+        })
+            .then(collected => {
+                let f = collected.first();
+
+                resolve(f);
+            })
+            .catch(e => {
+                reject();
+            });
+    });
+};
+
+async function getClubCollectionCount(club_id, name) {
+    let query;
+
+    if (!name || name == undefined) {
+        query = `{ getClubCollection(club_id: "${club_id}") { player_id } }`;
+    } else {
+        query = `{ getClubCollection(club_id: "${club_id}", name: "${name}") { player_id } }`;
+    }
+
     let res = await graphql.request(query);
 
     return res.getClubCollection;
 };
 
-async function getClubCollection(club_id, page) {
-    let query = `{ getClubCollection(club_id: "${club_id}", page: ${page}) { id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+async function getClubCollection(club_id, page, name) {
+    let query;
+
+    if (!name || name == undefined) {
+        query = `{ getClubCollection(club_id: "${club_id}", page: ${page}) { id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+    } else {
+        query = `{ getClubCollection(club_id: "${club_id}", page: ${page}, name: "${name}") { id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+    }
+
     let res = await graphql.request(query);
 
     return res.getClubCollection;
+};
+
+async function getClubTransferpileCount(club_id) {
+    let query = `{ getTransferpile(club_id: "${club_id}") { player_id } }`;
+    let res = await graphql.request(query);
+
+    return res.getTransferpile;
+};
+
+async function getClubPlayerById(club_id, id) {
+    let query = `{ getClubCollectionPlayer(club_id: "${club_id}", id: "${id}") { id player_id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+    console.log(query)
+    let res = await graphql.request(query);
+
+    return res.getClubCollectionPlayer;
+};
+
+async function getTransferpilePlayerById(club_id, id) {
+    let query = `{ getTransferpilePlayer(club_id: "${club_id}", id: "${id}") { id player_id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+    let res = await graphql.request(query);
+
+    return res.getTransferpilePlayer;
+};
+
+async function getClubTransferpile(club_id, page) {
+    let query = `{ getTransferpile(club_id: "${club_id}", page: ${page}) { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+    let res = await graphql.request(query);
+
+    return res.getTransferpile;
 };
 
 module.exports = {
+    getClubTransferpileCount,
+    getClubPlayerById,
+    getTransferpilePlayerById,
+    getClubTransferpile,
     getQuality,
     getRarityName,
     getPlayer,
@@ -382,20 +494,23 @@ module.exports = {
     getPacksByName,
     numberWithCommas,
     getPackById,
+    makeTransferMenu,
     getAnimation,
     addClubPlayer,
     getUserClubId,
     createUserClub,
     getClubPlayer,
     addCoinsToClub,
+    setDialogueReactions,
     removeCoinsFromClub,
     makePlayerCard,
     setDialogue,
-    makeOptionMenu,
+    makeOptionMenuPacks,
     getClubCollectionCount,
     getClubCollection,
     getActiveAuctions,
     makeAuctionMenu,
     getCurrentAuctionsCount,
-    makeClubMenu
+    makeClubMenu,
+    getPlayerVersionById
 }

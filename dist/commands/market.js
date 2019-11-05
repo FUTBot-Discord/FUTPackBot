@@ -103,6 +103,7 @@ function () {
             collector = pMessage.createReactionCollector(filter, {
               time: 180000
             });
+            if (!message.guild) channel.send("In DM's no reactions could be removed by me. You need to remove those by yourself!");
             collector.on('collect',
             /*#__PURE__*/
             function () {
@@ -303,7 +304,7 @@ function () {
                         });
 
                       case 70:
-                        r.remove(author);
+                        if (message.guild) r.remove(author);
 
                       case 71:
                       case "end":
@@ -318,7 +319,7 @@ function () {
               };
             }());
 
-          case 27:
+          case 28:
           case "end":
             return _context2.stop();
         }

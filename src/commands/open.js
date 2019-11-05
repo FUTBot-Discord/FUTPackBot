@@ -14,7 +14,7 @@ import {
     makePlayerCard,
     setDialogue,
     getPacksByName,
-    makeOptionMenu
+    makeOptionMenuPacks
 } from '../functions/general';
 import { createClient } from 'async-redis';
 
@@ -71,7 +71,7 @@ exports.run = async (client, message, args) => {
         } else if (packList.length === 1) {
             pID = packList[0].id;
         } else {
-            channel.send(await makeOptionMenu(packList), {
+            channel.send(await makeOptionMenuPacks(packList), {
                 code: true
             }).then(m => mTemp = m);
 

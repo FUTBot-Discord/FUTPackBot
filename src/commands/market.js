@@ -1,5 +1,5 @@
 import { Redis } from "ioredis";
-import { getActiveAuctions, makeAuctionMenu, getUserClubId, getCurrentAuctionsCount } from '../functions/general';
+import { getActiveAuctions, makeAuctionMenu, getUserClubId, getCurrentAuctionsCount, setDialogue } from '../functions/general';
 
 // const redis = new Redis(6379, "futbot-redis-1", {
 //     reconnectOnError: function (err) {
@@ -16,6 +16,7 @@ exports.run = async (client, message, args) => {
 
     const channel = message.channel;
     const author = message.author;
+
     const cInfo = await getUserClubId(author.id);
 
     let aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
@@ -48,6 +49,8 @@ exports.run = async (client, message, args) => {
 
     const filter = (reaction, user) => user.id === author.id;
     const collector = pMessage.createReactionCollector(filter, { time: 180000 });
+
+    if (!message.guild) channel.send("In DM's no reactions could be removed by me. You need to remove those by yourself!");
 
     collector.on('collect', async r => {
         if (r.emoji.name === "⏭") {
@@ -150,7 +153,7 @@ exports.run = async (client, message, args) => {
             });
         }
 
-        r.remove(author);
+        if (message.guild) r.remove(author);
     });
 
 }

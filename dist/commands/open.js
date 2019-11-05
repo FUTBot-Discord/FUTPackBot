@@ -115,7 +115,7 @@ function () {
           case 20:
             _context2.t0 = channel;
             _context2.next = 23;
-            return (0, _general.makeOptionMenu)(packList);
+            return (0, _general.makeOptionMenuPacks)(packList);
 
           case 23:
             _context2.t1 = _context2.sent;

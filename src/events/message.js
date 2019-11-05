@@ -32,7 +32,8 @@ module.exports = async (client, message) => {
         "point",
         "points",
         "commands",
-        "command"
+        "command",
+        "clubinfo"
     ];
 
     if (author.id !== "259012839379828739" && allowedCommands.includes(command) && cooldown.has(author.id)) {

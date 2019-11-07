@@ -1,5 +1,9 @@
-import { RichEmbed } from 'discord.js';
-import { Chance } from 'chance';
+import {
+    RichEmbed
+} from 'discord.js';
+import {
+    Chance
+} from 'chance';
 import {
     getPlayer,
     getQuality,
@@ -9,14 +13,17 @@ import {
     getUserClubId,
     addClubPlayer,
     getClubPlayer,
-    removeCoinsFromClub,
     addCoinsToClub,
     makePlayerCard,
     setDialogue,
     getPacksByName,
-    makeOptionMenuPacks
+    makeOptionMenuPacks,
+    getClubTransferpileCount,
+    addTransferpilePlayer
 } from '../functions/general';
-import { createClient } from 'async-redis';
+import {
+    createClient
+} from 'async-redis';
 
 const redis = createClient({
     "host": process.env.R_HOST,
@@ -121,13 +128,20 @@ exports.run = async (client, message, args) => {
     }
 
     let duplicates = [];
+    let transferpile = [];
 
     for (let p of players_info) {
         let o = await getClubPlayer(clubuser.id, p.id);
 
         if (o !== null) {
-            duplicates.push(p.id);
-            await addCoinsToClub(clubuser.id, p.min_price);
+            if ((await getClubTransferpileCount(clubuser.id)).length < 100) {
+                transferpile.push(p.id);
+                await addTransferpilePlayer(clubuser.id, p.id);
+            } else {
+                duplicates.push(p.id);
+                await addCoinsToClub(clubuser.id, p.min_price);
+            }
+
         } else {
             await addClubPlayer(clubuser.id, p.id);
         }
@@ -156,7 +170,9 @@ exports.run = async (client, message, args) => {
 
             for (let i = 1; i < players_info.length; i++) {
                 if (duplicates.includes(players_info[i].id)) {
-                    other_players.push(`Playername: ${(players_info[i].meta_info.common_name ? `${players_info[i].meta_info.common_name} (${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name})` : `${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name}`)}\nVersion: ${getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) ? getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) : "Unknown"}\nRating: ${players_info[i].rating}\nQuick-sold for ${players_info[i].min_price} because it's a duplicate.`);
+                    other_players.push(`Playername: ${(players_info[i].meta_info.common_name ? `${players_info[i].meta_info.common_name} (${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name})` : `${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name}`)}\nVersion: ${getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) ? getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) : "Unknown"}\nRating: ${players_info[i].rating}\nQuick-sold for ${players_info[i].min_price} because no space left in transferpile.`);
+                } else if (transferpile.includes(players_info[i].id)) {
+                    other_players.push(`Playername: ${(players_info[i].meta_info.common_name ? `${players_info[i].meta_info.common_name} (${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name})` : `${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name}`)}\nVersion: ${getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) ? getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) : "Unknown"}\nRating: ${players_info[i].rating}\nSend to transferpile because it's a duplicate.`);
                 } else {
                     other_players.push(`Playername: ${(players_info[i].meta_info.common_name ? `${players_info[i].meta_info.common_name} (${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name})` : `${players_info[i].meta_info.first_name} ${players_info[i].meta_info.last_name}`)}\nVersion: ${getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) ? getRarityName(`${players_info[i].rareflag}-${getQuality(players_info[i].rating)}`) : "Unknown"}\nRating: ${players_info[i].rating}`);
                 }
@@ -164,7 +180,8 @@ exports.run = async (client, message, args) => {
 
             let t = "";
 
-            if (duplicates.includes(players_info[0].id)) t = `\nQuick-sold for ${players_info[0].min_price} because it's a duplicate.`;
+            if (duplicates.includes(players_info[0].id)) t = `\nQuick-sold for ${players_info[0].min_price} because because no space left in transferpile.`;
+            if (transferpile.includes(players_info[0].id)) t = `\nSend to transferpile because it's a duplicate.`;
 
             embed = new RichEmbed()
                 .setColor("0xE51E0A")
@@ -177,21 +194,21 @@ exports.run = async (client, message, args) => {
 
             m.delete()
                 .catch(e => {
-                    if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nSomething just went wrong with the opening.");
+                    if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold/send to transferpile.\nSomething just went wrong with the opening.");
 
-                    return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
+                    return channel.send("The packed players are stored to your club and duplicates has been quick-sold/send to transferpile.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
                 });
 
             channel.send(embed)
                 .catch(e => {
-                    if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nSomething just went wrong with the opening.");
+                    if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold/send to transferpile.\nSomething just went wrong with the opening.");
 
-                    return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
+                    return channel.send("The packed players are stored to your club and duplicates has been quick-sold/send to transferpile.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
                 });
         })
         .catch(e => {
-            if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nSomething just went wrong with the opening.");
+            if (e.code !== 50013) return channel.send("The packed players are stored to your club and duplicates has been quick-sold/send to transferpile.\nSomething just went wrong with the opening.");
 
-            return channel.send("The packed players are stored to your club and duplicates has been quick-sold.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
+            return channel.send("The packed players are stored to your club and duplicates has been quick-sold/send to transferpile.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
         });
 }

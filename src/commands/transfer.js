@@ -1,4 +1,9 @@
-import { getClubTransferpile, getUserClubId, getClubTransferpileCount, makeTransferMenu } from '../functions/general';
+import {
+    getClubTransferpile,
+    getUserClubId,
+    getClubTransferpileCount,
+    makeTransferMenu
+} from '../functions/general';
 
 exports.run = async (client, message, args) => {
     let page = 1;
@@ -21,8 +26,8 @@ exports.run = async (client, message, args) => {
     let pMessage;
 
     await channel.send(aMenu, {
-        code: true
-    })
+            code: true
+        })
         .then(m => pMessage = m)
         .catch(e => {
             console.log(e);
@@ -37,7 +42,9 @@ exports.run = async (client, message, args) => {
         .then(r => r.message.react("⏭"));
 
     const filter = (reaction, user) => user.id === author.id;
-    const collector = pMessage.createReactionCollector(filter, { time: 180000 });
+    const collector = pMessage.createReactionCollector(filter, {
+        time: 180000
+    });
 
     if (!message.guild) channel.send("In DM's no reactions could be removed by me. You need to remove those by yourself!");
 
@@ -142,7 +149,10 @@ exports.run = async (client, message, args) => {
             });
         }
 
-        if (message.guild) r.remove(author);
+        if (message.guild) r.remove(author)
+            .catch(e => {
+
+            });
     });
 
 }

@@ -294,7 +294,7 @@ function () {
                         });
 
                       case 70:
-                        if (message.guild) r.remove(author);
+                        if (message.guild) r.remove(author)["catch"](function (e) {});
 
                       case 71:
                       case "end":

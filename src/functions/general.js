@@ -1,10 +1,16 @@
-import { GraphQLClient } from 'graphql-request';
+import {
+    GraphQLClient
+} from 'graphql-request';
 import * as Canvas from 'canvas';
-import { Attachment } from 'discord.js';
+import {
+    Attachment
+} from 'discord.js';
 import AsciiTable from 'ascii-table';
 import hDuration from "humanize-duration"
 
-const graphql = new GraphQLClient(process.env.G_ENDPOINT, { headers: {} });
+const graphql = new GraphQLClient(process.env.G_ENDPOINT, {
+    headers: {}
+});
 const raritiesList = require('../../rarities.json');
 
 function getQuality(rating) {
@@ -110,7 +116,10 @@ function makeAuctionMenu(auctions, a, p, pp) {
 
         if (bid < 1) bid = "-";
 
-        t.addRow(auction.id, (auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : `${auction.card_info.meta_info.first_name} ${auction.card_info.meta_info.last_name}`), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.buy_now), hDuration(auction.end_timestamp - cDate, { round: true, largest: 1 }));
+        t.addRow(auction.id, (auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : `${auction.card_info.meta_info.first_name} ${auction.card_info.meta_info.last_name}`), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.buy_now), hDuration(auction.end_timestamp - cDate, {
+            round: true,
+            largest: 1
+        }));
     }
 
     t += `\nFUTPackBot v.1.0.0 | Made by Tjird#0001 | You can switch 3 minutes between pages`;
@@ -147,7 +156,10 @@ function makeTransferMenu(transfers, a, p, pp, am) {
             cBuy = transfer.auction_info.buy_now;
         }
 
-        t.addRow(transfer.id, (transfer.card_info.meta_info.common_name ? transfer.card_info.meta_info.common_name : `${transfer.card_info.meta_info.first_name} ${transfer.card_info.meta_info.last_name}`), transfer.card_info.rating, numberWithCommas(cBid), numberWithCommas(cBuy), transfer.auction_info ? hDuration(cTime - cDate, { round: true, largest: 1 }) : cTime);
+        t.addRow(transfer.id, (transfer.card_info.meta_info.common_name ? transfer.card_info.meta_info.common_name : `${transfer.card_info.meta_info.first_name} ${transfer.card_info.meta_info.last_name}`), transfer.card_info.rating, numberWithCommas(cBid), numberWithCommas(cBuy), transfer.auction_info ? hDuration(cTime - cDate, {
+            round: true,
+            largest: 1
+        }) : cTime);
     }
 
     t += `\nFUTPackBot v.1.0.0 | Made by Tjird#0001 | You can switch 3 minutes between pages`;
@@ -210,6 +222,7 @@ async function createUserClub(author_id) {
 
 async function getClubPlayer(club_id, player_id) {
     let query = `{ getClubPlayer(club_id: "${club_id}", player_id: "${player_id}") { id } }`;
+    console.log(query);
     let res = await graphql.request(query);
 
     return res.getClubPlayer;
@@ -242,8 +255,53 @@ async function addCoinsToClub(club_id, coins) {
     return true;
 };
 
+async function addTransferpilePlayer(club_id, player_id, auction_id) {
+    let query;
+
+    if (!auction_id || auction_id == undefined) {
+        query = `mutation { addTransferPlayer(club_id: "${club_id}", player_id: "${player_id}") { id } }`;
+    } else {
+        query = `mutation { addTransferPlayer(club_id: "${club_id}", player_id: "${player_id}", auction_id: ${auction_id}) { id } }`;
+    }
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
 async function removeCoinsFromClub(club_id, coins) {
     let query = `mutation { removeCoinsFromClub(club_id: "${club_id}", coins: "${coins}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
+async function removePlayerFromTransferpile(club_id, id) {
+    let query = `mutation { removePlayerFromTransferpile(club_id: "${club_id}", id: ${id}) { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
+async function removePlayerFromClub(club_id, id) {
+    let query = `mutation { removePlayerFromClub(club_id: "${club_id}", id: ${id}) { id } }`;
 
     try {
         await graphql.request(query);
@@ -289,10 +347,18 @@ async function makePlayerCard(player_info) {
         }
     }
 
-    Canvas.registerFont(`Roboto-Bold.ttf`, { family: "Roboto Bold" });
-    Canvas.registerFont(`Champions-Regular.otf`, { family: "Champions" });
-    Canvas.registerFont(`fut.ttf`, { family: "DIN Condensed Web" });
-    Canvas.registerFont(`futlight.ttf`, { family: "DIN Condensed Web Light" });
+    Canvas.registerFont(`Roboto-Bold.ttf`, {
+        family: "Roboto Bold"
+    });
+    Canvas.registerFont(`Champions-Regular.otf`, {
+        family: "Champions"
+    });
+    Canvas.registerFont(`fut.ttf`, {
+        family: "DIN Condensed Web"
+    });
+    Canvas.registerFont(`futlight.ttf`, {
+        family: "DIN Condensed Web Light"
+    });
 
     const packCard = Canvas.createCanvas((644 / 2.15), (900 / 2.15));
     const ctx = packCard.getContext('2d');
@@ -391,9 +457,9 @@ async function makePlayerCard(player_info) {
 async function setDialogue(f, c, t) {
     return new Promise(async (resolve, reject) => {
         await c.awaitMessages(f, {
-            max: 1,
-            time: t
-        })
+                max: 1,
+                time: t
+            })
             .then(collected => {
                 let f = collected.first();
 
@@ -410,9 +476,9 @@ async function setDialogue(f, c, t) {
 async function setDialogueReactions(f, m, t) {
     return new Promise(async (resolve, reject) => {
         await m.awaitReactions(f, {
-            max: 1,
-            time: t
-        })
+                max: 1,
+                time: t
+            })
             .then(collected => {
                 let f = collected.first();
 
@@ -461,7 +527,6 @@ async function getClubTransferpileCount(club_id) {
 
 async function getClubPlayerById(club_id, id) {
     let query = `{ getClubCollectionPlayer(club_id: "${club_id}", id: "${id}") { id player_id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
-    console.log(query)
     let res = await graphql.request(query);
 
     return res.getClubCollectionPlayer;
@@ -487,6 +552,8 @@ module.exports = {
     getTransferpilePlayerById,
     getClubTransferpile,
     getQuality,
+    removePlayerFromTransferpile,
+    removePlayerFromClub,
     getRarityName,
     getPlayer,
     getCardColor,
@@ -511,6 +578,7 @@ module.exports = {
     getActiveAuctions,
     makeAuctionMenu,
     getCurrentAuctionsCount,
+    addTransferpilePlayer,
     makeClubMenu,
     getPlayerVersionById
 }

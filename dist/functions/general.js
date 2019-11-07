@@ -1053,7 +1053,7 @@ function _setDialogue() {
                 }, _callee19);
               }));
 
-              return function (_x50, _x51) {
+              return function (_x51, _x52) {
                 return _ref.apply(this, arguments);
               };
             }()));
@@ -1111,7 +1111,7 @@ function _setDialogueReactions() {
                 }, _callee21);
               }));
 
-              return function (_x52, _x53) {
+              return function (_x53, _x54) {
                 return _ref2.apply(this, arguments);
               };
             }()));
@@ -1303,20 +1303,25 @@ function _getTransferpilePlayerById() {
 
 ;
 
-function getClubTransferpile(_x48, _x49) {
+function getClubTransferpile(_x48, _x49, _x50) {
   return _getClubTransferpile.apply(this, arguments);
 }
 
 function _getClubTransferpile() {
   _getClubTransferpile = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee28(club_id, page) {
+  _regenerator["default"].mark(function _callee28(club_id, page, name) {
     var query, res;
     return _regenerator["default"].wrap(function _callee28$(_context28) {
       while (1) {
         switch (_context28.prev = _context28.next) {
           case 0:
-            query = "{ getTransferpile(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
+            if (!name || name == undefined) {
+              query = "{ getTransferpile(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
+            } else {
+              query = "{ getTransferpile(club_id: \"".concat(club_id, "\", page: ").concat(page, ", name: \"").concat(name, "\") { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
+            }
+
             _context28.next = 3;
             return graphql.request(query);
 

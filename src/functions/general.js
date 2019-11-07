@@ -539,8 +539,15 @@ async function getTransferpilePlayerById(club_id, id) {
     return res.getTransferpilePlayer;
 };
 
-async function getClubTransferpile(club_id, page) {
-    let query = `{ getTransferpile(club_id: "${club_id}", page: ${page}) { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+async function getClubTransferpile(club_id, page, name) {
+    let query;
+
+    if (!name || name == undefined) {
+        query = `{ getTransferpile(club_id: "${club_id}", page: ${page}) { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+    } else {
+        query = `{ getTransferpile(club_id: "${club_id}", page: ${page}, name: "${name}") { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }`;
+    }
+
     let res = await graphql.request(query);
 
     return res.getTransferpile;

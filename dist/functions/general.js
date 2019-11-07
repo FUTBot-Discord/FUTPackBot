@@ -566,15 +566,14 @@ function _getClubPlayer() {
         switch (_context11.prev = _context11.next) {
           case 0:
             query = "{ getClubPlayer(club_id: \"".concat(club_id, "\", player_id: \"").concat(player_id, "\") { id } }");
-            console.log(query);
-            _context11.next = 4;
+            _context11.next = 3;
             return graphql.request(query);
 
-          case 4:
+          case 3:
             res = _context11.sent;
             return _context11.abrupt("return", res.getClubPlayer);
 
-          case 6:
+          case 5:
           case "end":
             return _context11.stop();
         }

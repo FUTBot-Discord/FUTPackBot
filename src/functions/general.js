@@ -222,7 +222,6 @@ async function createUserClub(author_id) {
 
 async function getClubPlayer(club_id, player_id) {
     let query = `{ getClubPlayer(club_id: "${club_id}", player_id: "${player_id}") { id } }`;
-    console.log(query);
     let res = await graphql.request(query);
 
     return res.getClubPlayer;

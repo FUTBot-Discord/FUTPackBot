@@ -251,7 +251,6 @@ exports.run = async (client, message, args) => {
 
                             break;
                         case "2%E2%83%A3":
-                            console.log(await getClubPlayer(cInfo.id, pPlayer.player_id));
                             if (await getTransferpilePlayerById(cInfo.id, pPlayer.id) == null) return channel.send(`Player couldn't be found. Try again... ${author}`);
                             if (await getClubPlayer(cInfo.id, pPlayer.player_id) !== null) return channel.send(`Player can't be added to your club. The same version is already in your club. ${author}`);
 

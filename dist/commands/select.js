@@ -423,7 +423,7 @@ function () {
                     switch (_context4.prev = _context4.next) {
                       case 0:
                         _context4.t0 = r.emoji.identifier;
-                        _context4.next = _context4.t0 === "1%E2%83%A3" ? 3 : _context4.t0 === "2%E2%83%A3" ? 11 : _context4.t0 === "3%E2%83%A3" ? 29 : 35;
+                        _context4.next = _context4.t0 === "1%E2%83%A3" ? 3 : _context4.t0 === "2%E2%83%A3" ? 11 : _context4.t0 === "3%E2%83%A3" ? 24 : 30;
                         break;
 
                       case 3:
@@ -465,47 +465,38 @@ function () {
                         })));
 
                       case 10:
-                        return _context4.abrupt("break", 35);
+                        return _context4.abrupt("break", 30);
 
                       case 11:
-                        _context4.t2 = console;
-                        _context4.next = 14;
-                        return (0, _general.getClubPlayer)(cInfo.id, pPlayer.player_id);
-
-                      case 14:
-                        _context4.t3 = _context4.sent;
-
-                        _context4.t2.log.call(_context4.t2, _context4.t3);
-
-                        _context4.next = 18;
+                        _context4.next = 13;
                         return (0, _general.getTransferpilePlayerById)(cInfo.id, pPlayer.id);
 
-                      case 18:
-                        _context4.t4 = _context4.sent;
+                      case 13:
+                        _context4.t2 = _context4.sent;
 
-                        if (!(_context4.t4 == null)) {
-                          _context4.next = 21;
+                        if (!(_context4.t2 == null)) {
+                          _context4.next = 16;
                           break;
                         }
 
                         return _context4.abrupt("return", channel.send("Player couldn't be found. Try again... ".concat(author)));
 
-                      case 21:
-                        _context4.next = 23;
+                      case 16:
+                        _context4.next = 18;
                         return (0, _general.getClubPlayer)(cInfo.id, pPlayer.player_id);
 
-                      case 23:
-                        _context4.t5 = _context4.sent;
+                      case 18:
+                        _context4.t3 = _context4.sent;
 
-                        if (!(_context4.t5 !== null)) {
-                          _context4.next = 26;
+                        if (!(_context4.t3 !== null)) {
+                          _context4.next = 21;
                           break;
                         }
 
                         return _context4.abrupt("return", channel.send("Player can't be added to your club. The same version is already in your club. ".concat(author)));
 
-                      case 26:
-                        _context4.next = 28;
+                      case 21:
+                        _context4.next = 23;
                         return (0, _general.removePlayerFromTransferpile)(cInfo.id, pPlayer.id).then(
                         /*#__PURE__*/
                         (0, _asyncToGenerator2["default"])(
@@ -528,27 +519,27 @@ function () {
                           }, _callee3);
                         })));
 
-                      case 28:
-                        return _context4.abrupt("break", 35);
+                      case 23:
+                        return _context4.abrupt("break", 30);
 
-                      case 29:
-                        _context4.next = 31;
+                      case 24:
+                        _context4.next = 26;
                         return (0, _general.getClubTransferpileCount)(cInfo.id).length;
 
-                      case 31:
-                        _context4.t6 = _context4.sent;
+                      case 26:
+                        _context4.t4 = _context4.sent;
 
-                        if (!(_context4.t6 > 99)) {
-                          _context4.next = 34;
+                        if (!(_context4.t4 > 99)) {
+                          _context4.next = 29;
                           break;
                         }
 
                         return _context4.abrupt("return", channel.send("Player isn't able to be moved to your transferpile. Your transferpile has reached his max... ".concat(author)));
 
-                      case 34:
-                        return _context4.abrupt("break", 35);
+                      case 29:
+                        return _context4.abrupt("break", 30);
 
-                      case 35:
+                      case 30:
                       case "end":
                         return _context4.stop();
                     }

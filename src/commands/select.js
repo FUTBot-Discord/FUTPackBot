@@ -11,11 +11,19 @@ import {
     getTransferpilePlayerById,
     getClubPlayerById,
     makePlayerCard,
+    getClubPlayer,
     getPlayerVersionById,
     getRarityName,
-    getQuality
+    getQuality,
+    addClubPlayer,
+    addCoinsToClub,
+    removePlayerFromTransferpile,
+    removePlayerFromClub,
+    addTransferpilePlayer
 } from '../functions/general';
-import { RichEmbed } from 'discord.js'
+import {
+    RichEmbed
+} from 'discord.js'
 
 exports.run = async (client, message, args) => {
     const transferpile = [
@@ -122,6 +130,8 @@ exports.run = async (client, message, args) => {
         }
     }
 
+    if (pCollection.length < 1) return channel.send(`No players are found with this criteria. Try again later... ${author}`);
+
     let pMenu;
     let mTemp2;
     let aPages;
@@ -146,8 +156,8 @@ exports.run = async (client, message, args) => {
     }
 
     await channel.send(pMenu, {
-        code: true
-    })
+            code: true
+        })
         .then(m => mTemp = m)
         .then(() => {
             channel.send(`Type the **ID** your player you want to select. ${author}\nIf the player is at the transfer market, you can do nothing with him.\nAfter 30 seconds without any response this request is going to be closed.`)
@@ -155,7 +165,9 @@ exports.run = async (client, message, args) => {
         });
 
     rFilter = (reaction, user) => user.id === author.id;
-    const rCollector = mTemp.createReactionCollector(rFilter, { time: 30000 });
+    const rCollector = mTemp.createReactionCollector(rFilter, {
+        time: 30000
+    });
 
     rCollector.on('collect', async r => {
 
@@ -195,7 +207,7 @@ exports.run = async (client, message, args) => {
         case 1:
             place = "Transferpile";
             a = "Send to club";
-            b += "\n:three: List to transfer market";
+            //b += "\n:three: List to transfer market"; UNCOMMENT THIS STUPID TJIRD
             break;
         case 2:
             place = "Club";
@@ -211,7 +223,7 @@ exports.run = async (client, message, args) => {
         .attachFile(playerCard)
         .setImage("attachment://card.png")
         .setTitle(`You have choosen ${playerName} his card.`)
-        .setDescription(`Version: ${getRarityName(`${playerInfo.rareflag}-${getQuality(playerInfo.rating)}`) ? getRarityName(`${playerInfo.rareflag}-${getQuality(playerInfo.rating)}`) : "Unknown"}\nCurrent place: ${place}\n\nReact at this message with some choosen emojis.\n:one: Quick-sell (${playerInfo.min_price} coins)\n:two: ${a}${b}`)
+        .setDescription(`Version: ${getRarityName(`${playerInfo.rareflag}-${getQuality(playerInfo.rating)}`) ? getRarityName(`${playerInfo.rareflag}-${getQuality(playerInfo.rating)}`) : "Unknown"}\nCurrent place: ${place}\n\nReact at this message with some choosen emojis.\n:one: Quick-sell (${playerInfo.min_price} coins)\n:two: ${a}${b}\n\nAfter 30 seconds without any response this request is going to be closed.`)
         .setFooter(`FUTPackBot v.1.0.0 | Made by Tjird#0001`, "https://tjird.nl/futbot.jpg");
 
     await channel.send(pEmbed)
@@ -219,8 +231,78 @@ exports.run = async (client, message, args) => {
         .then(() => mTemp.react("\u0031\u20E3"))
         .then(() => mTemp.react("\u0032\u20E3"))
         .then(() => {
-            if (choice === 1) mTemp.react("\u0033\u20E3");
+            //if (choice === 1) mTemp.react("\u0033\u20E3"); UNCOMMENT THIS STUPID TJIRD
         });
 
+    switch (choice) {
+        case 1:
+            rFilter = (reaction, user) => (reaction.emoji.identifier === '1%E2%83%A3' || reaction.emoji.identifier === '2%E2%83%A3' || reaction.emoji.identifier === '3%E2%83%A3') && user.id === author.id;
+            await setDialogueReactions(rFilter, mTemp, 30000)
+                .then(async r => {
+                    switch (r.emoji.identifier) {
+                        case "1%E2%83%A3":
+                            if (await getTransferpilePlayerById(cInfo.id, pPlayer.id) == null) return channel.send(`Player couldn't be found. Try again... ${author}`);
+
+                            await removePlayerFromTransferpile(cInfo.id, pPlayer.id)
+                                .then(async () => {
+                                    await addCoinsToClub(cInfo.id, playerInfo.min_price)
+                                        .then(() => channel.send(`${playerName} is successfully quick-sold for ${playerInfo.min_price} coins! ${author}`));
+                                });
+
+                            break;
+                        case "2%E2%83%A3":
+                            console.log(await getClubPlayer(cInfo.id, pPlayer.player_id));
+                            if (await getTransferpilePlayerById(cInfo.id, pPlayer.id) == null) return channel.send(`Player couldn't be found. Try again... ${author}`);
+                            if (await getClubPlayer(cInfo.id, pPlayer.player_id) !== null) return channel.send(`Player can't be added to your club. The same version is already in your club. ${author}`);
+
+                            await removePlayerFromTransferpile(cInfo.id, pPlayer.id)
+                                .then(async () => {
+                                    await addClubPlayer(cInfo.id, pPlayer.player_id)
+                                        .then(() => channel.send(`${playerName} is successfully moved to your club! ${author}`));
+                                });
+
+                            break;
+                        case "3%E2%83%A3":
+                            if (await getClubTransferpileCount(cInfo.id).length > 99) return channel.send(`Player isn't able to be moved to your transferpile. Your transferpile has reached his max... ${author}`);
+
+
+                            break;
+                    }
+                })
+                .then(() => mTemp.delete())
+                .catch(e => channel.send(`${author} your request has been called because no response has given.`));
+            break;
+        case 2:
+            rFilter = (reaction, user) => (reaction.emoji.identifier === '1%E2%83%A3' || reaction.emoji.identifier === '2%E2%83%A3') && user.id === author.id;
+            await setDialogueReactions(rFilter, mTemp, 30000)
+                .then(async r => {
+                    switch (r.emoji.identifier) {
+                        case "1%E2%83%A3":
+                            if (await getClubPlayerById(cInfo.id, pPlayer.id) == null) return channel.send(`Player couldn't be found. Try again... ${author}`);
+
+                            await removePlayerFromClub(cInfo.id, pPlayer.id)
+                                .then(async () => {
+                                    await addCoinsToClub(cInfo.id, playerInfo.min_price)
+                                        .then(() => channel.send(`${playerName} is successfully quick-sold for ${playerInfo.min_price} coins! ${author}`));
+                                });
+
+                            break;
+                        case "2%E2%83%A3":
+                            if (await getClubPlayerById(cInfo.id, pPlayer.id) == null) return channel.send(`Player couldn't be found. Try again... ${author}`);
+                            if (await getClubTransferpileCount(cInfo.id).length > 99) return channel.send(`Player isn't able to be moved to your transferpile. Your transferpile has reached his max... ${author}`);
+
+                            await removePlayerFromClub(cInfo.id, pPlayer.id)
+                                .then(async () => {
+                                    await addTransferpilePlayer(cInfo.id, pPlayer.player_id)
+                                        .then(() => channel.send(`${playerName} is successfully moved to your transferpile! ${author}`));
+                                });
+
+                            break;
+                    }
+                })
+                .then(() => mTemp.delete())
+                .catch(e => channel.send(`${author} your request has been called because no response has given.`));
+            break;
+    }
 
 }

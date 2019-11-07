@@ -566,14 +566,15 @@ function _getClubPlayer() {
         switch (_context11.prev = _context11.next) {
           case 0:
             query = "{ getClubPlayer(club_id: \"".concat(club_id, "\", player_id: \"").concat(player_id, "\") { id } }");
-            _context11.next = 3;
+            console.log(query);
+            _context11.next = 4;
             return graphql.request(query);
 
-          case 3:
+          case 4:
             res = _context11.sent;
             return _context11.abrupt("return", res.getClubPlayer);
 
-          case 5:
+          case 6:
           case "end":
             return _context11.stop();
         }
@@ -666,20 +667,25 @@ function _addCoinsToClub() {
 
 ;
 
-function removeCoinsFromClub(_x22, _x23) {
-  return _removeCoinsFromClub.apply(this, arguments);
+function addTransferpilePlayer(_x22, _x23, _x24) {
+  return _addTransferpilePlayer.apply(this, arguments);
 }
 
-function _removeCoinsFromClub() {
-  _removeCoinsFromClub = (0, _asyncToGenerator2["default"])(
+function _addTransferpilePlayer() {
+  _addTransferpilePlayer = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee14(club_id, coins) {
+  _regenerator["default"].mark(function _callee14(club_id, player_id, auction_id) {
     var query;
     return _regenerator["default"].wrap(function _callee14$(_context14) {
       while (1) {
         switch (_context14.prev = _context14.next) {
           case 0:
-            query = "mutation { removeCoinsFromClub(club_id: \"".concat(club_id, "\", coins: \"").concat(coins, "\") { id } }");
+            if (!auction_id || auction_id == undefined) {
+              query = "mutation { addTransferPlayer(club_id: \"".concat(club_id, "\", player_id: \"").concat(player_id, "\") { id } }");
+            } else {
+              query = "mutation { addTransferPlayer(club_id: \"".concat(club_id, "\", player_id: \"").concat(player_id, "\", auction_id: ").concat(auction_id, ") { id } }");
+            }
+
             _context14.prev = 1;
             _context14.next = 4;
             return graphql.request(query);
@@ -704,7 +710,136 @@ function _removeCoinsFromClub() {
       }
     }, _callee14, null, [[1, 6]]);
   }));
+  return _addTransferpilePlayer.apply(this, arguments);
+}
+
+;
+
+function removeCoinsFromClub(_x25, _x26) {
   return _removeCoinsFromClub.apply(this, arguments);
+}
+
+function _removeCoinsFromClub() {
+  _removeCoinsFromClub = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee15(club_id, coins) {
+    var query;
+    return _regenerator["default"].wrap(function _callee15$(_context15) {
+      while (1) {
+        switch (_context15.prev = _context15.next) {
+          case 0:
+            query = "mutation { removeCoinsFromClub(club_id: \"".concat(club_id, "\", coins: \"").concat(coins, "\") { id } }");
+            _context15.prev = 1;
+            _context15.next = 4;
+            return graphql.request(query);
+
+          case 4:
+            _context15.next = 10;
+            break;
+
+          case 6:
+            _context15.prev = 6;
+            _context15.t0 = _context15["catch"](1);
+            console.log(_context15.t0);
+            return _context15.abrupt("return", false);
+
+          case 10:
+            return _context15.abrupt("return", true);
+
+          case 11:
+          case "end":
+            return _context15.stop();
+        }
+      }
+    }, _callee15, null, [[1, 6]]);
+  }));
+  return _removeCoinsFromClub.apply(this, arguments);
+}
+
+;
+
+function removePlayerFromTransferpile(_x27, _x28) {
+  return _removePlayerFromTransferpile.apply(this, arguments);
+}
+
+function _removePlayerFromTransferpile() {
+  _removePlayerFromTransferpile = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee16(club_id, id) {
+    var query;
+    return _regenerator["default"].wrap(function _callee16$(_context16) {
+      while (1) {
+        switch (_context16.prev = _context16.next) {
+          case 0:
+            query = "mutation { removePlayerFromTransferpile(club_id: \"".concat(club_id, "\", id: ").concat(id, ") { id } }");
+            _context16.prev = 1;
+            _context16.next = 4;
+            return graphql.request(query);
+
+          case 4:
+            _context16.next = 10;
+            break;
+
+          case 6:
+            _context16.prev = 6;
+            _context16.t0 = _context16["catch"](1);
+            console.log(_context16.t0);
+            return _context16.abrupt("return", false);
+
+          case 10:
+            return _context16.abrupt("return", true);
+
+          case 11:
+          case "end":
+            return _context16.stop();
+        }
+      }
+    }, _callee16, null, [[1, 6]]);
+  }));
+  return _removePlayerFromTransferpile.apply(this, arguments);
+}
+
+;
+
+function removePlayerFromClub(_x29, _x30) {
+  return _removePlayerFromClub.apply(this, arguments);
+}
+
+function _removePlayerFromClub() {
+  _removePlayerFromClub = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee17(club_id, id) {
+    var query;
+    return _regenerator["default"].wrap(function _callee17$(_context17) {
+      while (1) {
+        switch (_context17.prev = _context17.next) {
+          case 0:
+            query = "mutation { removePlayerFromClub(club_id: \"".concat(club_id, "\", id: ").concat(id, ") { id } }");
+            _context17.prev = 1;
+            _context17.next = 4;
+            return graphql.request(query);
+
+          case 4:
+            _context17.next = 10;
+            break;
+
+          case 6:
+            _context17.prev = 6;
+            _context17.t0 = _context17["catch"](1);
+            console.log(_context17.t0);
+            return _context17.abrupt("return", false);
+
+          case 10:
+            return _context17.abrupt("return", true);
+
+          case 11:
+          case "end":
+            return _context17.stop();
+        }
+      }
+    }, _callee17, null, [[1, 6]]);
+  }));
+  return _removePlayerFromClub.apply(this, arguments);
 }
 
 ;
@@ -725,18 +860,18 @@ function getAnimation(rf, rt) {
 
 ;
 
-function makePlayerCard(_x24) {
+function makePlayerCard(_x31) {
   return _makePlayerCard.apply(this, arguments);
 }
 
 function _makePlayerCard() {
   _makePlayerCard = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee15(player_info) {
+  _regenerator["default"].mark(function _callee18(player_info) {
     var positions, packCard, ctx, colors, background, playerpicture, playername, pSize, pHeight, nation, club, attachment;
-    return _regenerator["default"].wrap(function _callee15$(_context15) {
+    return _regenerator["default"].wrap(function _callee18$(_context18) {
       while (1) {
-        switch (_context15.prev = _context15.next) {
+        switch (_context18.prev = _context18.next) {
           case 0:
             positions = {
               p: {
@@ -770,22 +905,22 @@ function _makePlayerCard() {
             });
             packCard = Canvas.createCanvas(644 / 2.15, 900 / 2.15);
             ctx = packCard.getContext('2d');
-            _context15.next = 9;
+            _context18.next = 9;
             return getCardColor(player_info.rareflag, player_info.rating);
 
           case 9:
-            colors = _context15.sent;
-            _context15.next = 12;
+            colors = _context18.sent;
+            _context18.next = 12;
             return Canvas.loadImage("http://fifa.tjird.nl/cards/".concat(player_info.rareflag, "-").concat(getQuality(player_info.rating), ".png"));
 
           case 12:
-            background = _context15.sent;
+            background = _context18.sent;
             ctx.drawImage(background, 0, 0, 644 / 2.15, 900 / 2.15);
-            _context15.next = 16;
+            _context18.next = 16;
             return Canvas.loadImage(player_info.meta_info.img);
 
           case 16:
-            playerpicture = _context15.sent;
+            playerpicture = _context18.sent;
             ctx.drawImage(playerpicture, 95, 57, 160, 160);
             playername = player_info.meta_info.common_name ? player_info.meta_info.common_name.toUpperCase() : player_info.meta_info.last_name.toUpperCase();
             pSize = '19px';
@@ -804,17 +939,17 @@ function _makePlayerCard() {
             ctx.fillText(player_info.rating, 90, 93);
             ctx.font = "28px '".concat(colors.font_2, "'");
             ctx.fillText(player_info.preferred_position.toUpperCase(), 90, 119);
-            _context15.next = 32;
+            _context18.next = 32;
             return Canvas.loadImage(player_info.nation_info.img);
 
           case 32:
-            nation = _context15.sent;
+            nation = _context18.sent;
             ctx.drawImage(nation, 70, 128, nation.width * 0.6, nation.height * 0.6);
-            _context15.next = 36;
+            _context18.next = 36;
             return Canvas.loadImage(player_info.club_info.img);
 
           case 36:
-            club = _context15.sent;
+            club = _context18.sent;
             ctx.drawImage(club, 70, 165, club.width * 0.31, club.height * 0.31);
             ctx.font = "18px '".concat(colors.font_3, "'");
             ctx.fillStyle = "#".concat(colors.color_attr_values);
@@ -862,43 +997,43 @@ function _makePlayerCard() {
             ctx.lineTo(packCard.width / 2 + 23, 350);
             ctx.stroke();
             attachment = new _discord.Attachment(packCard.toBuffer(), 'card.png');
-            return _context15.abrupt("return", attachment);
+            return _context18.abrupt("return", attachment);
 
           case 79:
           case "end":
-            return _context15.stop();
+            return _context18.stop();
         }
       }
-    }, _callee15);
+    }, _callee18);
   }));
   return _makePlayerCard.apply(this, arguments);
 }
 
 ;
 
-function setDialogue(_x25, _x26, _x27) {
+function setDialogue(_x32, _x33, _x34) {
   return _setDialogue.apply(this, arguments);
 }
 
 function _setDialogue() {
   _setDialogue = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee17(f, c, t) {
-    return _regenerator["default"].wrap(function _callee17$(_context17) {
+  _regenerator["default"].mark(function _callee20(f, c, t) {
+    return _regenerator["default"].wrap(function _callee20$(_context20) {
       while (1) {
-        switch (_context17.prev = _context17.next) {
+        switch (_context20.prev = _context20.next) {
           case 0:
-            return _context17.abrupt("return", new Promise(
+            return _context20.abrupt("return", new Promise(
             /*#__PURE__*/
             function () {
               var _ref = (0, _asyncToGenerator2["default"])(
               /*#__PURE__*/
-              _regenerator["default"].mark(function _callee16(resolve, reject) {
-                return _regenerator["default"].wrap(function _callee16$(_context16) {
+              _regenerator["default"].mark(function _callee19(resolve, reject) {
+                return _regenerator["default"].wrap(function _callee19$(_context19) {
                   while (1) {
-                    switch (_context16.prev = _context16.next) {
+                    switch (_context19.prev = _context19.next) {
                       case 0:
-                        _context16.next = 2;
+                        _context19.next = 2;
                         return c.awaitMessages(f, {
                           max: 1,
                           time: t
@@ -912,52 +1047,52 @@ function _setDialogue() {
 
                       case 2:
                       case "end":
-                        return _context16.stop();
+                        return _context19.stop();
                     }
                   }
-                }, _callee16);
+                }, _callee19);
               }));
 
-              return function (_x43, _x44) {
+              return function (_x50, _x51) {
                 return _ref.apply(this, arguments);
               };
             }()));
 
           case 1:
           case "end":
-            return _context17.stop();
+            return _context20.stop();
         }
       }
-    }, _callee17);
+    }, _callee20);
   }));
   return _setDialogue.apply(this, arguments);
 }
 
 ;
 
-function setDialogueReactions(_x28, _x29, _x30) {
+function setDialogueReactions(_x35, _x36, _x37) {
   return _setDialogueReactions.apply(this, arguments);
 }
 
 function _setDialogueReactions() {
   _setDialogueReactions = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee19(f, m, t) {
-    return _regenerator["default"].wrap(function _callee19$(_context19) {
+  _regenerator["default"].mark(function _callee22(f, m, t) {
+    return _regenerator["default"].wrap(function _callee22$(_context22) {
       while (1) {
-        switch (_context19.prev = _context19.next) {
+        switch (_context22.prev = _context22.next) {
           case 0:
-            return _context19.abrupt("return", new Promise(
+            return _context22.abrupt("return", new Promise(
             /*#__PURE__*/
             function () {
               var _ref2 = (0, _asyncToGenerator2["default"])(
               /*#__PURE__*/
-              _regenerator["default"].mark(function _callee18(resolve, reject) {
-                return _regenerator["default"].wrap(function _callee18$(_context18) {
+              _regenerator["default"].mark(function _callee21(resolve, reject) {
+                return _regenerator["default"].wrap(function _callee21$(_context21) {
                   while (1) {
-                    switch (_context18.prev = _context18.next) {
+                    switch (_context21.prev = _context21.next) {
                       case 0:
-                        _context18.next = 2;
+                        _context21.next = 2;
                         return m.awaitReactions(f, {
                           max: 1,
                           time: t
@@ -970,41 +1105,41 @@ function _setDialogueReactions() {
 
                       case 2:
                       case "end":
-                        return _context18.stop();
+                        return _context21.stop();
                     }
                   }
-                }, _callee18);
+                }, _callee21);
               }));
 
-              return function (_x45, _x46) {
+              return function (_x52, _x53) {
                 return _ref2.apply(this, arguments);
               };
             }()));
 
           case 1:
           case "end":
-            return _context19.stop();
+            return _context22.stop();
         }
       }
-    }, _callee19);
+    }, _callee22);
   }));
   return _setDialogueReactions.apply(this, arguments);
 }
 
 ;
 
-function getClubCollectionCount(_x31, _x32) {
+function getClubCollectionCount(_x38, _x39) {
   return _getClubCollectionCount.apply(this, arguments);
 }
 
 function _getClubCollectionCount() {
   _getClubCollectionCount = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee20(club_id, name) {
+  _regenerator["default"].mark(function _callee23(club_id, name) {
     var query, res;
-    return _regenerator["default"].wrap(function _callee20$(_context20) {
+    return _regenerator["default"].wrap(function _callee23$(_context23) {
       while (1) {
-        switch (_context20.prev = _context20.next) {
+        switch (_context23.prev = _context23.next) {
           case 0:
             if (!name || name == undefined) {
               query = "{ getClubCollection(club_id: \"".concat(club_id, "\") { player_id } }");
@@ -1012,37 +1147,37 @@ function _getClubCollectionCount() {
               query = "{ getClubCollection(club_id: \"".concat(club_id, "\", name: \"").concat(name, "\") { player_id } }");
             }
 
-            _context20.next = 3;
+            _context23.next = 3;
             return graphql.request(query);
 
           case 3:
-            res = _context20.sent;
-            return _context20.abrupt("return", res.getClubCollection);
+            res = _context23.sent;
+            return _context23.abrupt("return", res.getClubCollection);
 
           case 5:
           case "end":
-            return _context20.stop();
+            return _context23.stop();
         }
       }
-    }, _callee20);
+    }, _callee23);
   }));
   return _getClubCollectionCount.apply(this, arguments);
 }
 
 ;
 
-function getClubCollection(_x33, _x34, _x35) {
+function getClubCollection(_x40, _x41, _x42) {
   return _getClubCollection.apply(this, arguments);
 }
 
 function _getClubCollection() {
   _getClubCollection = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee21(club_id, page, name) {
+  _regenerator["default"].mark(function _callee24(club_id, page, name) {
     var query, res;
-    return _regenerator["default"].wrap(function _callee21$(_context21) {
+    return _regenerator["default"].wrap(function _callee24$(_context24) {
       while (1) {
-        switch (_context21.prev = _context21.next) {
+        switch (_context24.prev = _context24.next) {
           case 0:
             if (!name || name == undefined) {
               query = "{ getClubCollection(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
@@ -1050,112 +1185,12 @@ function _getClubCollection() {
               query = "{ getClubCollection(club_id: \"".concat(club_id, "\", page: ").concat(page, ", name: \"").concat(name, "\") { id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
             }
 
-            _context21.next = 3;
-            return graphql.request(query);
-
-          case 3:
-            res = _context21.sent;
-            return _context21.abrupt("return", res.getClubCollection);
-
-          case 5:
-          case "end":
-            return _context21.stop();
-        }
-      }
-    }, _callee21);
-  }));
-  return _getClubCollection.apply(this, arguments);
-}
-
-;
-
-function getClubTransferpileCount(_x36) {
-  return _getClubTransferpileCount.apply(this, arguments);
-}
-
-function _getClubTransferpileCount() {
-  _getClubTransferpileCount = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee22(club_id) {
-    var query, res;
-    return _regenerator["default"].wrap(function _callee22$(_context22) {
-      while (1) {
-        switch (_context22.prev = _context22.next) {
-          case 0:
-            query = "{ getTransferpile(club_id: \"".concat(club_id, "\") { player_id } }");
-            _context22.next = 3;
-            return graphql.request(query);
-
-          case 3:
-            res = _context22.sent;
-            return _context22.abrupt("return", res.getTransferpile);
-
-          case 5:
-          case "end":
-            return _context22.stop();
-        }
-      }
-    }, _callee22);
-  }));
-  return _getClubTransferpileCount.apply(this, arguments);
-}
-
-;
-
-function getClubPlayerById(_x37, _x38) {
-  return _getClubPlayerById.apply(this, arguments);
-}
-
-function _getClubPlayerById() {
-  _getClubPlayerById = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee23(club_id, id) {
-    var query, res;
-    return _regenerator["default"].wrap(function _callee23$(_context23) {
-      while (1) {
-        switch (_context23.prev = _context23.next) {
-          case 0:
-            query = "{ getClubCollectionPlayer(club_id: \"".concat(club_id, "\", id: \"").concat(id, "\") { id player_id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
-            console.log(query);
-            _context23.next = 4;
-            return graphql.request(query);
-
-          case 4:
-            res = _context23.sent;
-            return _context23.abrupt("return", res.getClubCollectionPlayer);
-
-          case 6:
-          case "end":
-            return _context23.stop();
-        }
-      }
-    }, _callee23);
-  }));
-  return _getClubPlayerById.apply(this, arguments);
-}
-
-;
-
-function getTransferpilePlayerById(_x39, _x40) {
-  return _getTransferpilePlayerById.apply(this, arguments);
-}
-
-function _getTransferpilePlayerById() {
-  _getTransferpilePlayerById = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee24(club_id, id) {
-    var query, res;
-    return _regenerator["default"].wrap(function _callee24$(_context24) {
-      while (1) {
-        switch (_context24.prev = _context24.next) {
-          case 0:
-            query = "{ getTransferpilePlayer(club_id: \"".concat(club_id, "\", id: \"").concat(id, "\") { id player_id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
             _context24.next = 3;
             return graphql.request(query);
 
           case 3:
             res = _context24.sent;
-            return _context24.abrupt("return", res.getTransferpilePlayer);
+            return _context24.abrupt("return", res.getClubCollection);
 
           case 5:
           case "end":
@@ -1164,25 +1199,25 @@ function _getTransferpilePlayerById() {
       }
     }, _callee24);
   }));
-  return _getTransferpilePlayerById.apply(this, arguments);
+  return _getClubCollection.apply(this, arguments);
 }
 
 ;
 
-function getClubTransferpile(_x41, _x42) {
-  return _getClubTransferpile.apply(this, arguments);
+function getClubTransferpileCount(_x43) {
+  return _getClubTransferpileCount.apply(this, arguments);
 }
 
-function _getClubTransferpile() {
-  _getClubTransferpile = (0, _asyncToGenerator2["default"])(
+function _getClubTransferpileCount() {
+  _getClubTransferpileCount = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee25(club_id, page) {
+  _regenerator["default"].mark(function _callee25(club_id) {
     var query, res;
     return _regenerator["default"].wrap(function _callee25$(_context25) {
       while (1) {
         switch (_context25.prev = _context25.next) {
           case 0:
-            query = "{ getTransferpile(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
+            query = "{ getTransferpile(club_id: \"".concat(club_id, "\") { player_id } }");
             _context25.next = 3;
             return graphql.request(query);
 
@@ -1197,6 +1232,105 @@ function _getClubTransferpile() {
       }
     }, _callee25);
   }));
+  return _getClubTransferpileCount.apply(this, arguments);
+}
+
+;
+
+function getClubPlayerById(_x44, _x45) {
+  return _getClubPlayerById.apply(this, arguments);
+}
+
+function _getClubPlayerById() {
+  _getClubPlayerById = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee26(club_id, id) {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee26$(_context26) {
+      while (1) {
+        switch (_context26.prev = _context26.next) {
+          case 0:
+            query = "{ getClubCollectionPlayer(club_id: \"".concat(club_id, "\", id: \"").concat(id, "\") { id player_id card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
+            _context26.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context26.sent;
+            return _context26.abrupt("return", res.getClubCollectionPlayer);
+
+          case 5:
+          case "end":
+            return _context26.stop();
+        }
+      }
+    }, _callee26);
+  }));
+  return _getClubPlayerById.apply(this, arguments);
+}
+
+;
+
+function getTransferpilePlayerById(_x46, _x47) {
+  return _getTransferpilePlayerById.apply(this, arguments);
+}
+
+function _getTransferpilePlayerById() {
+  _getTransferpilePlayerById = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee27(club_id, id) {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee27$(_context27) {
+      while (1) {
+        switch (_context27.prev = _context27.next) {
+          case 0:
+            query = "{ getTransferpilePlayer(club_id: \"".concat(club_id, "\", id: \"").concat(id, "\") { id player_id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
+            _context27.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context27.sent;
+            return _context27.abrupt("return", res.getTransferpilePlayer);
+
+          case 5:
+          case "end":
+            return _context27.stop();
+        }
+      }
+    }, _callee27);
+  }));
+  return _getTransferpilePlayerById.apply(this, arguments);
+}
+
+;
+
+function getClubTransferpile(_x48, _x49) {
+  return _getClubTransferpile.apply(this, arguments);
+}
+
+function _getClubTransferpile() {
+  _getClubTransferpile = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee28(club_id, page) {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee28$(_context28) {
+      while (1) {
+        switch (_context28.prev = _context28.next) {
+          case 0:
+            query = "{ getTransferpile(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id auction_info{current_bid buy_now end_timestamp} card_info { rating rareflag preferred_position meta_info { first_name last_name common_name } } } }");
+            _context28.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context28.sent;
+            return _context28.abrupt("return", res.getTransferpile);
+
+          case 5:
+          case "end":
+            return _context28.stop();
+        }
+      }
+    }, _callee28);
+  }));
   return _getClubTransferpile.apply(this, arguments);
 }
 
@@ -1207,6 +1341,8 @@ module.exports = {
   getTransferpilePlayerById: getTransferpilePlayerById,
   getClubTransferpile: getClubTransferpile,
   getQuality: getQuality,
+  removePlayerFromTransferpile: removePlayerFromTransferpile,
+  removePlayerFromClub: removePlayerFromClub,
   getRarityName: getRarityName,
   getPlayer: getPlayer,
   getCardColor: getCardColor,
@@ -1231,6 +1367,7 @@ module.exports = {
   getActiveAuctions: getActiveAuctions,
   makeAuctionMenu: makeAuctionMenu,
   getCurrentAuctionsCount: getCurrentAuctionsCount,
+  addTransferpilePlayer: addTransferpilePlayer,
   makeClubMenu: makeClubMenu,
   getPlayerVersionById: getPlayerVersionById
 };

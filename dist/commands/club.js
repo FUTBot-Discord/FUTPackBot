@@ -449,7 +449,7 @@ function () {
                         });
 
                       case 118:
-                        if (message.guild) r.remove(author);
+                        if (message.guild) r.remove(author)["catch"](function (e) {});
 
                       case 119:
                       case "end":

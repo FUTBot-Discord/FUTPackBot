@@ -674,7 +674,7 @@ function _addTransferpilePlayer() {
   _addTransferpilePlayer = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee14(club_id, player_id, auction_id) {
-    var query;
+    var query, res;
     return _regenerator["default"].wrap(function _callee14$(_context14) {
       while (1) {
         switch (_context14.prev = _context14.next) {
@@ -685,34 +685,32 @@ function _addTransferpilePlayer() {
               query = "mutation { addTransferPlayer(club_id: \"".concat(club_id, "\", player_id: \"").concat(player_id, "\", auction_id: ").concat(auction_id, ") { id } }");
             }
 
-            _context14.prev = 1;
-            _context14.next = 4;
+            _context14.next = 3;
             return graphql.request(query);
 
-          case 4:
-            _context14.next = 10;
-            break;
+          case 3:
+            res = _context14.sent;
+            return _context14.abrupt("return", res.addTransferPlayer);
 
-          case 6:
-            _context14.prev = 6;
-            _context14.t0 = _context14["catch"](1);
-            console.log(_context14.t0);
-            return _context14.abrupt("return", false);
-
-          case 10:
-            return _context14.abrupt("return", true);
-
-          case 11:
+          case 5:
           case "end":
             return _context14.stop();
         }
       }
-    }, _callee14, null, [[1, 6]]);
+    }, _callee14);
   }));
   return _addTransferpilePlayer.apply(this, arguments);
 }
 
 ;
+
+function nextCurrentBid(p) {
+  p = parseInt(p, 10);
+  if (p >= 100000) return Math.ceil(p / 1000) * 1000;
+  if (p >= 10000) return Math.ceil(p / 250) * 250;
+  if (p >= 1000) return Math.ceil(p / 100) * 100;
+  return Math.ceil(p / 50) * 50;
+}
 
 function removeCoinsFromClub(_x25, _x26) {
   return _removeCoinsFromClub.apply(this, arguments);
@@ -1052,7 +1050,7 @@ function _setDialogue() {
                 }, _callee19);
               }));
 
-              return function (_x51, _x52) {
+              return function (_x58, _x59) {
                 return _ref.apply(this, arguments);
               };
             }()));
@@ -1110,7 +1108,7 @@ function _setDialogueReactions() {
                 }, _callee21);
               }));
 
-              return function (_x53, _x54) {
+              return function (_x60, _x61) {
                 return _ref2.apply(this, arguments);
               };
             }()));
@@ -1339,6 +1337,79 @@ function _getClubTransferpile() {
 }
 
 ;
+
+function addAuctionPlayer(_x51, _x52, _x53, _x54, _x55) {
+  return _addAuctionPlayer.apply(this, arguments);
+}
+
+function _addAuctionPlayer() {
+  _addAuctionPlayer = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee29(cid, pid, end, buy, startp) {
+    var query, res;
+    return _regenerator["default"].wrap(function _callee29$(_context29) {
+      while (1) {
+        switch (_context29.prev = _context29.next) {
+          case 0:
+            query = "mutation { addAuctionPlayer(club_id: \"".concat(cid, "\", player_id: \"").concat(pid, "\", end_timestamp: ").concat(end, ", buy_now: ").concat(buy, ", start_price: ").concat(startp, ") { id } }");
+            _context29.next = 3;
+            return graphql.request(query);
+
+          case 3:
+            res = _context29.sent;
+            return _context29.abrupt("return", res.addAuctionPlayer);
+
+          case 5:
+          case "end":
+            return _context29.stop();
+        }
+      }
+    }, _callee29);
+  }));
+  return _addAuctionPlayer.apply(this, arguments);
+}
+
+function updateTransferPlayer(_x56, _x57) {
+  return _updateTransferPlayer.apply(this, arguments);
+}
+
+function _updateTransferPlayer() {
+  _updateTransferPlayer = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee30(id, aId) {
+    var query;
+    return _regenerator["default"].wrap(function _callee30$(_context30) {
+      while (1) {
+        switch (_context30.prev = _context30.next) {
+          case 0:
+            query = "mutation { updateTransferPlayer(id: \"".concat(id, "\", auction_id: \"").concat(aId, "\") { id } }");
+            _context30.prev = 1;
+            _context30.next = 4;
+            return graphql.request(query);
+
+          case 4:
+            _context30.next = 10;
+            break;
+
+          case 6:
+            _context30.prev = 6;
+            _context30.t0 = _context30["catch"](1);
+            console.log(_context30.t0);
+            return _context30.abrupt("return", false);
+
+          case 10:
+            return _context30.abrupt("return", true);
+
+          case 11:
+          case "end":
+            return _context30.stop();
+        }
+      }
+    }, _callee30, null, [[1, 6]]);
+  }));
+  return _updateTransferPlayer.apply(this, arguments);
+}
+
 module.exports = {
   getClubTransferpileCount: getClubTransferpileCount,
   getClubPlayerById: getClubPlayerById,
@@ -1373,5 +1444,8 @@ module.exports = {
   getCurrentAuctionsCount: getCurrentAuctionsCount,
   addTransferpilePlayer: addTransferpilePlayer,
   makeClubMenu: makeClubMenu,
-  getPlayerVersionById: getPlayerVersionById
+  getPlayerVersionById: getPlayerVersionById,
+  nextCurrentBid: nextCurrentBid,
+  addAuctionPlayer: addAuctionPlayer,
+  updateTransferPlayer: updateTransferPlayer
 };

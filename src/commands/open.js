@@ -130,6 +130,8 @@ exports.run = async (client, message, args) => {
     let duplicates = [];
     let transferpile = [];
 
+    players_info = players_info.sort((a, b) => (a.rating < b.rating) ? 1 : ((b.rating < a.rating) ? -1 : 0));
+
     for (let p of players_info) {
         let o = await getClubPlayer(clubuser.id, p.id);
 
@@ -146,8 +148,6 @@ exports.run = async (client, message, args) => {
             await addClubPlayer(clubuser.id, p.id);
         }
     }
-
-    players_info = players_info.sort((a, b) => (a.rating < b.rating) ? 1 : ((b.rating < a.rating) ? -1 : 0));
 
     const card = await makePlayerCard(players_info[0]);
     const animation = getAnimation(players_info[0].rareflag, players_info[0].rating);

@@ -263,15 +263,20 @@ async function addTransferpilePlayer(club_id, player_id, auction_id) {
         query = `mutation { addTransferPlayer(club_id: "${club_id}", player_id: "${player_id}", auction_id: ${auction_id}) { id } }`;
     }
 
-    try {
-        await graphql.request(query);
-    } catch (e) {
-        console.log(e);
-        return false;
-    }
+    let res = await graphql.request(query);
 
-    return true;
+    return res.addTransferPlayer;
 };
+
+function nextCurrentBid(p) {
+    p = parseInt(p, 10);
+
+    if (p >= 100000) return Math.ceil(p / 1000) * 1000;
+    if (p >= 10000) return Math.ceil(p / 250) * 250;
+    if (p >= 1000) return Math.ceil(p / 100) * 100;
+
+    return Math.ceil(p / 50) * 50;
+}
 
 async function removeCoinsFromClub(club_id, coins) {
     let query = `mutation { removeCoinsFromClub(club_id: "${club_id}", coins: "${coins}") { id } }`;
@@ -552,6 +557,26 @@ async function getClubTransferpile(club_id, page, name) {
     return res.getTransferpile;
 };
 
+async function addAuctionPlayer(cid, pid, end, buy, startp) {
+    let query = `mutation { addAuctionPlayer(club_id: "${cid}", player_id: "${pid}", end_timestamp: ${end}, buy_now: ${buy}, start_price: ${startp}) { id } }`;
+    let res = await graphql.request(query);
+
+    return res.addAuctionPlayer;
+}
+
+async function updateTransferPlayer(id, aId) {
+    let query = `mutation { updateTransferPlayer(id: "${id}", auction_id: "${aId}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+}
+
 module.exports = {
     getClubTransferpileCount,
     getClubPlayerById,
@@ -586,5 +611,8 @@ module.exports = {
     getCurrentAuctionsCount,
     addTransferpilePlayer,
     makeClubMenu,
-    getPlayerVersionById
+    getPlayerVersionById,
+    nextCurrentBid,
+    addAuctionPlayer,
+    updateTransferPlayer
 }

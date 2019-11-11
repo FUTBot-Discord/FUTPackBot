@@ -40,7 +40,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(client, message, args) {
-    var channel, author, pID, f, mTemp, mTemp2, pName, packList, wPacks, iPacks, delay, players_info, tPacks, clubuser, w, chance, players_count, duplicates, transferpile, _i, _players_info, p, o, card, animation, embed;
+    var channel, author, pID, f, mTemp, mTemp2, pName, packList, wPacks, iPacks, delay, players_info, tPacks, clubuser, w, chance, players_count, duplicates, transferpile, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, p, o, card, animation, embed;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -240,71 +240,109 @@ function () {
           case 68:
             duplicates = [];
             transferpile = [];
-            _i = 0, _players_info = players_info;
+            players_info = players_info.sort(function (a, b) {
+              return a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0;
+            });
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            _context2.prev = 74;
+            _iterator = players_info[Symbol.iterator]();
 
-          case 71:
-            if (!(_i < _players_info.length)) {
+          case 76:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              _context2.next = 101;
+              break;
+            }
+
+            p = _step.value;
+            _context2.next = 80;
+            return (0, _general.getClubPlayer)(clubuser.id, p.id);
+
+          case 80:
+            o = _context2.sent;
+
+            if (!(o !== null)) {
               _context2.next = 96;
               break;
             }
 
-            p = _players_info[_i];
-            _context2.next = 75;
-            return (0, _general.getClubPlayer)(clubuser.id, p.id);
+            _context2.next = 84;
+            return (0, _general.getClubTransferpileCount)(clubuser.id);
 
-          case 75:
-            o = _context2.sent;
+          case 84:
+            _context2.t10 = _context2.sent.length;
 
-            if (!(o !== null)) {
+            if (!(_context2.t10 < 100)) {
               _context2.next = 91;
               break;
             }
 
-            _context2.next = 79;
-            return (0, _general.getClubTransferpileCount)(clubuser.id);
-
-          case 79:
-            _context2.t10 = _context2.sent.length;
-
-            if (!(_context2.t10 < 100)) {
-              _context2.next = 86;
-              break;
-            }
-
             transferpile.push(p.id);
-            _context2.next = 84;
+            _context2.next = 89;
             return (0, _general.addTransferpilePlayer)(clubuser.id, p.id);
 
-          case 84:
-            _context2.next = 89;
-            break;
-
-          case 86:
-            duplicates.push(p.id);
-            _context2.next = 89;
-            return (0, _general.addCoinsToClub)(clubuser.id, p.min_price);
-
           case 89:
-            _context2.next = 93;
+            _context2.next = 94;
             break;
 
           case 91:
-            _context2.next = 93;
-            return (0, _general.addClubPlayer)(clubuser.id, p.id);
+            duplicates.push(p.id);
+            _context2.next = 94;
+            return (0, _general.addCoinsToClub)(clubuser.id, p.min_price);
 
-          case 93:
-            _i++;
-            _context2.next = 71;
+          case 94:
+            _context2.next = 98;
             break;
 
           case 96:
-            players_info = players_info.sort(function (a, b) {
-              return a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0;
-            });
-            _context2.next = 99;
+            _context2.next = 98;
+            return (0, _general.addClubPlayer)(clubuser.id, p.id);
+
+          case 98:
+            _iteratorNormalCompletion = true;
+            _context2.next = 76;
+            break;
+
+          case 101:
+            _context2.next = 107;
+            break;
+
+          case 103:
+            _context2.prev = 103;
+            _context2.t11 = _context2["catch"](74);
+            _didIteratorError = true;
+            _iteratorError = _context2.t11;
+
+          case 107:
+            _context2.prev = 107;
+            _context2.prev = 108;
+
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
+            }
+
+          case 110:
+            _context2.prev = 110;
+
+            if (!_didIteratorError) {
+              _context2.next = 113;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 113:
+            return _context2.finish(110);
+
+          case 114:
+            return _context2.finish(107);
+
+          case 115:
+            _context2.next = 117;
             return (0, _general.makePlayerCard)(players_info[0]);
 
-          case 99:
+          case 117:
             card = _context2.sent;
             animation = (0, _general.getAnimation)(players_info[0].rareflag, players_info[0].rating);
             embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a ").concat(iPacks.name), "https://tjird.nl/futbot.jpg");
@@ -365,12 +403,12 @@ function () {
               return channel.send("The packed players are stored to your club and duplicates has been quick-sold/send to transferpile.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
             });
 
-          case 103:
+          case 121:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2);
+    }, _callee2, null, [[74, 103, 107, 115], [108,, 110, 114]]);
   }));
 
   return function (_x, _x2, _x3) {

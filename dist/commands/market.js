@@ -66,7 +66,7 @@ function () {
             return _context2.abrupt("return", channel.send("No active auctions were found ".concat(author, ".")));
 
           case 16:
-            aPages = Math.ceil(aAuctions / 16);
+            aPages = Math.ceil(aAuctions / 12);
             aMenu = (0, _general.makeAuctionMenu)(cuAuctions, author, page, aPages);
             _context2.next = 20;
             return channel.send(aMenu, {
@@ -130,7 +130,7 @@ function () {
                           collector.stop();
                         }
 
-                        aPages = Math.ceil(aAuctions / 16);
+                        aPages = Math.ceil(aAuctions / 12);
 
                         if (!(aPages <= page)) {
                           _context.next = 8;
@@ -179,7 +179,7 @@ function () {
                           collector.stop();
                         }
 
-                        aPages = Math.ceil(aAuctions / 16);
+                        aPages = Math.ceil(aAuctions / 12);
 
                         if (!(aPages <= page)) {
                           _context.next = 26;
@@ -237,7 +237,7 @@ function () {
                         }
 
                         page = 1;
-                        aPages = Math.ceil(aAuctions / 16);
+                        aPages = Math.ceil(aAuctions / 12);
                         _context.next = 47;
                         return (0, _general.getActiveAuctions)(cInfo.id, page);
 
@@ -285,7 +285,7 @@ function () {
                         }
 
                         page--;
-                        aPages = Math.ceil(aAuctions / 16);
+                        aPages = Math.ceil(aAuctions / 12);
                         _context.next = 65;
                         return (0, _general.getActiveAuctions)(cInfo.id, page);
 

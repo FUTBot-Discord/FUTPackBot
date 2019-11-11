@@ -100,13 +100,14 @@ function makeOptionMenuPacks(packs) {
 function makeAuctionMenu(auctions, a, p, pp) {
     let t = new AsciiTable()
         .setTitle(`Transfer market for ${a.username}#${a.discriminator}. Page ${p}/${pp}.`)
-        .setHeading('ID', 'Name', 'Rating', 'Current bid', 'Buy now', 'Time remaining')
+        .setHeading('ID', 'Name', 'Rating', 'Current bid', 'Start price', 'Buy now', 'Time remaining')
         .setAlign(1, AsciiTable.LEFT)
         .setAlign(2, AsciiTable.LEFT)
         .setAlign(3, AsciiTable.LEFT)
         .setAlign(4, AsciiTable.LEFT)
         .setAlign(5, AsciiTable.LEFT)
-        .setAlign(6, AsciiTable.LEFT);
+        .setAlign(6, AsciiTable.LEFT)
+        .setAlign(7, AsciiTable.LEFT);
 
     let cDate = new Date();
     cDate = cDate.getTime();
@@ -116,7 +117,7 @@ function makeAuctionMenu(auctions, a, p, pp) {
 
         if (bid < 1) bid = "-";
 
-        t.addRow(auction.id, (auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : `${auction.card_info.meta_info.first_name} ${auction.card_info.meta_info.last_name}`), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.buy_now), hDuration(auction.end_timestamp - cDate, {
+        t.addRow(auction.id, (auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : `${auction.card_info.meta_info.first_name} ${auction.card_info.meta_info.last_name}`), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.start_price), numberWithCommas(auction.buy_now), hDuration(auction.end_timestamp - cDate, {
             round: true,
             largest: 1
         }));
@@ -231,9 +232,9 @@ async function getActiveAuctions(club_id, page, name) {
     let query;
 
     if (!name || name == undefined) {
-        query = `{ getCurrentAuctions(club_id: "${club_id}", page: ${page}) { id current_bid buy_now end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }`;
+        query = `{ getCurrentAuctions(club_id: "${club_id}", page: ${page}) { id current_bid buy_now start_price end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }`;
     } else {
-        query = `{ getCurrentAuctions(club_id: "${club_id}", name: "${name}", page: ${page}) { id current_bid buy_now end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }`;
+        query = `{ getCurrentAuctions(club_id: "${club_id}", name: "${name}", page: ${page}) { id current_bid buy_now start_price end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }`;
     }
 
     let res = await graphql.request(query);

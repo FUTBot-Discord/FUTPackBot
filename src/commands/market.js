@@ -1,5 +1,13 @@
-import { Redis } from "ioredis";
-import { getActiveAuctions, makeAuctionMenu, getUserClubId, getCurrentAuctionsCount, setDialogue } from '../functions/general';
+import {
+    Redis
+} from "ioredis";
+import {
+    getActiveAuctions,
+    makeAuctionMenu,
+    getUserClubId,
+    getCurrentAuctionsCount,
+    setDialogue
+} from '../functions/general';
 
 // const redis = new Redis(6379, "futbot-redis-1", {
 //     reconnectOnError: function (err) {
@@ -27,14 +35,14 @@ exports.run = async (client, message, args) => {
 
     if (cuAuctions.length < 1) return channel.send(`No active auctions were found ${author}.`);
 
-    let aPages = Math.ceil(aAuctions / 16);
+    let aPages = Math.ceil(aAuctions / 12);
     let aMenu = makeAuctionMenu(cuAuctions, author, page, aPages);
 
     let pMessage;
 
     await channel.send(aMenu, {
-        code: true
-    })
+            code: true
+        })
         .then(m => pMessage = m)
         .catch(e => {
             return channel.send(`An error has occurred for ${author} his/her request.`)
@@ -48,7 +56,9 @@ exports.run = async (client, message, args) => {
         .then(r => r.message.react("⏭"));
 
     const filter = (reaction, user) => user.id === author.id;
-    const collector = pMessage.createReactionCollector(filter, { time: 180000 });
+    const collector = pMessage.createReactionCollector(filter, {
+        time: 180000
+    });
 
     if (!message.guild) channel.send("In DM's no reactions could be removed by me. You need to remove those by yourself!");
 
@@ -61,7 +71,7 @@ exports.run = async (client, message, args) => {
                 collector.stop();
             }
 
-            aPages = Math.ceil(aAuctions / 16);
+            aPages = Math.ceil(aAuctions / 12);
 
             if (aPages <= page) return;
 
@@ -86,7 +96,7 @@ exports.run = async (client, message, args) => {
                 collector.stop();
             }
 
-            aPages = Math.ceil(aAuctions / 16);
+            aPages = Math.ceil(aAuctions / 12);
 
             if (aPages <= page) return;
 
@@ -114,7 +124,7 @@ exports.run = async (client, message, args) => {
             }
 
             page = 1;
-            aPages = Math.ceil(aAuctions / 16);
+            aPages = Math.ceil(aAuctions / 12);
             cuAuctions = await getActiveAuctions(cInfo.id, page);
 
             if (cuAuctions.length < 1) {
@@ -138,7 +148,7 @@ exports.run = async (client, message, args) => {
             }
 
             page--;
-            aPages = Math.ceil(aAuctions / 16);
+            aPages = Math.ceil(aAuctions / 12);
             cuAuctions = await getActiveAuctions(cInfo.id, page);
 
             if (cuAuctions.length < 1) {

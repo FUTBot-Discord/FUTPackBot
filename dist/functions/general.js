@@ -317,7 +317,7 @@ function makeOptionMenuPacks(packs) {
 ;
 
 function makeAuctionMenu(auctions, a, p, pp) {
-  var t = new _asciiTable["default"]().setTitle("Transfer market for ".concat(a.username, "#").concat(a.discriminator, ". Page ").concat(p, "/").concat(pp, ".")).setHeading('ID', 'Name', 'Rating', 'Current bid', 'Buy now', 'Time remaining').setAlign(1, _asciiTable["default"].LEFT).setAlign(2, _asciiTable["default"].LEFT).setAlign(3, _asciiTable["default"].LEFT).setAlign(4, _asciiTable["default"].LEFT).setAlign(5, _asciiTable["default"].LEFT).setAlign(6, _asciiTable["default"].LEFT);
+  var t = new _asciiTable["default"]().setTitle("Transfer market for ".concat(a.username, "#").concat(a.discriminator, ". Page ").concat(p, "/").concat(pp, ".")).setHeading('ID', 'Name', 'Rating', 'Current bid', 'Start price', 'Buy now', 'Time remaining').setAlign(1, _asciiTable["default"].LEFT).setAlign(2, _asciiTable["default"].LEFT).setAlign(3, _asciiTable["default"].LEFT).setAlign(4, _asciiTable["default"].LEFT).setAlign(5, _asciiTable["default"].LEFT).setAlign(6, _asciiTable["default"].LEFT).setAlign(7, _asciiTable["default"].LEFT);
   var cDate = new Date();
   cDate = cDate.getTime();
   var _iteratorNormalCompletion2 = true;
@@ -329,7 +329,7 @@ function makeAuctionMenu(auctions, a, p, pp) {
       var auction = _step2.value;
       var bid = auction.current_bid;
       if (bid < 1) bid = "-";
-      t.addRow(auction.id, auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : "".concat(auction.card_info.meta_info.first_name, " ").concat(auction.card_info.meta_info.last_name), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.buy_now), (0, _humanizeDuration["default"])(auction.end_timestamp - cDate, {
+      t.addRow(auction.id, auction.card_info.meta_info.common_name ? auction.card_info.meta_info.common_name : "".concat(auction.card_info.meta_info.first_name, " ").concat(auction.card_info.meta_info.last_name), auction.card_info.rating, numberWithCommas(bid), numberWithCommas(auction.start_price), numberWithCommas(auction.buy_now), (0, _humanizeDuration["default"])(auction.end_timestamp - cDate, {
         round: true,
         largest: 1
       }));
@@ -599,9 +599,9 @@ function _getActiveAuctions() {
         switch (_context12.prev = _context12.next) {
           case 0:
             if (!name || name == undefined) {
-              query = "{ getCurrentAuctions(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id current_bid buy_now end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }");
+              query = "{ getCurrentAuctions(club_id: \"".concat(club_id, "\", page: ").concat(page, ") { id current_bid buy_now start_price end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }");
             } else {
-              query = "{ getCurrentAuctions(club_id: \"".concat(club_id, "\", name: \"").concat(name, "\", page: ").concat(page, ") { id current_bid buy_now end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }");
+              query = "{ getCurrentAuctions(club_id: \"".concat(club_id, "\", name: \"").concat(name, "\", page: ").concat(page, ") { id current_bid buy_now start_price end_timestamp card_info{ rating rareflag preferred_position meta_info{ first_name last_name common_name } } } }");
             }
 
             _context12.next = 3;

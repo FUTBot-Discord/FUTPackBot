@@ -38,37 +38,68 @@ function () {
 
           case 5:
             cInfo = _context2.sent;
-            _context2.next = 8;
+
+            if (!(args.length > 0)) {
+              _context2.next = 12;
+              break;
+            }
+
+            _context2.next = 9;
+            return (0, _general.getCurrentAuctionsCount)(cInfo.id, args.join(" "));
+
+          case 9:
+            aAuctions = _context2.sent.auctions;
+            _context2.next = 15;
+            break;
+
+          case 12:
+            _context2.next = 14;
             return (0, _general.getCurrentAuctionsCount)(cInfo.id);
 
-          case 8:
+          case 14:
             aAuctions = _context2.sent.auctions;
 
+          case 15:
             if (!(aAuctions < 1)) {
-              _context2.next = 11;
+              _context2.next = 17;
               break;
             }
 
             return _context2.abrupt("return", channel.send("No active auctions were found ".concat(author, ".")));
 
-          case 11:
-            _context2.next = 13;
+          case 17:
+            if (!(args.length > 0)) {
+              _context2.next = 23;
+              break;
+            }
+
+            _context2.next = 20;
+            return (0, _general.getActiveAuctions)(cInfo.id, page, args.join(" "));
+
+          case 20:
+            cuAuctions = _context2.sent;
+            _context2.next = 26;
+            break;
+
+          case 23:
+            _context2.next = 25;
             return (0, _general.getActiveAuctions)(cInfo.id, page);
 
-          case 13:
+          case 25:
             cuAuctions = _context2.sent;
 
+          case 26:
             if (!(cuAuctions.length < 1)) {
-              _context2.next = 16;
+              _context2.next = 28;
               break;
             }
 
             return _context2.abrupt("return", channel.send("No active auctions were found ".concat(author, ".")));
 
-          case 16:
+          case 28:
             aPages = Math.ceil(aAuctions / 12);
             aMenu = (0, _general.makeAuctionMenu)(cuAuctions, author, page, aPages);
-            _context2.next = 20;
+            _context2.next = 32;
             return channel.send(aMenu, {
               code: true
             }).then(function (m) {
@@ -77,16 +108,16 @@ function () {
               return channel.send("An error has occurred for ".concat(author, " his/her request."));
             });
 
-          case 20:
+          case 32:
             if (!(aPages < 2 || !pMessage)) {
-              _context2.next = 22;
+              _context2.next = 34;
               break;
             }
 
             return _context2.abrupt("return");
 
-          case 22:
-            _context2.next = 24;
+          case 34:
+            _context2.next = 36;
             return pMessage.react("⏮").then(function (r) {
               return r.message.react("⏪");
             }).then(function (r) {
@@ -95,7 +126,7 @@ function () {
               return r.message.react("⏭");
             });
 
-          case 24:
+          case 36:
             filter = function filter(reaction, user) {
               return user.id === author.id;
             };
@@ -115,16 +146,31 @@ function () {
                     switch (_context.prev = _context.next) {
                       case 0:
                         if (!(r.emoji.name === "⏭")) {
-                          _context.next = 18;
+                          _context.next = 30;
                           break;
                         }
 
-                        _context.next = 3;
+                        if (!(args.length > 0)) {
+                          _context.next = 7;
+                          break;
+                        }
+
+                        _context.next = 4;
+                        return (0, _general.getCurrentAuctionsCount)(cInfo.id, args.join(" "));
+
+                      case 4:
+                        aAuctions = _context.sent.auctions;
+                        _context.next = 10;
+                        break;
+
+                      case 7:
+                        _context.next = 9;
                         return (0, _general.getCurrentAuctionsCount)(cInfo.id);
 
-                      case 3:
+                      case 9:
                         aAuctions = _context.sent.auctions;
 
+                      case 10:
                         if (aAuctions < 1) {
                           pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
                           collector.stop();
@@ -133,47 +179,78 @@ function () {
                         aPages = Math.ceil(aAuctions / 12);
 
                         if (!(aPages <= page)) {
-                          _context.next = 8;
+                          _context.next = 14;
                           break;
                         }
 
                         return _context.abrupt("return");
 
-                      case 8:
+                      case 14:
                         page = aPages;
-                        _context.next = 11;
-                        return (0, _general.getActiveAuctions)(cInfo.id, page);
 
-                      case 11:
-                        cuAuctions = _context.sent;
-
-                        if (cuAuctions.length < 1) {
-                          pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
-                          collector.stop();
+                        if (!(args.length > 0)) {
+                          _context.next = 21;
+                          break;
                         }
 
-                        aMenu = (0, _general.makeAuctionMenu)(cuAuctions, author, page, aPages);
-                        _context.next = 16;
-                        return pMessage.edit(aMenu, {
-                          code: true
-                        });
-
-                      case 16:
-                        _context.next = 70;
-                        break;
+                        _context.next = 18;
+                        return (0, _general.getActiveAuctions)(cInfo.id, page, args.join(" "));
 
                       case 18:
+                        cuAuctions = _context.sent;
+                        _context.next = 24;
+                        break;
+
+                      case 21:
+                        _context.next = 23;
+                        return (0, _general.getActiveAuctions)(cInfo.id, page);
+
+                      case 23:
+                        cuAuctions = _context.sent;
+
+                      case 24:
+                        if (cuAuctions.length < 1) {
+                          pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
+                          collector.stop();
+                        }
+
+                        aMenu = (0, _general.makeAuctionMenu)(cuAuctions, author, page, aPages);
+                        _context.next = 28;
+                        return pMessage.edit(aMenu, {
+                          code: true
+                        });
+
+                      case 28:
+                        _context.next = 118;
+                        break;
+
+                      case 30:
                         if (!(r.emoji.name === "⏩")) {
-                          _context.next = 36;
+                          _context.next = 60;
                           break;
                         }
 
-                        _context.next = 21;
+                        if (!(args.length > 0)) {
+                          _context.next = 37;
+                          break;
+                        }
+
+                        _context.next = 34;
+                        return (0, _general.getCurrentAuctionsCount)(cInfo.id, args.join(" "));
+
+                      case 34:
+                        aAuctions = _context.sent.auctions;
+                        _context.next = 40;
+                        break;
+
+                      case 37:
+                        _context.next = 39;
                         return (0, _general.getCurrentAuctionsCount)(cInfo.id);
 
-                      case 21:
+                      case 39:
                         aAuctions = _context.sent.auctions;
 
+                      case 40:
                         if (aAuctions < 1) {
                           pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
                           collector.stop();
@@ -182,55 +259,86 @@ function () {
                         aPages = Math.ceil(aAuctions / 12);
 
                         if (!(aPages <= page)) {
-                          _context.next = 26;
+                          _context.next = 44;
                           break;
                         }
 
                         return _context.abrupt("return");
 
-                      case 26:
+                      case 44:
                         page++;
-                        _context.next = 29;
+
+                        if (!(args.length > 0)) {
+                          _context.next = 51;
+                          break;
+                        }
+
+                        _context.next = 48;
+                        return (0, _general.getActiveAuctions)(cInfo.id, page, args.join(" "));
+
+                      case 48:
+                        cuAuctions = _context.sent;
+                        _context.next = 54;
+                        break;
+
+                      case 51:
+                        _context.next = 53;
                         return (0, _general.getActiveAuctions)(cInfo.id, page);
 
-                      case 29:
+                      case 53:
                         cuAuctions = _context.sent;
 
+                      case 54:
                         if (cuAuctions.length < 1) {
                           pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
                           collector.stop();
                         }
 
                         aMenu = (0, _general.makeAuctionMenu)(cuAuctions, author, page, aPages);
-                        _context.next = 34;
+                        _context.next = 58;
                         return pMessage.edit(aMenu, {
                           code: true
                         });
 
-                      case 34:
-                        _context.next = 70;
+                      case 58:
+                        _context.next = 118;
                         break;
 
-                      case 36:
+                      case 60:
                         if (!(r.emoji.name === "⏮")) {
-                          _context.next = 54;
+                          _context.next = 90;
                           break;
                         }
 
                         if (!(page <= 1)) {
-                          _context.next = 39;
+                          _context.next = 63;
                           break;
                         }
 
                         return _context.abrupt("return");
 
-                      case 39:
-                        _context.next = 41;
+                      case 63:
+                        if (!(args.length > 0)) {
+                          _context.next = 69;
+                          break;
+                        }
+
+                        _context.next = 66;
+                        return (0, _general.getCurrentAuctionsCount)(cInfo.id, args.join(" "));
+
+                      case 66:
+                        aAuctions = _context.sent.auctions;
+                        _context.next = 72;
+                        break;
+
+                      case 69:
+                        _context.next = 71;
                         return (0, _general.getCurrentAuctionsCount)(cInfo.id);
 
-                      case 41:
+                      case 71:
                         aAuctions = _context.sent.auctions;
 
+                      case 72:
                         if (aAuctions < 1) {
                           pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
                           collector.stop();
@@ -238,47 +346,78 @@ function () {
 
                         page = 1;
                         aPages = Math.ceil(aAuctions / 12);
-                        _context.next = 47;
+
+                        if (!(args.length > 0)) {
+                          _context.next = 81;
+                          break;
+                        }
+
+                        _context.next = 78;
+                        return (0, _general.getActiveAuctions)(cInfo.id, page, args.join(" "));
+
+                      case 78:
+                        cuAuctions = _context.sent;
+                        _context.next = 84;
+                        break;
+
+                      case 81:
+                        _context.next = 83;
                         return (0, _general.getActiveAuctions)(cInfo.id, page);
 
-                      case 47:
+                      case 83:
                         cuAuctions = _context.sent;
 
+                      case 84:
                         if (cuAuctions.length < 1) {
                           pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
                           collector.stop();
                         }
 
                         aMenu = (0, _general.makeAuctionMenu)(cuAuctions, author, page, aPages);
-                        _context.next = 52;
+                        _context.next = 88;
                         return pMessage.edit(aMenu, {
                           code: true
                         });
 
-                      case 52:
-                        _context.next = 70;
+                      case 88:
+                        _context.next = 118;
                         break;
 
-                      case 54:
+                      case 90:
                         if (!(r.emoji.name === "⏪")) {
-                          _context.next = 70;
+                          _context.next = 118;
                           break;
                         }
 
                         if (!(page <= 1)) {
-                          _context.next = 57;
+                          _context.next = 93;
                           break;
                         }
 
                         return _context.abrupt("return");
 
-                      case 57:
-                        _context.next = 59;
+                      case 93:
+                        if (!(args.length > 0)) {
+                          _context.next = 99;
+                          break;
+                        }
+
+                        _context.next = 96;
+                        return (0, _general.getCurrentAuctionsCount)(cInfo.id, args.join(" "));
+
+                      case 96:
+                        aAuctions = _context.sent.auctions;
+                        _context.next = 102;
+                        break;
+
+                      case 99:
+                        _context.next = 101;
                         return (0, _general.getCurrentAuctionsCount)(cInfo.id);
 
-                      case 59:
+                      case 101:
                         aAuctions = _context.sent.auctions;
 
+                      case 102:
                         if (aAuctions < 1) {
                           pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
                           collector.stop();
@@ -286,27 +425,43 @@ function () {
 
                         page--;
                         aPages = Math.ceil(aAuctions / 12);
-                        _context.next = 65;
+
+                        if (!(args.length > 0)) {
+                          _context.next = 111;
+                          break;
+                        }
+
+                        _context.next = 108;
+                        return (0, _general.getActiveAuctions)(cInfo.id, page, args.join(" "));
+
+                      case 108:
+                        cuAuctions = _context.sent;
+                        _context.next = 114;
+                        break;
+
+                      case 111:
+                        _context.next = 113;
                         return (0, _general.getActiveAuctions)(cInfo.id, page);
 
-                      case 65:
+                      case 113:
                         cuAuctions = _context.sent;
 
+                      case 114:
                         if (cuAuctions.length < 1) {
                           pMessage.edit("No active auctions were found ".concat(author, ". Try searching again with the correct command."));
                           collector.stop();
                         }
 
                         aMenu = (0, _general.makeAuctionMenu)(cuAuctions, author, page, aPages);
-                        _context.next = 70;
+                        _context.next = 118;
                         return pMessage.edit(aMenu, {
                           code: true
                         });
 
-                      case 70:
+                      case 118:
                         if (message.guild) r.remove(author);
 
-                      case 71:
+                      case 119:
                       case "end":
                         return _context.stop();
                     }
@@ -319,7 +474,7 @@ function () {
               };
             }());
 
-          case 28:
+          case 40:
           case "end":
             return _context2.stop();
         }

@@ -27,11 +27,23 @@ exports.run = async (client, message, args) => {
 
     const cInfo = await getUserClubId(author.id);
 
-    let aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+    let aAuctions;
+
+    if (args.length > 0) {
+        aAuctions = (await getCurrentAuctionsCount(cInfo.id, args.join(" "))).auctions;
+    } else {
+        aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+    }
 
     if (aAuctions < 1) return channel.send(`No active auctions were found ${author}.`);
 
-    let cuAuctions = await getActiveAuctions(cInfo.id, page);
+    let cuAuctions;
+
+    if (args.length > 0) {
+        cuAuctions = await getActiveAuctions(cInfo.id, page, args.join(" "));
+    } else {
+        cuAuctions = await getActiveAuctions(cInfo.id, page);
+    }
 
     if (cuAuctions.length < 1) return channel.send(`No active auctions were found ${author}.`);
 
@@ -64,7 +76,11 @@ exports.run = async (client, message, args) => {
 
     collector.on('collect', async r => {
         if (r.emoji.name === "⏭") {
-            aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+            if (args.length > 0) {
+                aAuctions = (await getCurrentAuctionsCount(cInfo.id, args.join(" "))).auctions;
+            } else {
+                aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+            }
 
             if (aAuctions < 1) {
                 pMessage.edit(`No active auctions were found ${author}. Try searching again with the correct command.`);
@@ -76,7 +92,12 @@ exports.run = async (client, message, args) => {
             if (aPages <= page) return;
 
             page = aPages;
-            cuAuctions = await getActiveAuctions(cInfo.id, page);
+
+            if (args.length > 0) {
+                cuAuctions = await getActiveAuctions(cInfo.id, page, args.join(" "));
+            } else {
+                cuAuctions = await getActiveAuctions(cInfo.id, page);
+            }
 
             if (cuAuctions.length < 1) {
                 pMessage.edit(`No active auctions were found ${author}. Try searching again with the correct command.`);
@@ -89,7 +110,11 @@ exports.run = async (client, message, args) => {
                 code: true
             });
         } else if (r.emoji.name === "⏩") {
-            aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+            if (args.length > 0) {
+                aAuctions = (await getCurrentAuctionsCount(cInfo.id, args.join(" "))).auctions;
+            } else {
+                aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+            }
 
             if (aAuctions < 1) {
                 pMessage.edit(`No active auctions were found ${author}. Try searching again with the correct command.`);
@@ -101,7 +126,12 @@ exports.run = async (client, message, args) => {
             if (aPages <= page) return;
 
             page++;
-            cuAuctions = await getActiveAuctions(cInfo.id, page);
+
+            if (args.length > 0) {
+                cuAuctions = await getActiveAuctions(cInfo.id, page, args.join(" "));
+            } else {
+                cuAuctions = await getActiveAuctions(cInfo.id, page);
+            }
 
             if (cuAuctions.length < 1) {
                 pMessage.edit(`No active auctions were found ${author}. Try searching again with the correct command.`);
@@ -116,7 +146,11 @@ exports.run = async (client, message, args) => {
         } else if (r.emoji.name === "⏮") {
             if (page <= 1) return;
 
-            aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+            if (args.length > 0) {
+                aAuctions = (await getCurrentAuctionsCount(cInfo.id, args.join(" "))).auctions;
+            } else {
+                aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+            }
 
             if (aAuctions < 1) {
                 pMessage.edit(`No active auctions were found ${author}. Try searching again with the correct command.`);
@@ -125,7 +159,12 @@ exports.run = async (client, message, args) => {
 
             page = 1;
             aPages = Math.ceil(aAuctions / 12);
-            cuAuctions = await getActiveAuctions(cInfo.id, page);
+
+            if (args.length > 0) {
+                cuAuctions = await getActiveAuctions(cInfo.id, page, args.join(" "));
+            } else {
+                cuAuctions = await getActiveAuctions(cInfo.id, page);
+            }
 
             if (cuAuctions.length < 1) {
                 pMessage.edit(`No active auctions were found ${author}. Try searching again with the correct command.`);
@@ -140,7 +179,11 @@ exports.run = async (client, message, args) => {
         } else if (r.emoji.name === "⏪") {
             if (page <= 1) return;
 
-            aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+            if (args.length > 0) {
+                aAuctions = (await getCurrentAuctionsCount(cInfo.id, args.join(" "))).auctions;
+            } else {
+                aAuctions = (await getCurrentAuctionsCount(cInfo.id)).auctions;
+            }
 
             if (aAuctions < 1) {
                 pMessage.edit(`No active auctions were found ${author}. Try searching again with the correct command.`);
@@ -149,7 +192,12 @@ exports.run = async (client, message, args) => {
 
             page--;
             aPages = Math.ceil(aAuctions / 12);
-            cuAuctions = await getActiveAuctions(cInfo.id, page);
+
+            if (args.length > 0) {
+                cuAuctions = await getActiveAuctions(cInfo.id, page, args.join(" "));
+            } else {
+                cuAuctions = await getActiveAuctions(cInfo.id, page);
+            }
 
             if (cuAuctions.length < 1) {
                 pMessage.edit(`No active auctions were found ${author}. Try searching again with the correct command.`);

@@ -84,7 +84,7 @@ function _redisStartup() {
             return redis.send_command("config", ["set", "notify-keyspace-events", "Ex"]);
 
           case 2:
-            expired_subKey = "__keyevent@" + process.env.REDIS_DATABASE + "__:expired";
+            expired_subKey = "__keyevent@" + process.env.R_DB + "__:expired";
             redis.subscribe(expired_subKey).then(function () {
               return console.log("[i] Subscribed to " + expired_subKey);
             });
@@ -108,62 +108,53 @@ function _redisStartup() {
 
                       case 2:
                         console.log("[a] [".concat(message, "] Expired."));
-                        _context2.prev = 3;
-                        _context2.next = 6;
+                        _context2.next = 5;
                         return (0, _general.getAuctionById)(message);
 
-                      case 6:
+                      case 5:
                         aInfo = _context2.sent;
-                        _context2.next = 12;
-                        break;
 
-                      case 9:
-                        _context2.prev = 9;
-                        _context2.t0 = _context2["catch"](3);
-                        return _context2.abrupt("return");
-
-                      case 12:
                         if (!(aInfo == null)) {
-                          _context2.next = 14;
+                          _context2.next = 8;
                           break;
                         }
 
                         return _context2.abrupt("return");
 
-                      case 14:
+                      case 8:
                         if (!(aInfo.b_club_id == 0)) {
-                          _context2.next = 17;
+                          _context2.next = 11;
                           break;
                         }
 
                         console.log("[a] [".concat(message, "] No buyer was found."));
                         return _context2.abrupt("return", (0, _general.resetTransferPlayer)(message));
 
-                      case 17:
+                      case 11:
                         console.log("[a] [".concat(message, "] Buyer(").concat(aInfo.b_club_id, ") has been found."));
-                        _context2.next = 20;
+                        _context2.next = 14;
                         return (0, _general.addCoinsToClub)(aInfo.s_club_id, aInfo.current_bid);
 
-                      case 20:
-                        _context2.next = 22;
+                      case 14:
+                        _context2.next = 16;
                         return (0, _general.auctionBuyNow)(aInfo.id, aInfo.b_club_id);
 
-                      case 22:
-                        _context2.next = 24;
+                      case 16:
+                        _context2.next = 18;
                         return (0, _general.getPlayerVersionById)(aInfo.player_id);
 
-                      case 24:
+                      case 18:
                         pInfo = _context2.sent;
                         pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : "".concat(pInfo.meta_info.first_name, " ").concat(pInfo.meta_info.last_name);
-                        _context2.next = 28;
+                        _context2.next = 22;
                         return (0, _general.notifyPerson)(client, aInfo, 3);
 
-                      case 28:
+                      case 22:
                       case "end":
                         return _context2.stop();
                     }
                   }
-                }, _callee2, null, [[3, 9]]);
+                }, _callee2);
               }));
 
               return function (_x3, _x4) {

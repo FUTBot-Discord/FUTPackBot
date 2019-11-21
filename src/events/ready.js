@@ -48,7 +48,7 @@ async function redisStartup(client) {
     await redis.send_command("config", ["set", "notify-keyspace-events", "Ex"]);
 
     const expired_subKey =
-        "__keyevent@" + process.env.REDIS_DATABASE + "__:expired";
+        "__keyevent@" + process.env.R_DB + "__:expired";
 
     redis
         .subscribe(expired_subKey)
@@ -58,13 +58,7 @@ async function redisStartup(client) {
         if (channel !== expired_subKey) return;
         console.log(`[a] [${message}] Expired.`);
 
-        let aInfo;
-
-        try {
-            aInfo = await getAuctionById(message);
-        } catch (e) {
-            return;
-        }
+        let aInfo = await getAuctionById(message);
 
         if (aInfo == null) return;
 

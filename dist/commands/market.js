@@ -6,19 +6,8 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _ioredis = require("ioredis");
-
 var _general = require("../functions/general");
 
-// const redis = new Redis(6379, "futbot-redis-1", {
-//     reconnectOnError: function (err) {
-//         var targetError = "READONLY";
-//         if (err.message.slice(0, targetError.length) === targetError) {
-//             // Only reconnect when the error starts with "READONLY"
-//             return true; // or `return 1;`
-//         }
-//     }
-// });
 exports.run =
 /*#__PURE__*/
 function () {

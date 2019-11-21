@@ -81,7 +81,7 @@ function () {
           case 21:
             allowedCommands = ["help", "support", "list", "bal", "balance", "point", "points", "commands", "command", "clubinfo"];
 
-            if (!(author.id !== "259012839379828739" && allowedCommands.includes(command) && cooldown.has(author.id))) {
+            if (!(author.id !== "259012839379828739" && !allowedCommands.includes(command) && cooldown.has(author.id))) {
               _context.next = 27;
               break;
             }

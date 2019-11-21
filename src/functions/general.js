@@ -228,6 +228,13 @@ async function getClubPlayer(club_id, player_id) {
     return res.getClubPlayer;
 };
 
+async function getAuctionById(auction_id) {
+    let query = `{ getAuctionById(id: "${auction}") { id player_id b_club_id s_club_id current_bid start_price buy_now end_timestamp } }`;
+    let res = await graphql.request(query);
+
+    return res.getAuctionById;
+};
+
 async function getActiveAuctions(club_id, page, name) {
     let query;
 
@@ -612,6 +619,7 @@ module.exports = {
     getCurrentAuctionsCount,
     addTransferpilePlayer,
     makeClubMenu,
+    getAuctionById,
     getPlayerVersionById,
     nextCurrentBid,
     addAuctionPlayer,

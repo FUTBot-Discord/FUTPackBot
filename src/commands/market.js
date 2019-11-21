@@ -1,23 +1,9 @@
 import {
-    Redis
-} from "ioredis";
-import {
     getActiveAuctions,
     makeAuctionMenu,
     getUserClubId,
-    getCurrentAuctionsCount,
-    setDialogue
+    getCurrentAuctionsCount
 } from '../functions/general';
-
-// const redis = new Redis(6379, "futbot-redis-1", {
-//     reconnectOnError: function (err) {
-//         var targetError = "READONLY";
-//         if (err.message.slice(0, targetError.length) === targetError) {
-//             // Only reconnect when the error starts with "READONLY"
-//             return true; // or `return 1;`
-//         }
-//     }
-// });
 
 exports.run = async (client, message, args) => {
     let page = 1;

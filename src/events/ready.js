@@ -76,6 +76,7 @@ async function redisStartup(client) {
         const pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : `${pInfo.meta_info.first_name} ${pInfo.meta_info.last_name}`;
 
         await notifyPerson(client, aInfo, 3);
+        await notifyPerson(client, aInfo, 4);
     });
 }
 

@@ -150,6 +150,10 @@ function _redisStartup() {
                         return (0, _general.notifyPerson)(client, aInfo, 3);
 
                       case 22:
+                        _context2.next = 24;
+                        return (0, _general.notifyPerson)(client, aInfo, 4);
+
+                      case 24:
                       case "end":
                         return _context2.stop();
                     }

@@ -120,6 +120,21 @@ async function notifyPerson(client, auction, action) {
                 console.log(`Tried to contact a person but he/she not likes me...`);
             }
             break;
+        case 4:
+            try {
+                let prefPerson = await getClubInfoById(auction.b_club_id);
+                prefPerson = await client.fetchUser(`${prefPerson.author_id}`);
+                prefPerson.createDM()
+                    .then(async c => {
+                        pInfo = await getPlayerVersionById(auction.player_id);
+                        pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : `${pInfo.meta_info.first_name} ${pInfo.meta_info.last_name}`;
+                        c.send(`You have won ${pName} rated ${pInfo.rating}. The player has been send to your transferpile.`);
+                    })
+                    .catch(e => console.log(`Tried to contact a person but he/she not likes me...`));
+            } catch (e) {
+                console.log(`Tried to contact a person but he/she not likes me...`);
+            }
+            break;
     }
 };
 

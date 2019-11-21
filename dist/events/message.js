@@ -81,7 +81,7 @@ function () {
           case 21:
             allowedCommands = ["help", "support", "list", "bal", "balance", "point", "points", "commands", "command", "clubinfo"];
 
-            if (!(author.id !== "259012839379828739" && !allowedCommands.includes(command) && cooldown.has(author.id))) {
+            if (!(author.id !== "259012839379828739" && cooldown.has(author.id))) {
               _context.next = 27;
               break;
             }
@@ -92,7 +92,7 @@ function () {
             return _context.abrupt("return", channel.send("You need to wait ".concat((cooldownsec - diff).toFixed(1), " seconds before opening another pack.")));
 
           case 27:
-            if (allowedCommands.includes(command)) {
+            if (!allowedCommands.includes(command)) {
               cooldown.set(author.id, new Date());
               setTimeout(function () {
                 cooldown["delete"](author.id);

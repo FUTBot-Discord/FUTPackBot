@@ -12,6 +12,7 @@ const graphql = new GraphQLClient(process.env.G_ENDPOINT, {
     headers: {}
 });
 const raritiesList = require('../../rarities.json');
+const footer = "\nFUTPackBot v.1.0.0 | Made by Tjird#0001";
 
 function getQuality(rating) {
     if (rating < 65) return "bronze";
@@ -69,6 +70,59 @@ async function getPlayerVersionById(id) {
     return res.getPlayerVersionById;
 };
 
+async function notifyPerson(client, auction, action) {
+    let pInfo;
+    let pName;
+
+    switch (action) {
+        case 1:
+            try {
+                let prefPerson = await getClubInfoById(auction.b_club_id);
+                prefPerson = await client.fetchUser(`${prefPerson.author_id}`);
+                prefPerson.createDM()
+                    .then(async c => {
+                        pInfo = await getPlayerVersionById(auction.player_id);
+                        pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : `${pInfo.meta_info.first_name} ${pInfo.meta_info.last_name}`;
+                        c.send(`You have been outbid at an auction for ${pName} rated ${pInfo.rating} (Buy now).`);
+                    })
+                    .catch(e => console.log(`Tried to contact a person but he/she not likes me...`));
+            } catch (e) {
+                console.log(`Tried to contact a person but he/she not likes me...`);
+            }
+            break;
+        case 2:
+            try {
+                let prefPerson = await getClubInfoById(auction.s_club_id);
+                prefPerson = await client.fetchUser(`${prefPerson.author_id}`);
+                prefPerson.createDM()
+                    .then(async c => {
+                        pInfo = await getPlayerVersionById(auction.player_id);
+                        pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : `${pInfo.meta_info.first_name} ${pInfo.meta_info.last_name}`;
+                        c.send(`You have sold ${pName} rated ${pInfo.rating} for ${auction.buy_now} (Buy now).`);
+                    })
+                    .catch(e => console.log(`Tried to contact a person but he/she not likes me...`));
+            } catch (e) {
+                console.log(`Tried to contact a person but he/she not likes me...`);
+            }
+            break;
+        case 3:
+            try {
+                let prefPerson = await getClubInfoById(auction.s_club_id);
+                prefPerson = await client.fetchUser(`${prefPerson.author_id}`);
+                prefPerson.createDM()
+                    .then(async c => {
+                        pInfo = await getPlayerVersionById(auction.player_id);
+                        pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : `${pInfo.meta_info.first_name} ${pInfo.meta_info.last_name}`;
+                        c.send(`You have sold ${pName} rated ${pInfo.rating} for ${auction.buy_now} (Bid).`);
+                    })
+                    .catch(e => console.log(`Tried to contact a person but he/she not likes me...`));
+            } catch (e) {
+                console.log(`Tried to contact a person but he/she not likes me...`);
+            }
+            break;
+    }
+};
+
 async function addClubPlayer(club_id, player_id) {
     let query = `mutation { addClubPlayer(club_id: "${club_id}", player_id: "${player_id}") { id } }`;
 
@@ -123,14 +177,22 @@ function makeAuctionMenu(auctions, a, p, pp) {
         }));
     }
 
-    t += `\nFUTPackBot v.1.0.0 | Made by Tjird#0001 | You can switch 3 minutes between pages`;
+    if (pp > 1) {
+        t += footer + " | You can switch 3 minutes between pages";
+    } else {
+        t += footer;
+    }
 
     return t;
 };
 
 function makeTransferMenu(transfers, a, p, pp, am) {
+    let max = 100;
+
+    if (am > max) max = am;
+
     let t = new AsciiTable()
-        .setTitle(`Transferpile of ${a.username}#${a.discriminator}. Page ${p}/${pp}. Amount ${am}/100.`)
+        .setTitle(`Transferpile of ${a.username}#${a.discriminator}. Page ${p}/${pp}. Amount ${am}/${max}.`)
         .setHeading('ID', 'Name', 'Rating', 'Current bid', 'Buy now', 'Time remaining')
         .setAlign(1, AsciiTable.LEFT)
         .setAlign(2, AsciiTable.LEFT)
@@ -163,7 +225,11 @@ function makeTransferMenu(transfers, a, p, pp, am) {
         }) : cTime);
     }
 
-    t += `\nFUTPackBot v.1.0.0 | Made by Tjird#0001 | You can switch 3 minutes between pages`;
+    if (pp > 1) {
+        t += footer + " | You can switch 3 minutes between pages";
+    } else {
+        t += footer;
+    }
 
     return t;
 };
@@ -182,7 +248,11 @@ function makeClubMenu(players, a, p, pp) {
         t.addRow(player.id, (player.card_info.meta_info.common_name ? player.card_info.meta_info.common_name : `${player.card_info.meta_info.first_name} ${player.card_info.meta_info.last_name}`), player.card_info.rating, getRarityName(`${player.card_info.rareflag}-${getQuality(player.card_info.rating)}`), player.card_info.preferred_position);
     }
 
-    t += `\nFUTPackBot v.1.0.0 | Made by Tjird#0001 | You can switch 3 minutes between pages`;
+    if (pp > 1) {
+        t += footer + " | You can switch 3 minutes between pages";
+    } else {
+        t += footer;
+    }
 
     return t;
 };
@@ -192,6 +262,13 @@ async function getUserClubId(author_id) {
     let res = await graphql.request(query);
 
     return res.getUserClubByAuthorId;
+};
+
+async function getClubInfoById(id) {
+    let query = `{ getUserClubById(id: ${id}) { id points coins creation_time author_id } }`;
+    let res = await graphql.request(query);
+
+    return res.getUserClubById;
 };
 
 async function getCurrentAuctionsCount(club_id, name) {
@@ -228,8 +305,20 @@ async function getClubPlayer(club_id, player_id) {
     return res.getClubPlayer;
 };
 
+async function resetTransferPlayer(aId) {
+    let query = `mutation { resetTransferPlayer(auction_id: "${aId}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+
+    }
+
+    return true;
+};
+
 async function getAuctionById(auction_id) {
-    let query = `{ getAuctionById(id: "${auction}") { id player_id b_club_id s_club_id current_bid start_price buy_now end_timestamp } }`;
+    let query = `{ getAuctionById(id: "${auction_id}") { id player_id b_club_id s_club_id current_bid start_price buy_now end_timestamp } }`;
     let res = await graphql.request(query);
 
     return res.getAuctionById;
@@ -288,6 +377,32 @@ function nextCurrentBid(p) {
 
 async function removeCoinsFromClub(club_id, coins) {
     let query = `mutation { removeCoinsFromClub(club_id: "${club_id}", coins: "${coins}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
+async function auctionBuyNow(auction_id, club_id) {
+    let query = `mutation { changeTransferPlayer(club_id: "${club_id}", auction_id: "${auction_id}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
+async function auctionBid(auction_id, end_timestamp, bid, b_club_id) {
+    let query = `mutation { changeAuctionPlayer(club_id: "${b_club_id}", auction_id: "${auction_id}", current_bid: ${bid}, end_timestamp: "${end_timestamp}") { id } }`;
 
     try {
         await graphql.request(query);
@@ -623,5 +738,10 @@ module.exports = {
     getPlayerVersionById,
     nextCurrentBid,
     addAuctionPlayer,
-    updateTransferPlayer
+    updateTransferPlayer,
+    auctionBuyNow,
+    auctionBid,
+    getClubInfoById,
+    notifyPerson,
+    resetTransferPlayer
 }

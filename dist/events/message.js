@@ -17,7 +17,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee(client, message) {
-    var prefix, channel, author, guild, args, command, cmd, allowedCommands, init, curr, diff;
+    var prefix, channel, author, guild, args, command, cmd, allowedCommands, diff, curr, init;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -79,7 +79,7 @@ function () {
             return (0, _general.createUserClub)(author.id);
 
           case 21:
-            allowedCommands = ["help", "support", "list", "bal", "balance", "point", "points", "commands", "command", "clubinfo"];
+            allowedCommands = ["help", "support", "list", "bal", "balance", "point", "points", "commands", "command", "clubinfo", "bid", "b", "buy"];
 
             if (!(author.id !== "259012839379828739" && cooldown.has(author.id))) {
               _context.next = 27;
@@ -89,7 +89,7 @@ function () {
             init = cooldown.get(author.id);
             curr = new Date();
             diff = (curr - init) / 1000;
-            return _context.abrupt("return", channel.send("You need to wait ".concat((cooldownsec - diff).toFixed(1), " seconds before opening another pack.")));
+            return _context.abrupt("return", channel.send("You need to wait ".concat((cooldownsec - diff).toFixed(1), " seconds before executing another command.")));
 
           case 27:
             if (!allowedCommands.includes(command)) {
@@ -99,9 +99,20 @@ function () {
               }, cooldownsec * 1000);
             }
 
+            curr = new Date().getTime();
+            diff = curr - message.author.createdTimestamp;
+
+            if (!(diff < 86400000)) {
+              _context.next = 32;
+              break;
+            }
+
+            return _context.abrupt("return", channel.send("I don't like very new Discord accounts. Try again when your account is older then 1 day."));
+
+          case 32:
             return _context.abrupt("return", cmd.run(client, message, args));
 
-          case 29:
+          case 33:
           case "end":
             return _context.stop();
         }

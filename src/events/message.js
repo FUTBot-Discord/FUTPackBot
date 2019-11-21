@@ -36,15 +36,21 @@ module.exports = async (client, message) => {
         "points",
         "commands",
         "command",
-        "clubinfo"
+        "clubinfo",
+        "bid",
+        "b",
+        "buy"
     ];
+
+    let diff;
+    let curr;
 
     if (author.id !== "259012839379828739" && cooldown.has(author.id)) {
         let init = cooldown.get(author.id);
-        let curr = new Date();
-        let diff = (curr - init) / 1000;
+        curr = new Date();
+        diff = (curr - init) / 1000;
 
-        return channel.send(`You need to wait ${(cooldownsec - diff).toFixed(1)} seconds before opening another pack.`);
+        return channel.send(`You need to wait ${(cooldownsec - diff).toFixed(1)} seconds before executing another command.`);
     }
 
     if (!allowedCommands.includes(command)) {
@@ -54,6 +60,11 @@ module.exports = async (client, message) => {
             cooldown.delete(author.id);
         }, cooldownsec * 1000);
     }
+
+    curr = (new Date()).getTime();
+    diff = curr - message.author.createdTimestamp;
+
+    if (diff < 86400000) return channel.send(`I don't like very new Discord accounts. Try again when your account is older then 1 day.`);
 
     return cmd.run(client, message, args);
 }

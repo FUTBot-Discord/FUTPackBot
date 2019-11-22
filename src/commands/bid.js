@@ -25,7 +25,7 @@ exports.run = async (client, message, args) => {
     let date = (new Date()).getTime();
     let diff = aInfo.end_timestamp - date;
 
-    // if (aInfo.s_club_id === cInfo.id) return channel.send(`You can't bid on your own item. ${author}`);
+    if (aInfo.s_club_id === cInfo.id) return channel.send(`You can't bid on your own item. ${author}`);
     if (diff < 300) return channel.send(`Auction has just been expired. ${author}`);
     if (args[1] == undefined || args[1] == null) return channel.send(`You need to fill-in an amount what you want to bid. ${author}`);
 

@@ -79,7 +79,7 @@ function () {
             return (0, _general.createUserClub)(author.id);
 
           case 21:
-            allowedCommands = ["help", "support", "list", "bal", "balance", "point", "points", "commands", "command", "clubinfo", "bid", "b", "buy"];
+            allowedCommands = ["help", "support", "list", "bal", "balance", "point", "points", "commands", "command", "clubinfo", "ci", "ping", "bid", "b", "buy"];
 
             if (!(author.id !== "259012839379828739" && cooldown.has(author.id))) {
               _context.next = 27;

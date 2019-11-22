@@ -17,7 +17,7 @@ function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            cmd = client.commands.get("club");
+            cmd = client.commands.get("claim");
             return _context.abrupt("return", cmd.run(client, message, args));
 
           case 2:

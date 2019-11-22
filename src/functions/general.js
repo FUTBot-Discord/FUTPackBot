@@ -366,6 +366,19 @@ async function addCoinsToClub(club_id, coins) {
     return true;
 };
 
+async function addPointsToClub(club_id, points) {
+    let query = `mutation { addPointsToClub(club_id: "${club_id}", points: "${points}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
 async function addTransferpilePlayer(club_id, player_id, auction_id) {
     let query;
 
@@ -392,6 +405,19 @@ function nextCurrentBid(p) {
 
 async function removeCoinsFromClub(club_id, coins) {
     let query = `mutation { removeCoinsFromClub(club_id: "${club_id}", coins: "${coins}") { id } }`;
+
+    try {
+        await graphql.request(query);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+};
+
+async function removePointsFromClub(club_id, points) {
+    let query = `mutation { removePointsFromClub(club_id: "${club_id}", points: "${points}") { id } }`;
 
     try {
         await graphql.request(query);
@@ -737,8 +763,10 @@ module.exports = {
     createUserClub,
     getClubPlayer,
     addCoinsToClub,
+    addPointsToClub,
     setDialogueReactions,
     removeCoinsFromClub,
+    removePointsFromClub,
     makePlayerCard,
     setDialogue,
     makeOptionMenuPacks,

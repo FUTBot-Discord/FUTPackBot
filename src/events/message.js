@@ -37,6 +37,8 @@ module.exports = async (client, message) => {
         "commands",
         "command",
         "clubinfo",
+        "ci",
+        "ping",
         "bid",
         "b",
         "buy"

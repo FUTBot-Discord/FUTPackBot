@@ -263,7 +263,7 @@ function () {
             }).then(function (m) {
               return mTemp = m;
             }).then(function () {
-              channel.send("Type the **ID** your player you want to select. ".concat(author, "\nIf the player is at the transfer market, you can do nothing with him.\nAfter 30 seconds without any response this request is going to be closed.")).then(function (m) {
+              channel.send("Type the **ID** your player you want to select. ".concat(author, "\nIf the player is at the transfer market, you can do nothing with him.\nAfter 3 minutes without any response this request is going to be closed.")).then(function (m) {
                 return mTemp2 = m;
               });
             });
@@ -276,7 +276,7 @@ function () {
             };
 
             rCollector = mTemp.createReactionCollector(rFilter, {
-              time: 30000
+              time: 180000
             });
 
             if (!(aPages > 1)) {
@@ -835,7 +835,7 @@ function () {
             }());
             pPlayer = false;
             _context9.next = 98;
-            return (0, _general.setDialogue)(mFilter, channel, 30000).then(function (m) {
+            return (0, _general.setDialogue)(mFilter, channel, 180000).then(function (m) {
               return pPlayer = m;
             }).then(function () {
               return rCollector.stop();

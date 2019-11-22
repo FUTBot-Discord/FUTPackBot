@@ -165,7 +165,7 @@ exports.run = async (client, message, args) => {
         })
         .then(m => mTemp = m)
         .then(() => {
-            channel.send(`Type the **ID** your player you want to select. ${author}\nIf the player is at the transfer market, you can do nothing with him.\nAfter 30 seconds without any response this request is going to be closed.`)
+            channel.send(`Type the **ID** your player you want to select. ${author}\nIf the player is at the transfer market, you can do nothing with him.\nAfter 3 minutes without any response this request is going to be closed.`)
                 .then(m => mTemp2 = m);
         });
 
@@ -173,7 +173,7 @@ exports.run = async (client, message, args) => {
 
     rFilter = (reaction, user) => user.id === author.id;
     const rCollector = mTemp.createReactionCollector(rFilter, {
-        time: 30000
+        time: 180000
     });
 
     if (aPages > 1) {
@@ -433,7 +433,7 @@ exports.run = async (client, message, args) => {
 
     let pPlayer = false;
 
-    await setDialogue(mFilter, channel, 30000)
+    await setDialogue(mFilter, channel, 180000)
         .then(m => pPlayer = m)
         .then(() => rCollector.stop())
         .then(() => pPlayer.delete())

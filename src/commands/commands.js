@@ -6,11 +6,12 @@ exports.run = async (client, message, args) => {
     const embed = new RichEmbed()
         .setColor("0xE51E0A")
         .setTitle("Available commands")
-        .setDescription("Want more information about a command? Use pack!cmd <command>. (Not yet implemented)")
+        // .setDescription("Want more information about a command? Use pack!cmd <command>. (Not yet implemented)")
         .addField('Packs', "pack!list // Get a list of available packs.\n" +
             "pack!open [pack_id] // Just open a pack.\n", false)
         .addField('Club information', "pack!balance // Get your current amount of coins.\n" +
             "pack!clubinfo // Get some general information of your own club.\n" +
+            "pack!select // Select a player from your club/transferpile to list, move or quick-sell.\n" +
             "pack!points // Get your current amount of points.", false)
         .addField('Club collections', "pack!club [player_name] // Get a list of players in your own club. You can switch pages with the reacted emojis.\n" +
             "pack!transferpile // Get a collection of your transferpile. You can switch pages with the reacted emojis.\n" +
@@ -21,7 +22,8 @@ exports.run = async (client, message, args) => {
         .addField('Utils', "pack!claim // Claim your 12 hour reward. The reward includes 100 points. In the future voting can also give you points.\n" +
             "pack!ping // Get the milliseconds that the bot needs to respond.\n" +
             "pack!command // Hey you get this page again!\n" +
-            "pack!help // Get some information for help if needed.\n", false);
+            "pack!help // Get some information for help if needed.\n" +
+            "pack!invite // Get the invite link to get this bot also.\n", false);
 
     message.channel.send(embed)
 }

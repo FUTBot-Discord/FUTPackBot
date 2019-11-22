@@ -19,7 +19,9 @@ import {
     getPacksByName,
     makeOptionMenuPacks,
     getClubTransferpileCount,
-    addTransferpilePlayer
+    addTransferpilePlayer,
+    removePointsFromClub,
+    removeCoinsFromClub
 } from '../functions/general';
 import {
     createClient
@@ -114,10 +116,21 @@ exports.run = async (client, message, args) => {
 
     const iPacks = await getPackById(pID);
     const delay = ms => new Promise(res => setTimeout(res, ms));
+    let clubuser = await getUserClubId(author.id);
+
+    if (clubuser.points > iPacks.points) {
+        await removePointsFromClub(clubuser.id, iPacks.points);
+    } else {
+        if (clubuser.coins > iPacks.price) {
+            await removeCoinsFromClub(clubuser.id, iPacks.price);
+        } else {
+            return channel.send(`You don't have enough coins/points to open this pack. ${author}`);
+        }
+    }
 
     let players_info = [];
     let tPacks = JSON.parse(await redis.get("information"));
-    let clubuser = await getUserClubId(author.id);
+
     let w;
     let chance;
 

@@ -40,7 +40,7 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(client, message, args) {
-    var channel, author, pID, f, mTemp, mTemp2, pName, packList, wPacks, iPacks, delay, players_info, tPacks, clubuser, w, chance, players_count, duplicates, transferpile, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, p, o, card, animation, embed;
+    var channel, author, pID, f, mTemp, mTemp2, pName, packList, wPacks, iPacks, delay, clubuser, players_info, tPacks, w, chance, players_count, duplicates, transferpile, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, p, o, card, animation, embed;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -200,44 +200,74 @@ function () {
               });
             };
 
-            players_info = [];
-            _context2.t6 = JSON;
-            _context2.next = 51;
-            return redis.get("information");
-
-          case 51:
-            _context2.t7 = _context2.sent;
-            tPacks = _context2.t6.parse.call(_context2.t6, _context2.t7);
-            _context2.next = 55;
+            _context2.next = 49;
             return (0, _general.getUserClubId)(author.id);
 
-          case 55:
+          case 49:
             clubuser = _context2.sent;
+
+            if (!(clubuser.points > iPacks.points)) {
+              _context2.next = 55;
+              break;
+            }
+
+            _context2.next = 53;
+            return (0, _general.removePointsFromClub)(clubuser.id, iPacks.points);
+
+          case 53:
+            _context2.next = 61;
+            break;
+
+          case 55:
+            if (!(clubuser.coins > iPacks.price)) {
+              _context2.next = 60;
+              break;
+            }
+
+            _context2.next = 58;
+            return (0, _general.removeCoinsFromClub)(clubuser.id, iPacks.price);
+
+          case 58:
+            _context2.next = 61;
+            break;
+
+          case 60:
+            return _context2.abrupt("return", channel.send("You don't have enough coins/points to open this pack. ".concat(author)));
+
+          case 61:
+            players_info = [];
+            _context2.t6 = JSON;
+            _context2.next = 65;
+            return redis.get("information");
+
+          case 65:
+            _context2.t7 = _context2.sent;
+            tPacks = _context2.t6.parse.call(_context2.t6, _context2.t7);
             players_count = 1;
 
-          case 57:
+          case 68:
             if (!(players_count <= iPacks.players)) {
-              _context2.next = 68;
+              _context2.next = 79;
               break;
             }
 
             chance = new _chance.Chance();
             w = tPacks[chance.weighted(wPacks[0], wPacks[1])];
             _context2.t8 = players_info;
-            _context2.next = 63;
+            _context2.next = 74;
             return (0, _general.getPlayer)(w.ratingB, w.ratingT, w.rarity);
 
-          case 63:
+          case 74:
             _context2.t9 = _context2.sent;
 
             _context2.t8.push.call(_context2.t8, _context2.t9);
 
-          case 65:
+          case 76:
             players_count++;
-            _context2.next = 57;
+            _context2.next = 68;
             break;
 
-          case 68:
+          case 79:
             duplicates = [];
             transferpile = [];
             players_info = players_info.sort(function (a, b) {
@@ -246,103 +276,103 @@ function () {
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            _context2.prev = 74;
+            _context2.prev = 85;
             _iterator = players_info[Symbol.iterator]();
 
-          case 76:
+          case 87:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              _context2.next = 101;
+              _context2.next = 112;
               break;
             }
 
             p = _step.value;
-            _context2.next = 80;
+            _context2.next = 91;
             return (0, _general.getClubPlayer)(clubuser.id, p.id);
 
-          case 80:
+          case 91:
             o = _context2.sent;
 
             if (!(o !== null)) {
-              _context2.next = 96;
+              _context2.next = 107;
               break;
             }
 
-            _context2.next = 84;
+            _context2.next = 95;
             return (0, _general.getClubTransferpileCount)(clubuser.id);
 
-          case 84:
+          case 95:
             _context2.t10 = _context2.sent.length;
 
             if (!(_context2.t10 < 100)) {
-              _context2.next = 91;
+              _context2.next = 102;
               break;
             }
 
             transferpile.push(p.id);
-            _context2.next = 89;
+            _context2.next = 100;
             return (0, _general.addTransferpilePlayer)(clubuser.id, p.id);
 
-          case 89:
-            _context2.next = 94;
+          case 100:
+            _context2.next = 105;
             break;
 
-          case 91:
+          case 102:
             duplicates.push(p.id);
-            _context2.next = 94;
+            _context2.next = 105;
             return (0, _general.addCoinsToClub)(clubuser.id, p.min_price);
 
-          case 94:
-            _context2.next = 98;
+          case 105:
+            _context2.next = 109;
             break;
 
-          case 96:
-            _context2.next = 98;
+          case 107:
+            _context2.next = 109;
             return (0, _general.addClubPlayer)(clubuser.id, p.id);
 
-          case 98:
+          case 109:
             _iteratorNormalCompletion = true;
-            _context2.next = 76;
+            _context2.next = 87;
             break;
 
-          case 101:
-            _context2.next = 107;
+          case 112:
+            _context2.next = 118;
             break;
 
-          case 103:
-            _context2.prev = 103;
-            _context2.t11 = _context2["catch"](74);
+          case 114:
+            _context2.prev = 114;
+            _context2.t11 = _context2["catch"](85);
             _didIteratorError = true;
             _iteratorError = _context2.t11;
 
-          case 107:
-            _context2.prev = 107;
-            _context2.prev = 108;
+          case 118:
+            _context2.prev = 118;
+            _context2.prev = 119;
 
             if (!_iteratorNormalCompletion && _iterator["return"] != null) {
               _iterator["return"]();
             }
 
-          case 110:
-            _context2.prev = 110;
+          case 121:
+            _context2.prev = 121;
 
             if (!_didIteratorError) {
-              _context2.next = 113;
+              _context2.next = 124;
               break;
             }
 
             throw _iteratorError;
 
-          case 113:
-            return _context2.finish(110);
+          case 124:
+            return _context2.finish(121);
 
-          case 114:
-            return _context2.finish(107);
+          case 125:
+            return _context2.finish(118);
 
-          case 115:
-            _context2.next = 117;
+          case 126:
+            _context2.next = 128;
             return (0, _general.makePlayerCard)(players_info[0]);
 
-          case 117:
+          case 128:
             card = _context2.sent;
             animation = (0, _general.getAnimation)(players_info[0].rareflag, players_info[0].rating);
             embed = new _discord.RichEmbed().setColor("0xE51E0A").setTimestamp().attachFile("pack_animations/".concat(animation, ".gif"), "".concat(animation, ".gif")).setImage("attachment://".concat(animation, ".gif")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg").setTitle("".concat(author.username, "#").concat(author.discriminator, " is opening a ").concat(iPacks.name), "https://tjird.nl/futbot.jpg");
@@ -403,12 +433,12 @@ function () {
               return channel.send("The packed players are stored to your club and duplicates has been quick-sold/send to transferpile.\nIt looks like the bot has the wrong permissions. Make sure that it can do all the following actions:\n- Manage Messages\n- Embed Links\n- Attach Files");
             });
 
-          case 121:
+          case 132:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[74, 103, 107, 115], [108,, 110, 114]]);
+    }, _callee2, null, [[85, 114, 118, 126], [119,, 121, 125]]);
   }));
 
   return function (_x, _x2, _x3) {

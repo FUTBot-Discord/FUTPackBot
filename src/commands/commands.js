@@ -21,7 +21,7 @@ exports.run = async (client, message, args) => {
             "pack!bid <auction_id> // Bid or buy a player from the transfer market. The auction id you need is available in the menu(Most left column) of the market command.\n", false)
         .addField('Utils', "pack!claim // Claim your 12 hour reward. The reward includes 100 points. In the future voting can also give you points.\n" +
             "pack!ping // Get the milliseconds that the bot needs to respond.\n" +
-            "pack!command // Hey you get this page again!\n" +
+            "pack!commands // Hey you get this page again!\n" +
             "pack!help // Get some information for help if needed.\n" +
             "pack!invite // Get the invite link to get this bot also.\n", false);
 

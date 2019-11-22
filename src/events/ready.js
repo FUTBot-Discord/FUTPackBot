@@ -37,9 +37,15 @@ module.exports = async (client) => {
     console.log(`Logged in as ${client.user.tag} and looking at ${getPlayerCount(client.guilds)} users.`);
     console.log("====================");
 
-    client.user.setActivity(`pack! in #testing`, {
+    client.user.setActivity(`${client.guilds.size} servers`, {
         type: 'WATCHING'
     });
+
+    setInterval(() => {
+        client.user.setActivity(`${client.guilds.size} servers`, {
+            type: 'WATCHING'
+        });
+    }, 360000);
 
     redisStartup(client);
 }

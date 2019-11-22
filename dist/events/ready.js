@@ -49,12 +49,17 @@ function () {
             });
             console.log("Logged in as ".concat(client.user.tag, " and looking at ").concat(getPlayerCount(client.guilds), " users."));
             console.log("====================");
-            client.user.setActivity("pack! in #testing", {
+            client.user.setActivity("".concat(client.guilds.size, " servers"), {
               type: 'WATCHING'
             });
+            setInterval(function () {
+              client.user.setActivity("".concat(client.guilds.size, " servers"), {
+                type: 'WATCHING'
+              });
+            }, 360000);
             redisStartup(client);
 
-          case 5:
+          case 6:
           case "end":
             return _context.stop();
         }

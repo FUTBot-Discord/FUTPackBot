@@ -206,7 +206,7 @@ function () {
           case 49:
             clubuser = _context2.sent;
 
-            if (!(clubuser.points > iPacks.points)) {
+            if (!(parseInt(clubuser.points) >= parseInt(iPacks.points))) {
               _context2.next = 55;
               break;
             }
@@ -219,7 +219,7 @@ function () {
             break;
 
           case 55:
-            if (!(clubuser.coins > iPacks.price)) {
+            if (!(parseInt(clubuser.coins) >= parseInt(iPacks.price))) {
               _context2.next = 60;
               break;
             }

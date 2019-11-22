@@ -118,10 +118,10 @@ exports.run = async (client, message, args) => {
     const delay = ms => new Promise(res => setTimeout(res, ms));
     let clubuser = await getUserClubId(author.id);
 
-    if (clubuser.points > iPacks.points) {
+    if (parseInt(clubuser.points) >= parseInt(iPacks.points)) {
         await removePointsFromClub(clubuser.id, iPacks.points);
     } else {
-        if (clubuser.coins > iPacks.price) {
+        if (parseInt(clubuser.coins) >= parseInt(iPacks.price)) {
             await removeCoinsFromClub(clubuser.id, iPacks.price);
         } else {
             return channel.send(`You don't have enough coins/points to open this pack. ${author}`);

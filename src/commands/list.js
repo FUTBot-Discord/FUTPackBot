@@ -1,5 +1,9 @@
-import { getPacks, getPacksByName, numberWithCommas } from '../functions/general';
-import AsciiTable from 'ascii-table';
+import {
+    getPacks,
+    getPacksByName,
+    numberWithCommas,
+    makeOptionMenuPacks
+} from '../functions/general';
 
 exports.run = async (client, message, args) => {
     let packs;
@@ -15,12 +19,7 @@ exports.run = async (client, message, args) => {
     if (packs.length < 1 && args.length > 0) return channel.send("There where no packs available with that search criteria.");
     if (packs.length < 1 && args.length < 1) return channel.send("There where no packs available.");
 
-    let table = new AsciiTable('Pack list')
-        .setHeading("Id", "Name", "Price");
-
-    for (let pack of packs) {
-        table.addRow(pack.id, pack.name, numberWithCommas(pack.price));
-    }
+    let table = makeOptionMenuPacks(packs);
 
     return channel.send(table + "\nFUTPackBot v.1.0.0 | Made by Tjird#0001", {
         code: true,

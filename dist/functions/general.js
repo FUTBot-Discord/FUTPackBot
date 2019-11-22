@@ -191,7 +191,7 @@ function _getPackById() {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            query = "{ getPackById(id: ".concat(id, ") { name players } }");
+            query = "{ getPackById(id: ".concat(id, ") { name players points price } }");
             _context5.next = 3;
             return graphql.request(query);
 
@@ -544,7 +544,7 @@ function _addClubPlayer() {
 ;
 
 function makeOptionMenuPacks(packs) {
-  var t = new _asciiTable["default"]().setHeading('ID', 'Name', 'Price', 'Points').setAlign(1, _asciiTable["default"].LEFT).setAlign(2, _asciiTable["default"].CENTER).setAlign(3, _asciiTable["default"].LEFT).setAlign(4, _asciiTable["default"].LEFT);
+  var t = new _asciiTable["default"]('Pack list').setHeading('ID', 'Name', 'Price', 'Points').setAlign(1, _asciiTable["default"].LEFT).setAlign(2, _asciiTable["default"].CENTER).setAlign(3, _asciiTable["default"].LEFT).setAlign(4, _asciiTable["default"].LEFT);
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;

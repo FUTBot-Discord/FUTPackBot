@@ -57,7 +57,7 @@ async function getPacksByName(name) {
 };
 
 async function getPackById(id) {
-    let query = `{ getPackById(id: ${id}) { name players } }`;
+    let query = `{ getPackById(id: ${id}) { name players points price } }`;
     let res = await graphql.request(query);
 
     return res.getPackById;
@@ -152,7 +152,7 @@ async function addClubPlayer(club_id, player_id) {
 };
 
 function makeOptionMenuPacks(packs) {
-    const t = new AsciiTable()
+    const t = new AsciiTable('Pack list')
         .setHeading('ID', 'Name', 'Price', 'Points')
         .setAlign(1, AsciiTable.LEFT)
         .setAlign(2, AsciiTable.CENTER)

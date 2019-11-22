@@ -130,7 +130,6 @@ exports.run = async (client, message, args) => {
 
     let players_info = [];
     let tPacks = JSON.parse(await redis.get("information"));
-
     let w;
     let chance;
 

@@ -16,7 +16,7 @@ function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            return _context.abrupt("return", message.channel.send("I can join your Discord with the following link https://discordapp.com/oauth2/authorize?client_id=647251451625603082&scope=bot&permissions=126016"));
+            return _context.abrupt("return", message.channel.send("You can vote for me with the following link https://top.gg/bot/647251451625603082/vote"));
 
           case 1:
           case "end":

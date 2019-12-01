@@ -1,7 +1,43 @@
 "use strict";
 
+var _asyncRedis = require("async-redis");
+
+var pub = (0, _asyncRedis.createClient)({
+  "host": process.env.R_HOST,
+  "retry_strategy": function retry_strategy(options) {
+    if (options.error && options.error.code === 'ECONNREFUSED') {
+      // End reconnecting on a specific error and flush all commands with
+      // a individual error
+      return new Error('The server refused the connection');
+    }
+
+    if (options.total_retry_time > 1000 * 60 * 60) {
+      // End reconnecting after a specific timeout and flush all commands
+      // with a individual error
+      return new Error('Retry time exhausted');
+    }
+
+    if (options.attempt > 10) {
+      // End reconnecting with built in error
+      return undefined;
+    } // reconnect after
+
+
+    return Math.min(options.attempt * 100, 3000);
+  }
+});
+pub.on("error", function (err) {
+  console.log("Error ".concat(err));
+});
+
 module.exports = function (client, guild) {
   client.user.setActivity("".concat(client.guilds.size, " servers"), {
     type: 'WATCHING'
   });
+
+  try {
+    guild.owner.send("Heeyy!! Love to you because your guild has invited me. \nYou can find the commandlist with `pack!commands` or at https://top.gg/bot/647251451625603082. \nIf you have any questions, don't hesitate and join the supported Discord https://discord.gg/KUnh4fc.");
+  } catch (e) {}
+
+  pub.publish("addedGuild", "{\"guildName\": \"".concat(guild.name.toString(), "\", \"guildOwner\": \"").concat(guild.owner.user.tag.toString(), "\", \"botId\": \"").concat(client.id, "\"}"));
 };

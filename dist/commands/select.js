@@ -38,7 +38,7 @@ function () {
             channel = message.channel;
 
             if (!(choice === 0)) {
-              _context9.next = 13;
+              _context9.next = 14;
               break;
             }
 
@@ -67,65 +67,67 @@ function () {
                   choice = 1;
                   break;
               }
-            }).then(function () {
-              return mTemp["delete"]();
             })["catch"](function (e) {
               return channel.send("".concat(author, " your request has been called because no response has given."));
+            }).then(function () {
+              return mTemp["delete"]();
             });
 
           case 11:
+            ;
+
             if (!(choice === 0)) {
-              _context9.next = 13;
+              _context9.next = 14;
               break;
             }
 
             return _context9.abrupt("return");
 
-          case 13:
-            _context9.next = 15;
+          case 14:
+            _context9.next = 16;
             return (0, _general.getUserClubId)(author.id);
 
-          case 15:
+          case 16:
             cInfo = _context9.sent;
             _context9.t0 = choice;
-            _context9.next = _context9.t0 === 1 ? 19 : _context9.t0 === 2 ? 25 : 31;
+            _context9.next = _context9.t0 === 1 ? 20 : _context9.t0 === 2 ? 26 : 32;
             break;
 
-          case 19:
-            _context9.next = 21;
+          case 20:
+            _context9.next = 22;
             return (0, _general.getClubTransferpileCount)(cInfo.id);
 
-          case 21:
+          case 22:
             count = _context9.sent.length;
 
             if (!(count < 1)) {
-              _context9.next = 24;
+              _context9.next = 25;
               break;
             }
 
             return _context9.abrupt("return", channel.send("Your transferpile is empty man! ".concat(author, ".")));
 
-          case 24:
-            return _context9.abrupt("break", 31);
-
           case 25:
-            _context9.next = 27;
+            return _context9.abrupt("break", 32);
+
+          case 26:
+            _context9.next = 28;
             return (0, _general.getClubCollectionCount)(cInfo.id);
 
-          case 27:
+          case 28:
             count = _context9.sent.length;
 
             if (!(count < 1)) {
-              _context9.next = 30;
+              _context9.next = 31;
               break;
             }
 
             return _context9.abrupt("return", channel.send("Your club is empty man! Open some packs ".concat(author, ".")));
 
-          case 30:
-            return _context9.abrupt("break", 31);
-
           case 31:
+            return _context9.abrupt("break", 32);
+
+          case 32:
             channel.send("Put in a (part of the) playername you want to search. ".concat(author, "\nIf you want all results, put in a '-' or say 30 seconds nothing.")).then(function (m) {
               return mTemp = m;
             });
@@ -135,7 +137,7 @@ function () {
             };
 
             page = 1;
-            _context9.next = 36;
+            _context9.next = 37;
             return (0, _general.setDialogue)(mFilter, channel, 30000).then(function (m) {
               return mPlayerName = m;
             }).then(function () {
@@ -146,118 +148,118 @@ function () {
               return mPlayerName = "";
             });
 
-          case 36:
+          case 37:
             if (!(mPlayerName.content !== "" && mPlayerName.content !== "-")) {
-              _context9.next = 50;
+              _context9.next = 51;
               break;
             }
 
             _context9.t1 = choice;
-            _context9.next = _context9.t1 === 1 ? 40 : _context9.t1 === 2 ? 44 : 48;
+            _context9.next = _context9.t1 === 1 ? 41 : _context9.t1 === 2 ? 45 : 49;
             break;
 
-          case 40:
-            _context9.next = 42;
+          case 41:
+            _context9.next = 43;
             return (0, _general.getClubTransferpile)(cInfo.id, page, mPlayerName.content);
 
-          case 42:
+          case 43:
             pCollection = _context9.sent;
-            return _context9.abrupt("break", 48);
+            return _context9.abrupt("break", 49);
 
-          case 44:
-            _context9.next = 46;
+          case 45:
+            _context9.next = 47;
             return (0, _general.getClubCollection)(cInfo.id, page, mPlayerName.content);
 
-          case 46:
+          case 47:
             pCollection = _context9.sent;
-            return _context9.abrupt("break", 48);
+            return _context9.abrupt("break", 49);
 
-          case 48:
-            _context9.next = 61;
+          case 49:
+            _context9.next = 62;
             break;
 
-          case 50:
+          case 51:
             _context9.t2 = choice;
-            _context9.next = _context9.t2 === 1 ? 53 : _context9.t2 === 2 ? 57 : 61;
+            _context9.next = _context9.t2 === 1 ? 54 : _context9.t2 === 2 ? 58 : 62;
             break;
 
-          case 53:
-            _context9.next = 55;
+          case 54:
+            _context9.next = 56;
             return (0, _general.getClubTransferpile)(cInfo.id, page);
 
-          case 55:
+          case 56:
             pCollection = _context9.sent;
-            return _context9.abrupt("break", 61);
+            return _context9.abrupt("break", 62);
 
-          case 57:
-            _context9.next = 59;
+          case 58:
+            _context9.next = 60;
             return (0, _general.getClubCollection)(cInfo.id, page);
 
-          case 59:
+          case 60:
             pCollection = _context9.sent;
-            return _context9.abrupt("break", 61);
+            return _context9.abrupt("break", 62);
 
-          case 61:
+          case 62:
             if (!(pCollection.length < 1)) {
-              _context9.next = 63;
+              _context9.next = 64;
               break;
             }
 
             return _context9.abrupt("return", channel.send("No players are found with this criteria. Try again later... ".concat(author)));
 
-          case 63:
+          case 64:
             _context9.t3 = choice;
-            _context9.next = _context9.t3 === 1 ? 66 : _context9.t3 === 2 ? 76 : 86;
+            _context9.next = _context9.t3 === 1 ? 67 : _context9.t3 === 2 ? 77 : 87;
             break;
 
-          case 66:
-            _context9.next = 68;
+          case 67:
+            _context9.next = 69;
             return (0, _general.getClubTransferpileCount)(cInfo.id);
 
-          case 68:
+          case 69:
             count = _context9.sent.length;
 
             if (!(count < 1)) {
-              _context9.next = 71;
+              _context9.next = 72;
               break;
             }
 
             return _context9.abrupt("return", channel.send("Your transferpile is empty man! ".concat(author, ".")));
 
-          case 71:
+          case 72:
             aPages = Math.ceil(count / 12);
-            _context9.next = 74;
+            _context9.next = 75;
             return (0, _general.makeTransferMenu)(pCollection, author, page, aPages, count);
 
-          case 74:
+          case 75:
             pMenu = _context9.sent;
-            return _context9.abrupt("break", 86);
+            return _context9.abrupt("break", 87);
 
-          case 76:
-            _context9.next = 78;
+          case 77:
+            _context9.next = 79;
             return (0, _general.getClubCollectionCount)(cInfo.id);
 
-          case 78:
+          case 79:
             count = _context9.sent.length;
 
             if (!(count < 1)) {
-              _context9.next = 81;
+              _context9.next = 82;
               break;
             }
 
             return _context9.abrupt("return", channel.send("Your club is empty man! Open some packs ".concat(author, ".")));
 
-          case 81:
+          case 82:
             aPages = Math.ceil(count / 18);
-            _context9.next = 84;
+            _context9.next = 85;
             return (0, _general.makeClubMenu)(pCollection, author, page, aPages);
 
-          case 84:
+          case 85:
             pMenu = _context9.sent;
-            return _context9.abrupt("break", 86);
+            return _context9.abrupt("break", 87);
 
-          case 86:
-            _context9.next = 88;
+          case 87:
+            _context9.next = 89;
             return channel.send(pMenu, {
               code: true
             }).then(function (m) {
@@ -268,7 +270,7 @@ function () {
               });
             });
 
-          case 88:
+          case 89:
             if (!message.guild) channel.send("In DM's no reactions could be removed by me. You need to remove those by yourself!");
 
             rFilter = function rFilter(reaction, user) {
@@ -280,11 +282,11 @@ function () {
             });
 
             if (!(aPages > 1)) {
-              _context9.next = 94;
+              _context9.next = 95;
               break;
             }
 
-            _context9.next = 94;
+            _context9.next = 95;
             return mTemp.react("⏮").then(function (r) {
               return r.message.react("⏪");
             }).then(function (r) {
@@ -293,7 +295,7 @@ function () {
               return r.message.react("⏭");
             });
 
-          case 94:
+          case 95:
             rCollector.on('collect',
             /*#__PURE__*/
             function () {
@@ -834,102 +836,102 @@ function () {
               };
             }());
             pPlayer = false;
-            _context9.next = 98;
+            _context9.next = 99;
             return (0, _general.setDialogue)(mFilter, channel, 180000).then(function (m) {
               return pPlayer = m;
             }).then(function () {
               return rCollector.stop();
+            })["catch"](function (e) {
+              return channel.send("No response has been given. Request is no closed ".concat(author, "."));
             }).then(function () {
               return pPlayer["delete"]();
             }).then(function () {
               return mTemp["delete"]();
             }).then(function () {
               return mTemp2["delete"]();
-            })["catch"](function (e) {
-              return channel.send("No response has been given. Request is no closed ".concat(author, "."));
             });
 
-          case 98:
+          case 99:
             if (pPlayer) {
-              _context9.next = 100;
+              _context9.next = 101;
               break;
             }
 
             return _context9.abrupt("return");
 
-          case 100:
+          case 101:
             _context9.t4 = choice;
-            _context9.next = _context9.t4 === 1 ? 103 : _context9.t4 === 2 ? 107 : 111;
+            _context9.next = _context9.t4 === 1 ? 104 : _context9.t4 === 2 ? 108 : 112;
             break;
 
-          case 103:
-            _context9.next = 105;
+          case 104:
+            _context9.next = 106;
             return (0, _general.getTransferpilePlayerById)(cInfo.id, pPlayer.content);
 
-          case 105:
+          case 106:
             pPlayer = _context9.sent;
-            return _context9.abrupt("break", 111);
+            return _context9.abrupt("break", 112);
 
-          case 107:
-            _context9.next = 109;
+          case 108:
+            _context9.next = 110;
             return (0, _general.getClubPlayerById)(cInfo.id, pPlayer.content);
 
-          case 109:
+          case 110:
             pPlayer = _context9.sent;
-            return _context9.abrupt("break", 111);
+            return _context9.abrupt("break", 112);
 
-          case 111:
+          case 112:
             if (!(pPlayer === null)) {
-              _context9.next = 113;
+              _context9.next = 114;
               break;
             }
 
             return _context9.abrupt("return", channel.send("Player couldn't be found. Try again... ".concat(author)));
 
-          case 113:
+          case 114:
             if (!(choice === 1)) {
-              _context9.next = 116;
+              _context9.next = 117;
               break;
             }
 
             if (!pPlayer.auction_info) {
-              _context9.next = 116;
+              _context9.next = 117;
               break;
             }
 
             return _context9.abrupt("return", channel.send("Player has an active auction. Wait for the auction to make actions at this player. ".concat(author)));
 
-          case 116:
+          case 117:
             b = "\n:three: List to transfer market";
             _context9.t5 = choice;
-            _context9.next = _context9.t5 === 1 ? 120 : _context9.t5 === 2 ? 123 : 126;
+            _context9.next = _context9.t5 === 1 ? 121 : _context9.t5 === 2 ? 124 : 127;
             break;
 
-          case 120:
+          case 121:
             place = "Transferpile";
             a = "Send to club";
-            return _context9.abrupt("break", 126);
+            return _context9.abrupt("break", 127);
 
-          case 123:
+          case 124:
             place = "Club";
             a = "Send to transferpile";
-            return _context9.abrupt("break", 126);
+            return _context9.abrupt("break", 127);
 
-          case 126:
-            _context9.next = 128;
+          case 127:
+            _context9.next = 129;
             return (0, _general.getPlayerVersionById)(pPlayer.player_id);
 
-          case 128:
+          case 129:
             playerInfo = _context9.sent;
             min_price = playerInfo.min_price;
-            _context9.next = 132;
+            _context9.next = 133;
             return (0, _general.makePlayerCard)(playerInfo);
 
-          case 132:
+          case 133:
             playerCard = _context9.sent;
             playerName = playerInfo.meta_info.common_name ? playerInfo.meta_info.common_name : "".concat(playerInfo.meta_info.first_name, " ").concat(playerInfo.meta_info.last_name);
             pEmbed = new _discord.RichEmbed().setTimestamp().attachFile(playerCard).setImage("attachment://card.png").setTitle("You have choosen ".concat(playerName, " his card.")).setDescription("Version: ".concat((0, _general.getRarityName)("".concat(playerInfo.rareflag, "-").concat((0, _general.getQuality)(playerInfo.rating))) ? (0, _general.getRarityName)("".concat(playerInfo.rareflag, "-").concat((0, _general.getQuality)(playerInfo.rating))) : "Unknown", "\nCurrent place: ").concat(place, "\n\nReact at this message with some choosen emojis.\n:one: Quick-sell (").concat(playerInfo.min_price, " coins)\n:two: ").concat(a).concat(b, "\n\nAfter 30 seconds without any response this request is going to be closed.")).setFooter("FUTPackBot v.1.0.0 | Made by Tjird#0001", "https://tjird.nl/futbot.jpg");
-            _context9.next = 137;
+            _context9.next = 138;
             return channel.send(pEmbed).then(function (m) {
               return mTemp2 = m;
             }).then(function () {
@@ -940,17 +942,17 @@ function () {
               return mTemp2.react("3\u20E3");
             });
 
-          case 137:
+          case 138:
             _context9.t6 = choice;
-            _context9.next = _context9.t6 === 1 ? 140 : _context9.t6 === 2 ? 144 : 148;
+            _context9.next = _context9.t6 === 1 ? 141 : _context9.t6 === 2 ? 145 : 149;
             break;
 
-          case 140:
+          case 141:
             rFilter = function rFilter(reaction, user) {
               return (reaction.emoji.identifier === '1%E2%83%A3' || reaction.emoji.identifier === '2%E2%83%A3' || reaction.emoji.identifier === '3%E2%83%A3') && user.id === author.id;
             };
 
-            _context9.next = 143;
+            _context9.next = 144;
             return (0, _general.setDialogueReactions)(rFilter, mTemp2, 30000).then(
             /*#__PURE__*/
             function () {
@@ -1088,14 +1090,12 @@ function () {
                         _context4.next = 34;
                         return (0, _general.setDialogue)(mFilter, channel, 30000).then(function (m) {
                           return iStart_price = m;
+                        })["catch"](function (e) {
+                          return channel.send("No response has been given. Request is no closed ".concat(author, "."));
                         }).then(function () {
                           return iStart_price["delete"]();
                         }).then(function () {
                           return mTemp["delete"]();
-                        })["catch"](function (e) {
-                          iStart_price["delete"]();
-                          mTemp["delete"]();
-                          channel.send("No response has been given. Request is no closed ".concat(author, "."));
                         });
 
                       case 34:
@@ -1305,21 +1305,21 @@ function () {
               return function (_x5) {
                 return _ref3.apply(this, arguments);
               };
-            }()).then(function () {
-              return mTemp2["delete"]();
-            })["catch"](function (e) {
+            }())["catch"](function (e) {
               return channel.send("".concat(author, " your request has been called because no response has given."));
+            }).then(function () {
+              return mTemp2["delete"]();
             });
 
-          case 143:
-            return _context9.abrupt("break", 148);
-
           case 144:
+            return _context9.abrupt("break", 149);
+
+          case 145:
             rFilter = function rFilter(reaction, user) {
               return (reaction.emoji.identifier === '1%E2%83%A3' || reaction.emoji.identifier === '2%E2%83%A3' || reaction.emoji.identifier === '3%E2%83%A3') && user.id === author.id;
             };
 
-            _context9.next = 147;
+            _context9.next = 148;
             return (0, _general.setDialogueReactions)(rFilter, mTemp2, 30000).then(
             /*#__PURE__*/
             function () {
@@ -1714,16 +1714,16 @@ function () {
               return function (_x6) {
                 return _ref6.apply(this, arguments);
               };
-            }()).then(function () {
-              return mTemp2["delete"]();
-            })["catch"](function (e) {
+            }())["catch"](function (e) {
               return channel.send("".concat(author, " your request has been called because no response has given."));
+            }).then(function () {
+              return mTemp2["delete"]();
             });
 
-          case 147:
-            return _context9.abrupt("break", 148);
-
           case 148:
+            return _context9.abrupt("break", 149);
+
+          case 149:
           case "end":
             return _context9.stop();
         }

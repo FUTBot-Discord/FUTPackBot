@@ -2,12 +2,7 @@ import {
     createClient
 } from "async-redis";
 import {
-    getAuctionById,
-    resetTransferPlayer,
-    addCoinsToClub,
-    auctionBuyNow,
-    notifyPerson,
-    getPlayerVersionById
+    notifyPerson
 } from "../functions/general";
 import dotenv from "dotenv";
 dotenv.config();
@@ -47,44 +42,53 @@ module.exports = async (client) => {
         });
     }, 360000);
 
-    redisStartup(client);
-}
+    redis.subscribe("auctionEnd");
 
-async function redisStartup(client) {
-    await redis.send_command("config", ["set", "notify-keyspace-events", "Ex"]);
+    redis.on("message", (channel, message) => {
+        if (channel !== "auctionEnd") return;
 
-    const expired_subKey =
-        "__keyevent@" + process.env.R_DB + "__:expired";
+        const aInfo = JSON.parse(message);
 
-    redis
-        .subscribe(expired_subKey)
-        .then(() => console.log("[i] Subscribed to " + expired_subKey));
-
-    redis.on("message", async (channel, message) => {
-        if (channel !== expired_subKey) return;
-        console.log(`[a] [${message}] Expired.`);
-
-        let aInfo = await getAuctionById(message);
-
-        if (aInfo == null) return;
-
-        if (aInfo.b_club_id == 0) {
-            console.log(`[a] [${message}] No buyer was found.`);
-            return resetTransferPlayer(message);
-        }
-
-        console.log(`[a] [${message}] Buyer(${aInfo.b_club_id}) has been found.`);
-
-        await addCoinsToClub(aInfo.s_club_id, aInfo.current_bid);
-        await auctionBuyNow(aInfo.id, aInfo.b_club_id);
-
-        const pInfo = await getPlayerVersionById(aInfo.player_id);
-        const pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : `${pInfo.meta_info.first_name} ${pInfo.meta_info.last_name}`;
-
-        await notifyPerson(client, aInfo, 3);
-        await notifyPerson(client, aInfo, 4);
+        notifyPerson(aInfo, 3);
+        notifyPerson(aInfo, 4);
     });
 }
+
+// async function redisStartup(client) {
+//     await redis.send_command("config", ["set", "notify-keyspace-events", "Ex"]);
+
+//     const expired_subKey =
+//         "__keyevent@" + process.env.R_DB + "__:expired";
+
+//     redis
+//         .subscribe(expired_subKey)
+//         .then(() => console.log("[i] Subscribed to " + expired_subKey));
+
+//     redis.on("message", async (channel, message) => {
+//         if (channel !== expired_subKey) return;
+//         console.log(`[a] [${message}] Expired.`);
+
+//         let aInfo = await getAuctionById(message);
+
+//         if (aInfo == null) return;
+
+//         if (aInfo.b_club_id == 0) {
+//             console.log(`[a] [${message}] No buyer was found.`);
+//             return resetTransferPlayer(message);
+//         }
+
+//         console.log(`[a] [${message}] Buyer(${aInfo.b_club_id}) has been found.`);
+
+//         await addCoinsToClub(aInfo.s_club_id, aInfo.current_bid);
+//         await auctionBuyNow(aInfo.id, aInfo.b_club_id);
+
+//         const pInfo = await getPlayerVersionById(aInfo.player_id);
+//         const pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : `${pInfo.meta_info.first_name} ${pInfo.meta_info.last_name}`;
+
+//         await notifyPerson(client, aInfo, 3);
+//         await notifyPerson(client, aInfo, 4);
+//     });
+// }
 
 function getPlayerCount(guilds) {
     let usercount = 0;

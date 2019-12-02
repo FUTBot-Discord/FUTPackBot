@@ -82,8 +82,8 @@ exports.run = async (client, message, args) => {
                         break;
                 }
             })
-            .then(() => mTemp.delete())
-            .catch(e => channel.send(`${author} your request has been called because no response has given.`));
+            .catch(e => channel.send(`${author} your request has been called because no response has given.`))
+            .then(() => mTemp.delete());;
 
         if (choice === 0) return;
     }
@@ -436,10 +436,10 @@ exports.run = async (client, message, args) => {
     await setDialogue(mFilter, channel, 180000)
         .then(m => pPlayer = m)
         .then(() => rCollector.stop())
+        .catch(e => channel.send(`No response has been given. Request is no closed ${author}.`))
         .then(() => pPlayer.delete())
         .then(() => mTemp.delete())
-        .then(() => mTemp2.delete())
-        .catch(e => channel.send(`No response has been given. Request is no closed ${author}.`));
+        .then(() => mTemp2.delete());
 
     if (!pPlayer) return;
 
@@ -530,13 +530,9 @@ exports.run = async (client, message, args) => {
 
                             await setDialogue(mFilter, channel, 30000)
                                 .then(m => iStart_price = m)
+                                .catch(e => channel.send(`No response has been given. Request is no closed ${author}.`))
                                 .then(() => iStart_price.delete())
-                                .then(() => mTemp.delete())
-                                .catch(e => {
-                                    iStart_price.delete();
-                                    mTemp.delete();
-                                    channel.send(`No response has been given. Request is no closed ${author}.`);
-                                });
+                                .then(() => mTemp.delete());
 
                             if (!iStart_price) return;
 
@@ -628,8 +624,8 @@ exports.run = async (client, message, args) => {
                             break;
                     }
                 })
-                .then(() => mTemp2.delete())
-                .catch(e => channel.send(`${author} your request has been called because no response has given.`));
+                .catch(e => channel.send(`${author} your request has been called because no response has given.`))
+                .then(() => mTemp2.delete());
             break;
         case 2:
             rFilter = (reaction, user) => (reaction.emoji.identifier === '1%E2%83%A3' || reaction.emoji.identifier === '2%E2%83%A3' || reaction.emoji.identifier === '3%E2%83%A3') && user.id === author.id;
@@ -782,8 +778,8 @@ exports.run = async (client, message, args) => {
                             break;
                     }
                 })
-                .then(() => mTemp2.delete())
-                .catch(e => channel.send(`${author} your request has been called because no response has given.`));
+                .catch(e => channel.send(`${author} your request has been called because no response has given.`))
+                .then(() => mTemp2.delete());
             break;
     }
 

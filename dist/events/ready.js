@@ -57,9 +57,15 @@ function () {
                 type: 'WATCHING'
               });
             }, 360000);
-            redisStartup(client);
+            redis.subscribe("auctionEnd");
+            redis.on("message", function (channel, message) {
+              if (channel !== "auctionEnd") return;
+              var aInfo = JSON.parse(message);
+              (0, _general.notifyPerson)(aInfo, 3);
+              (0, _general.notifyPerson)(aInfo, 4);
+            });
 
-          case 6:
+          case 7:
           case "end":
             return _context.stop();
         }
@@ -70,116 +76,32 @@ function () {
   return function (_x) {
     return _ref.apply(this, arguments);
   };
-}();
+}(); // async function redisStartup(client) {
+//     await redis.send_command("config", ["set", "notify-keyspace-events", "Ex"]);
+//     const expired_subKey =
+//         "__keyevent@" + process.env.R_DB + "__:expired";
+//     redis
+//         .subscribe(expired_subKey)
+//         .then(() => console.log("[i] Subscribed to " + expired_subKey));
+//     redis.on("message", async (channel, message) => {
+//         if (channel !== expired_subKey) return;
+//         console.log(`[a] [${message}] Expired.`);
+//         let aInfo = await getAuctionById(message);
+//         if (aInfo == null) return;
+//         if (aInfo.b_club_id == 0) {
+//             console.log(`[a] [${message}] No buyer was found.`);
+//             return resetTransferPlayer(message);
+//         }
+//         console.log(`[a] [${message}] Buyer(${aInfo.b_club_id}) has been found.`);
+//         await addCoinsToClub(aInfo.s_club_id, aInfo.current_bid);
+//         await auctionBuyNow(aInfo.id, aInfo.b_club_id);
+//         const pInfo = await getPlayerVersionById(aInfo.player_id);
+//         const pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : `${pInfo.meta_info.first_name} ${pInfo.meta_info.last_name}`;
+//         await notifyPerson(client, aInfo, 3);
+//         await notifyPerson(client, aInfo, 4);
+//     });
+// }
 
-function redisStartup(_x2) {
-  return _redisStartup.apply(this, arguments);
-}
-
-function _redisStartup() {
-  _redisStartup = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee3(client) {
-    var expired_subKey;
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.next = 2;
-            return redis.send_command("config", ["set", "notify-keyspace-events", "Ex"]);
-
-          case 2:
-            expired_subKey = "__keyevent@" + process.env.R_DB + "__:expired";
-            redis.subscribe(expired_subKey).then(function () {
-              return console.log("[i] Subscribed to " + expired_subKey);
-            });
-            redis.on("message",
-            /*#__PURE__*/
-            function () {
-              var _ref2 = (0, _asyncToGenerator2["default"])(
-              /*#__PURE__*/
-              _regenerator["default"].mark(function _callee2(channel, message) {
-                var aInfo, pInfo, pName;
-                return _regenerator["default"].wrap(function _callee2$(_context2) {
-                  while (1) {
-                    switch (_context2.prev = _context2.next) {
-                      case 0:
-                        if (!(channel !== expired_subKey)) {
-                          _context2.next = 2;
-                          break;
-                        }
-
-                        return _context2.abrupt("return");
-
-                      case 2:
-                        console.log("[a] [".concat(message, "] Expired."));
-                        _context2.next = 5;
-                        return (0, _general.getAuctionById)(message);
-
-                      case 5:
-                        aInfo = _context2.sent;
-
-                        if (!(aInfo == null)) {
-                          _context2.next = 8;
-                          break;
-                        }
-
-                        return _context2.abrupt("return");
-
-                      case 8:
-                        if (!(aInfo.b_club_id == 0)) {
-                          _context2.next = 11;
-                          break;
-                        }
-
-                        console.log("[a] [".concat(message, "] No buyer was found."));
-                        return _context2.abrupt("return", (0, _general.resetTransferPlayer)(message));
-
-                      case 11:
-                        console.log("[a] [".concat(message, "] Buyer(").concat(aInfo.b_club_id, ") has been found."));
-                        _context2.next = 14;
-                        return (0, _general.addCoinsToClub)(aInfo.s_club_id, aInfo.current_bid);
-
-                      case 14:
-                        _context2.next = 16;
-                        return (0, _general.auctionBuyNow)(aInfo.id, aInfo.b_club_id);
-
-                      case 16:
-                        _context2.next = 18;
-                        return (0, _general.getPlayerVersionById)(aInfo.player_id);
-
-                      case 18:
-                        pInfo = _context2.sent;
-                        pName = pInfo.meta_info.common_name ? pInfo.meta_info.common_name : "".concat(pInfo.meta_info.first_name, " ").concat(pInfo.meta_info.last_name);
-                        _context2.next = 22;
-                        return (0, _general.notifyPerson)(client, aInfo, 3);
-
-                      case 22:
-                        _context2.next = 24;
-                        return (0, _general.notifyPerson)(client, aInfo, 4);
-
-                      case 24:
-                      case "end":
-                        return _context2.stop();
-                    }
-                  }
-                }, _callee2);
-              }));
-
-              return function (_x3, _x4) {
-                return _ref2.apply(this, arguments);
-              };
-            }());
-
-          case 5:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  }));
-  return _redisStartup.apply(this, arguments);
-}
 
 function getPlayerCount(guilds) {
   var usercount = 0;

@@ -35,7 +35,7 @@ function () {
             author = message.author;
             guild = message.guild;
 
-            if (message.content.startsWith(prefix.toLowerCase())) {
+            if (message.content.toLowerCase().startsWith(prefix)) {
               _context.next = 8;
               break;
             }

@@ -12,6 +12,8 @@ var _general = require("../functions/general");
 
 var _dotenv = _interopRequireDefault(require("dotenv"));
 
+var _dblapi = _interopRequireDefault(require("dblapi.js"));
+
 _dotenv["default"].config();
 
 var redis = (0, _asyncRedis.createClient)({
@@ -40,10 +42,13 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee(client) {
+    var dbl;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            dbl = new _dblapi["default"]('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NzI1MTQ1MTYyNTYwMzA4MiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTc1ODIxOTcxfQ.H8ykXP9lKeSRUM2OJ69bpcStxSdzaqLSCJKeW7hg8tA', client);
+            dbl.postStats("".concat(client.guilds.size));
             client.user.setActivity("startup process, give me a moment plz ,_,", {
               type: 'PLAYING'
             });
@@ -56,6 +61,7 @@ function () {
               client.user.setActivity("".concat(client.guilds.size, " servers"), {
                 type: 'WATCHING'
               });
+              dbl.postStats("".concat(client.guilds.size));
             }, 360000);
             redis.subscribe("auctionEnd");
             redis.on("message", function (channel, message) {
@@ -65,7 +71,7 @@ function () {
               (0, _general.notifyPerson)(aInfo, 4);
             });
 
-          case 7:
+          case 9:
           case "end":
             return _context.stop();
         }

@@ -7,10 +7,6 @@ import {
 import dotenv from "dotenv";
 dotenv.config();
 
-import DBL from 'dblapi.js';
-
-
-
 const redis = createClient({
     host: process.env.R_HOST,
     db: process.env.R_DB,
@@ -29,31 +25,22 @@ const redis = createClient({
 });
 
 module.exports = async (client) => {
-    const dbl = new DBL('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NzI1MTQ1MTYyNTYwMzA4MiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTc1ODIxOTcxfQ.H8ykXP9lKeSRUM2OJ69bpcStxSdzaqLSCJKeW7hg8tA', client);
-    dbl.postStats(`${client.guilds.size}`);
-
     client.user.setActivity(`startup process, give me a moment plz ,_,`, {
         type: 'PLAYING'
     });
 
-    console.log(`Logged in as ${client.user.tag} and looking at ${getPlayerCount(client.guilds)} users.`);
+    console.log(`Logged in as ${client.user.tag}, looking at ${getPlayerCount(client.guilds)} users and ${client.guilds.size} guilds.\nShard ID: ${(client.shard.id + 1)}/${client.shard.count}`);
     console.log("====================");
 
-    client.user.setActivity(`${client.guilds.size} servers`, {
-        type: 'WATCHING'
-    });
-
-    setInterval(() => {
-        client.user.setActivity(`${client.guilds.size} servers`, {
-            type: 'WATCHING'
-        });
-
-        dbl.postStats(`${client.guilds.size}`);
-    }, 360000);
-
     redis.subscribe("auctionEnd");
+    redis.subscribe("updateGuildsCountPack");
 
     redis.on("message", (channel, message) => {
+        if (channel === "updateGuildsCountPack") {
+            client.user.setActivity(`${message} servers`, {
+                type: 'WATCHING'
+            });
+        }
         if (channel !== "auctionEnd") return;
 
         const aInfo = JSON.parse(message);

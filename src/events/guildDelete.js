@@ -29,9 +29,5 @@ pub.on("error", (err) => {
 });
 
 module.exports = (client, guild) => {
-    client.user.setActivity(`${client.guilds.size} servers`, {
-        type: 'WATCHING'
-    });
-
     pub.publish("leftGuild", `{"guildName": "${guild.name.toString()}", "guildOwner": "${guild.owner.user.tag.toString()}", "botId": "${client.id}"}`);
 }

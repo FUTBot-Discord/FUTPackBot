@@ -31,10 +31,6 @@ pub.on("error", function (err) {
 });
 
 module.exports = function (client, guild) {
-  client.user.setActivity("".concat(client.guilds.size, " servers"), {
-    type: 'WATCHING'
-  });
-
   try {
     guild.owner.send("Heeyy!! Love to you because your guild has invited me. \nYou can find the commandlist with `pack!commands` or at https://top.gg/bot/647251451625603082. \nIf you have any questions, don't hesitate and join the supported Discord https://discord.gg/KUnh4fc.");
   } catch (e) {}

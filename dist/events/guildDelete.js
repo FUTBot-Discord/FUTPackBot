@@ -31,8 +31,5 @@ pub.on("error", function (err) {
 });
 
 module.exports = function (client, guild) {
-  client.user.setActivity("".concat(client.guilds.size, " servers"), {
-    type: 'WATCHING'
-  });
   pub.publish("leftGuild", "{\"guildName\": \"".concat(guild.name.toString(), "\", \"guildOwner\": \"").concat(guild.owner.user.tag.toString(), "\", \"botId\": \"").concat(client.id, "\"}"));
 };
